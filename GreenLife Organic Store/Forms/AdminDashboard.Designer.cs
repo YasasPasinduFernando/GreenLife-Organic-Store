@@ -78,7 +78,6 @@ namespace GreenLife_Organic_Store.Forms
             buttonRegisterAdmin.Size = new Size(170, 45);
             buttonRegisterAdmin.TabIndex = 0;
             buttonRegisterAdmin.Text = "Register Admin";
-            buttonRegisterAdmin.Click += buttonRegisterAdmin_Click;
 
             // buttonRegisterCustomer
             buttonRegisterCustomer.Location = new Point(200, 15);
@@ -86,7 +85,6 @@ namespace GreenLife_Organic_Store.Forms
             buttonRegisterCustomer.Size = new Size(170, 45);
             buttonRegisterCustomer.TabIndex = 1;
             buttonRegisterCustomer.Text = "Register Customer";
-            buttonRegisterCustomer.Click += buttonRegisterCustomer_Click;
 
             // buttonViewUsers
             buttonViewUsers.Location = new Point(380, 15);
@@ -94,7 +92,6 @@ namespace GreenLife_Organic_Store.Forms
             buttonViewUsers.Size = new Size(170, 45);
             buttonViewUsers.TabIndex = 2;
             buttonViewUsers.Text = "Refresh Users";
-            buttonViewUsers.Click += buttonViewUsers_Click;
 
             // buttonEditUser
             buttonEditUser.Location = new Point(20, 75);
@@ -102,7 +99,6 @@ namespace GreenLife_Organic_Store.Forms
             buttonEditUser.Size = new Size(170, 45);
             buttonEditUser.TabIndex = 3;
             buttonEditUser.Text = "Edit User";
-            buttonEditUser.Click += buttonEditUser_Click;
 
             // buttonDeleteUser
             buttonDeleteUser.Location = new Point(200, 75);
@@ -110,7 +106,6 @@ namespace GreenLife_Organic_Store.Forms
             buttonDeleteUser.Size = new Size(170, 45);
             buttonDeleteUser.TabIndex = 4;
             buttonDeleteUser.Text = "Delete User";
-            buttonDeleteUser.Click += buttonDeleteUser_Click;
 
             // buttonLogout
             buttonLogout.Location = new Point(380, 75);
@@ -118,7 +113,6 @@ namespace GreenLife_Organic_Store.Forms
             buttonLogout.Size = new Size(170, 45);
             buttonLogout.TabIndex = 5;
             buttonLogout.Text = "Logout";
-            buttonLogout.Click += buttonLogout_Click;
 
             // dataGridViewUsers
             dataGridViewUsers.AllowUserToAddRows = false;
@@ -131,7 +125,6 @@ namespace GreenLife_Organic_Store.Forms
             dataGridViewUsers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewUsers.Size = new Size(900, 400);
             dataGridViewUsers.TabIndex = 2;
-            dataGridViewUsers.CellDoubleClick += dataGridViewUsers_CellDoubleClick;
 
             // AdminDashboard
             AutoScaleDimensions = new SizeF(8F, 20F);
