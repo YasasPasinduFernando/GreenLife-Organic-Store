@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Users (
 -- Insert a default admin user (password: admin123 - SHA256 hashed)
 -- Note: In production, change this password immediately
 INSERT IGNORE INTO Users (Email, Name, Phone, Age, Address, Sex, UserType, Password)
-VALUES ('admin@greenlife.com', 'Admin User', '555-0000', 30, 'Admin Office', 'Male', 'Admin', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3');
+VALUES ('admin@greenlife.com', 'Admin User', '555-0000', 30, 'Admin Office', 'Male', 'Admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9');
 
 -- Verify the database and table creation
 SELECT 'Database and tables created successfully!' AS Status;
