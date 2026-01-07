@@ -16,6 +16,79 @@ namespace GreenLife_Organic_Store.Forms
             this.Load += SalesReportForm_Load;
         }
 
+        private void ExportToPDF()
+        {
+            try
+            {
+                DateTimePicker? dtFromDate = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dtFromDate") as DateTimePicker;
+                DateTimePicker? dtToDate = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dtToDate") as DateTimePicker;
+
+                if (dtFromDate == null || dtToDate == null)
+                {
+                    MessageBox.Show("Date controls are not available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var orders = OrderRepository.GetOrdersByDateRange(dtFromDate.Value.Date, dtToDate.Value.Date.AddDays(1));
+                var completedOrderList = orders.Where(o => o.Status == OrderStatus.Delivered).ToList();
+
+                decimal totalSales = completedOrderList.Sum(o => o.TotalAmount);
+                int totalOrdersCount = completedOrderList.Count;
+                decimal avgOrder = totalOrdersCount > 0 ? totalSales / totalOrdersCount : 0;
+                int completedOrders = completedOrderList.Count;
+                int pendingOrders = orders.Count(o => o.Status == OrderStatus.Pending);
+
+                var daily = orders.GroupBy(o => o.OrderDate.Date)
+                    .OrderBy(g => g.Key)
+                    .Select(g => (date: g.Key, orders: g.Count(), amount: g.Sum(o => o.TotalAmount)))
+                    .ToList();
+
+                var allItems = new List<(string name, int qty, decimal revenue)>();
+                foreach (var order in completedOrderList)
+                {
+                    if (order.Items == null) continue;
+                    foreach (var item in order.Items)
+                    {
+                        var existing = allItems.FirstOrDefault(x => x.name == item.ProductName);
+                        if (!string.IsNullOrEmpty(existing.name))
+                        {
+                            allItems.Remove(existing);
+                            allItems.Add((existing.name, existing.qty + item.Quantity, existing.revenue + item.Subtotal));
+                        }
+                        else
+                        {
+                            allItems.Add((item.ProductName, item.Quantity, item.Subtotal));
+                        }
+                    }
+                }
+
+                var topProducts = allItems.OrderByDescending(x => x.qty).Take(10).ToList();
+
+                SaveFileDialog save = new SaveFileDialog
+                {
+                    FileName = $"SalesReport_{DateTime.Now:yyyyMMdd}.pdf",
+                    Filter = "PDF Files (*.pdf)|*.pdf"
+                };
+
+                if (save.ShowDialog() == DialogResult.OK)
+                {
+                    // call Pdf generator
+                    GreenLife_Organic_Store.Reports.PdfReportGenerator.GenerateSalesReportPdf(save.FileName,
+                        "GreenLife Organic Store",
+                        dtFromDate.Value.Date, dtToDate.Value.Date,
+                        totalSales, totalOrdersCount, avgOrder, completedOrders, pendingOrders,
+                        daily,
+                        topProducts);
+
+                    MessageBox.Show("PDF exported successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error exporting PDF: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void SalesReportForm_Load(object sender, EventArgs e)
         {
             InitializeUI();
@@ -97,6 +170,21 @@ namespace GreenLife_Organic_Store.Forms
             };
             btnExport.Click += (s, e) => ExportToCSV();
             this.Controls.Add(btnExport);
+
+            IconButton btnExportPdf = new IconButton
+            {
+                Text = "Export to PDF",
+                Location = new Point(800, yPosition - 5),
+                Size = new Size(120, 30),
+                BackColor = Color.LightCoral,
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.FilePdf,
+                IconColor = Color.White,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
+            };
+            btnExportPdf.Click += (s, e) => ExportToPDF();
+            this.Controls.Add(btnExportPdf);
 
             yPosition += 40;
 
