@@ -43,8 +43,15 @@ namespace GreenLife_Organic_Store.Forms
         private void CustomerDashboard_Load(object sender, EventArgs e)
         {
             this.Text = "GreenLife Organic Store - Shopping";
+            // Fixed size window centered on screen
             this.Size = new Size(1280, 860);
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle; // non-resizable
+            this.MaximizeBox = false; // disable maximize
+            this.MinimizeBox = true;
+            // Prevent user from resizing by locking min/max to the same size
+            this.MinimumSize = this.Size;
+            this.MaximumSize = this.Size;
             this.BackColor = Color.FromArgb(245, 245, 245);
 
             InitializeUI();
@@ -606,17 +613,22 @@ namespace GreenLife_Organic_Store.Forms
                 Location = new Point(3, 3)
             };
 
+            // Image area (either product/category image or a default icon)
             PictureBox pic = new PictureBox
             {
                 Size = new Size(70, 70),
                 Location = new Point(10, 10),
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.FromArgb(240, 240, 240)
+                BackColor = Color.FromArgb(240, 240, 240),
+                Cursor = Cursors.Hand
             };
-            
+
+            Control? imageControl = null;
+
             if (category != null && !string.IsNullOrWhiteSpace(category.ImagePath))
             {
                 try { if (File.Exists(category.ImagePath)) pic.ImageLocation = category.ImagePath; } catch { }
+                imageControl = pic;
             }
             else
             {
@@ -628,9 +640,15 @@ namespace GreenLife_Organic_Store.Forms
                     IconSize = 40,
                     Size = new Size(70, 70),
                     Location = new Point(10, 10),
-                    BackColor = Color.FromArgb(240, 240, 240)
+                    BackColor = Color.FromArgb(240, 240, 240),
+                    Cursor = Cursors.Hand
                 };
-                pnl.Controls.Add(defaultIcon);
+                imageControl = defaultIcon;
+            }
+
+            if (imageControl != null)
+            {
+                pnl.Controls.Add(imageControl);
             }
 
             Label lbl = new Label
@@ -659,9 +677,14 @@ namespace GreenLife_Organic_Store.Forms
                 }
             };
 
+            // Make panel, image and label clickable
             pnl.Click += clickHandler;
-            pic.Click += clickHandler;
+            if (imageControl != null)
+                imageControl.Click += clickHandler;
             lbl.Click += clickHandler;
+
+            // Visual cue for clickability
+            lbl.Cursor = Cursors.Hand;
 
             // Hover effect
             pnl.MouseEnter += (s, e) => pnl.BackColor = Color.FromArgb(240, 255, 240);
