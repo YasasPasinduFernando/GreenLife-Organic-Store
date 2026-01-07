@@ -3,6 +3,8 @@ using GreenLife_Organic_Store.Models;
 using FontAwesome.Sharp;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+// No Timer alias - animations use async Task.Delay to avoid Timer ambiguity
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -14,6 +16,10 @@ namespace GreenLife_Organic_Store.Forms
         private FlowLayoutPanel _flpProducts = null!;
         private FlowLayoutPanel _flpCategories = null!;
         private Label _lblCartCount = null!;
+        private Panel _pnlFilter = null!;
+        private Panel _pnlCategoriesSection = null!;
+        private bool _isFilterPinned = true;
+        private bool _isCategoriesPinned = true;
 
         public CustomerDashboard(User customer)
         {
@@ -21,10 +27,23 @@ namespace GreenLife_Organic_Store.Forms
             _currentCustomer = customer;
         }
 
+        private T? FindControlRecursive<T>(Control parent, string name) where T : Control
+        {
+            if (parent == null) return null;
+            foreach (Control child in parent.Controls)
+            {
+                if (child is T t && child.Name == name)
+                    return t;
+                var found = FindControlRecursive<T>(child, name);
+                if (found != null) return found;
+            }
+            return null;
+        }
+
         private void CustomerDashboard_Load(object sender, EventArgs e)
         {
             this.Text = "GreenLife Organic Store - Shopping";
-            this.Size = new Size(1000, 700);
+            this.Size = new Size(1280, 860);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(245, 245, 245);
 
@@ -59,172 +78,450 @@ namespace GreenLife_Organic_Store.Forms
 
         private void InitializeUI()
         {
-            // Header Panel
-            Panel pnlHeader = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 60,
-                BackColor = Color.FromArgb(34, 139, 34)
-            };
-
-            Label lblTitle = new Label
-            {
-                Text = "GreenLife Organic Store",
-                Location = new Point(10, 15),
-                Size = new Size(400, 30),
-                Font = new Font("Segoe UI", 16F, FontStyle.Bold),
-                ForeColor = Color.White
-            };
-            pnlHeader.Controls.Add(lblTitle);
-
-            // Cart icon + count
-            IconPictureBox iconCart = new IconPictureBox
-            {
-                IconChar = IconChar.ShoppingCart,
-                IconColor = Color.White,
-                Location = new Point(560, 15),
-                Size = new Size(28, 28),
-                BackColor = Color.Transparent,
-                Cursor = Cursors.Hand
-            };
-            iconCart.Click += (s, e) => ShowCart();
-            pnlHeader.Controls.Add(iconCart);
-
-            _lblCartCount = new Label
-            {
-                Text = "Cart: 0",
-                Location = new Point(600, 15),
-                Size = new Size(120, 30),
-                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand
-            };
-            _lblCartCount.Click += (s, e) => ShowCart();
-            pnlHeader.Controls.Add(_lblCartCount);
-
-            IconButton btnProfile = new IconButton
-            {
-                Text = "Profile",
-                Location = new Point(760, 15),
-                Size = new Size(110, 30),
-                BackColor = Color.LightBlue,
-                ForeColor = Color.Black,
-                IconChar = IconChar.User,
-                IconColor = Color.Black,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                Cursor = Cursors.Hand
-            };
-            btnProfile.Click += (s, e) => ShowProfile();
-            pnlHeader.Controls.Add(btnProfile);
-
-            Button btnLogout = new Button
-            {
-                Text = "Logout",
-                Location = new Point(890, 15),
-                Size = new Size(100, 30),
-                BackColor = Color.LightCoral,
-                Cursor = Cursors.Hand
-            };
-            btnLogout.Click += (s, e) => Logout();
-            pnlHeader.Controls.Add(btnLogout);
-
-            this.Controls.Add(pnlHeader);
-
-            // Filter Panel
-            Panel pnlFilter = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 70,
-                BackColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle
-            };
-
-            Label lblSearch = new Label { Text = "Search:", Location = new Point(10, 10), Size = new Size(60, 20) };
-            TextBox txtSearch = new TextBox { Name = "txtSearch", Location = new Point(80, 10), Size = new Size(200, 25) };
-            IconButton btnSearch = new IconButton
-            {
-                Text = "Search",
-                Location = new Point(290, 10),
-                Size = new Size(90, 25),
-                BackColor = Color.LightGreen,
-                ForeColor = Color.Black,
-                IconChar = IconChar.Search,
-                IconColor = Color.Black,
-                IconSize = 16,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                Cursor = Cursors.Hand
-            };
-            btnSearch.Click += (s, e) => SearchProducts(txtSearch.Text);
-            pnlFilter.Controls.Add(lblSearch);
-            pnlFilter.Controls.Add(txtSearch);
-            pnlFilter.Controls.Add(btnSearch);
-
-            Label lblCategory = new Label { Text = "Category:", Location = new Point(360, 10), Size = new Size(70, 20) };
-            ComboBox cmbCategory = new ComboBox
-            {
-                Name = "cmbCategory",
-                Location = new Point(440, 10),
-                Size = new Size(150, 25),
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
-            cmbCategory.Items.Add("All Products");
-            cmbCategory.SelectedIndex = 0;
-            cmbCategory.SelectedIndexChanged += (s, e) => FilterByCategory(cmbCategory);
-            pnlFilter.Controls.Add(lblCategory);
-            pnlFilter.Controls.Add(cmbCategory);
-
-            Label lblPrice = new Label { Text = "Price Range:", Location = new Point(620, 10), Size = new Size(80, 20) };
-            NumericUpDown numMinPrice = new NumericUpDown
-            {
-                Name = "numMinPrice",
-                Location = new Point(710, 10),
-                Size = new Size(80, 25),
-                Minimum = 0,
-                Maximum = 10000
-            };
-            Label lblPriceTo = new Label { Text = "to", Location = new Point(800, 10), Size = new Size(20, 20) };
-            NumericUpDown numMaxPrice = new NumericUpDown
-            {
-                Name = "numMaxPrice",
-                Location = new Point(830, 10),
-                Size = new Size(80, 25),
-                Minimum = 0,
-                Maximum = 10000,
-                Value = 10000
-            };
-            pnlFilter.Controls.Add(lblPrice);
-            pnlFilter.Controls.Add(numMinPrice);
-            pnlFilter.Controls.Add(lblPriceTo);
-            pnlFilter.Controls.Add(numMaxPrice);
-
-            Button btnFilter = new Button { Text = "Filter", Location = new Point(920, 10), Size = new Size(70, 25), BackColor = Color.LightBlue };
-            btnFilter.Click += (s, e) => FilterByPrice((decimal)numMinPrice.Value, (decimal)numMaxPrice.Value);
-            pnlFilter.Controls.Add(btnFilter);
-
-            this.Controls.Add(pnlFilter);
-
-            // Categories horizontal panel (shows clickable category cards)
-            _flpCategories = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                Height = 100,
-                AutoSize = false,
-                AutoScroll = true,
-                BackColor = Color.White,
-                Padding = new Padding(10)
-            };
-            this.Controls.Add(_flpCategories);
-
-            // Products Flow Panel
+            // Products Flow Panel - ADD FIRST (will be at bottom with DockStyle.Fill)
             _flpProducts = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 AutoScroll = true,
-                BackColor = Color.WhiteSmoke,
-                Padding = new Padding(10)
+                BackColor = Color.White,
+                Padding = new Padding(15)
             };
+            _flpProducts.FlowDirection = FlowDirection.LeftToRight;
+            _flpProducts.WrapContents = true;
             this.Controls.Add(_flpProducts);
+
+            // Products Section Header
+            Panel pnlProductsHeader = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 40,
+                BackColor = Color.FromArgb(240, 240, 240),
+                Padding = new Padding(20, 0, 20, 0)
+            };
+
+            Label lblProductsTitle = new Label
+            {
+                Text = "Our Products",
+                Location = new Point(20, 8),
+                Size = new Size(200, 25),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94)
+            };
+            pnlProductsHeader.Controls.Add(lblProductsTitle);
+            this.Controls.Add(pnlProductsHeader);
+
+            // Categories Section with Pin Button
+            _pnlCategoriesSection = new Panel
+            {
+                Name = "pnlCategoriesSection",
+                Dock = DockStyle.Top,
+                Height = 160,
+                BackColor = Color.White
+            };
+
+            // Categories horizontal panel (add first so it appears at bottom of categories section)
+            _flpCategories = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                Height = 120,
+                AutoSize = false,
+                AutoScroll = true,
+                BackColor = Color.White,
+                Padding = new Padding(15, 10, 15, 10)
+            };
+            _flpCategories.FlowDirection = FlowDirection.LeftToRight;
+            // keep categories in a single horizontal row and allow horizontal scrolling
+            _flpCategories.WrapContents = false;
+            _pnlCategoriesSection.Controls.Add(_flpCategories);
+
+            Panel pnlCategoriesHeader = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 40,
+                BackColor = Color.White,
+                Padding = new Padding(20, 0, 20, 0)
+            };
+
+            // Pin button for categories - same style as search
+            IconButton btnPinCategories = new IconButton
+            {
+                Name = "btnPinCategories",
+                Text = "",
+                Location = new Point(15, 5),
+                Size = new Size(35, 30),
+                BackColor = Color.FromArgb(52, 152, 219),
+                ForeColor = Color.White,
+                IconChar = IconChar.AngleDown,
+                IconColor = Color.White,
+                IconSize = 20,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnPinCategories.FlatAppearance.BorderSize = 0;
+            btnPinCategories.Click += (s, e) => ToggleCategoriesPin();
+            pnlCategoriesHeader.Controls.Add(btnPinCategories);
+
+            Label lblCategoriesTitle = new Label
+            {
+                Text = "Shop by Category",
+                Location = new Point(60, 8),
+                Size = new Size(200, 25),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94)
+            };
+            pnlCategoriesHeader.Controls.Add(lblCategoriesTitle);
+            _pnlCategoriesSection.Controls.Add(pnlCategoriesHeader);
+
+            this.Controls.Add(_pnlCategoriesSection);
+
+            // Filter Panel with Pin Button
+            _pnlFilter = new Panel
+            {
+                Name = "pnlFilter",
+                Dock = DockStyle.Top,
+                Height = 80,
+                BackColor = Color.White,
+                Padding = new Padding(20, 15, 20, 15)
+            };
+
+            // Pin button for filter
+            IconButton btnPinFilter = new IconButton
+            {
+                Name = "btnPinFilter",
+                Text = "",
+                Location = new Point(15, 15),
+                Size = new Size(35, 35),
+                BackColor = Color.FromArgb(52, 152, 219),
+                ForeColor = Color.White,
+                IconChar = IconChar.AngleDown,
+                IconColor = Color.White,
+                IconSize = 20,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnPinFilter.FlatAppearance.BorderSize = 0;
+            btnPinFilter.Click += (s, e) => ToggleFilterPin();
+            _pnlFilter.Controls.Add(btnPinFilter);
+
+            Label lblSearch = new Label 
+            { 
+                Text = "Search:", 
+                Location = new Point(60, 18), 
+                Size = new Size(80, 25),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94)
+            };
+            _pnlFilter.Controls.Add(lblSearch);
+
+            TextBox txtSearch = new TextBox 
+            { 
+                Name = "txtSearch", 
+                Location = new Point(145, 15), 
+                Size = new Size(250, 30),
+                Font = new Font("Segoe UI", 11F)
+            };
+            _pnlFilter.Controls.Add(txtSearch);
+
+            IconButton btnSearch = new IconButton
+            {
+                Text = "Search",
+                Location = new Point(405, 13),
+                Size = new Size(110, 35),
+                BackColor = Color.FromArgb(46, 204, 113),
+                ForeColor = Color.White,
+                IconChar = IconChar.Search,
+                IconColor = Color.White,
+                IconSize = 18,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
+            };
+            btnSearch.FlatAppearance.BorderSize = 0;
+            btnSearch.Click += (s, e) => SearchProducts(txtSearch.Text);
+            _pnlFilter.Controls.Add(btnSearch);
+
+            Label lblCategory = new Label 
+            { 
+                Text = "Category:", 
+                Location = new Point(530, 18), 
+                Size = new Size(80, 25),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94)
+            };
+            _pnlFilter.Controls.Add(lblCategory);
+
+            ComboBox cmbCategory = new ComboBox
+            {
+                Name = "cmbCategory",
+                Location = new Point(615, 15),
+                Size = new Size(180, 30),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 10F)
+            };
+            cmbCategory.Items.Add("All Products");
+            cmbCategory.SelectedIndex = 0;
+            cmbCategory.SelectedIndexChanged += (s, e) => FilterByCategory(cmbCategory);
+            _pnlFilter.Controls.Add(cmbCategory);
+
+            Label lblPrice = new Label 
+            { 
+                Text = "Price:", 
+                Location = new Point(810, 18), 
+                Size = new Size(50, 25),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94)
+            };
+            _pnlFilter.Controls.Add(lblPrice);
+
+            NumericUpDown numMinPrice = new NumericUpDown
+            {
+                Name = "numMinPrice",
+                Location = new Point(865, 15),
+                Size = new Size(90, 30),
+                Minimum = 0,
+                Maximum = 10000,
+                Font = new Font("Segoe UI", 10F)
+            };
+            _pnlFilter.Controls.Add(numMinPrice);
+
+            Label lblPriceTo = new Label { Text = "-", Location = new Point(960, 18), Size = new Size(20, 25), Font = new Font("Segoe UI", 10F, FontStyle.Bold) };
+            _pnlFilter.Controls.Add(lblPriceTo);
+
+            NumericUpDown numMaxPrice = new NumericUpDown
+            {
+                Name = "numMaxPrice",
+                Location = new Point(985, 15),
+                Size = new Size(90, 30),
+                Minimum = 0,
+                Maximum = 10000,
+                Value = 10000,
+                Font = new Font("Segoe UI", 10F)
+            };
+            _pnlFilter.Controls.Add(numMaxPrice);
+
+            IconButton btnFilter = new IconButton
+            {
+                Text = "Filter",
+                Location = new Point(1085, 13),
+                Size = new Size(95, 35),
+                BackColor = Color.FromArgb(52, 152, 219),
+                ForeColor = Color.White,
+                IconChar = IconChar.Filter,
+                IconColor = Color.White,
+                IconSize = 18,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
+            };
+            btnFilter.FlatAppearance.BorderSize = 0;
+            btnFilter.Click += (s, e) => FilterByPrice((decimal)numMinPrice.Value, (decimal)numMaxPrice.Value);
+            _pnlFilter.Controls.Add(btnFilter);
+
+            this.Controls.Add(_pnlFilter);
+
+            // Header Panel - ADD LAST SO IT APPEARS AT TOP
+            Panel pnlHeader = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 80,
+                BackColor = Color.FromArgb(34, 139, 34)
+            };
+
+            // Logo
+            IconPictureBox iconLogo = new IconPictureBox
+            {
+                IconChar = IconChar.Leaf,
+                IconColor = Color.White,
+                IconSize = 50,
+                Location = new Point(20, 15),
+                Size = new Size(50, 50),
+                BackColor = Color.Transparent
+            };
+            pnlHeader.Controls.Add(iconLogo);
+
+            Label lblTitle = new Label
+            {
+                Text = "GreenLife Organic Store",
+                Location = new Point(80, 18),
+                Size = new Size(400, 35),
+                Font = new Font("Segoe UI", 20F, FontStyle.Bold),
+                ForeColor = Color.White,
+                BackColor = Color.Transparent
+            };
+            pnlHeader.Controls.Add(lblTitle);
+
+            Label lblWelcome = new Label
+            {
+                Text = $"Welcome, {_currentCustomer.Name}!",
+                Location = new Point(80, 52),
+                Size = new Size(400, 20),
+                Font = new Font("Segoe UI", 10F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(220, 255, 220),
+                BackColor = Color.Transparent
+            };
+            pnlHeader.Controls.Add(lblWelcome);
+
+            // Cart Section
+            // Right-side panel for cart and profile (keeps them anchored to the right)
+            Panel pnlHeaderRight = new Panel
+            {
+                Dock = DockStyle.Right,
+                Width = 300,
+                BackColor = Color.Transparent
+            };
+
+            IconButton btnCart = new IconButton()
+            {
+                Text = "",
+                Location = new Point(10, 15),
+                Size = new Size(44, 44),
+                BackColor = Color.FromArgb(46, 204, 113),
+                ForeColor = Color.White,
+                IconChar = IconChar.ShoppingCart,
+                IconColor = Color.White,
+                IconSize = 22,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnCart.FlatAppearance.BorderSize = 0;
+            btnCart.Click += (s, e) => ShowCart();
+            pnlHeaderRight.Controls.Add(btnCart);
+
+            // Cart info panel (stacked count above the label) to avoid overlap
+            Panel pnlCartInfo = new Panel
+            {
+                Location = new Point(64, 12),
+                Size = new Size(60, 44),
+                BackColor = Color.Transparent
+            };
+
+            _lblCartCount = new Label
+            {
+                Text = "0",
+                Dock = DockStyle.Top,
+                Height = 26,
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                ForeColor = Color.White,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Cursor = Cursors.Hand,
+                BackColor = Color.Transparent
+            };
+            _lblCartCount.Click += (s, e) => ShowCart();
+            pnlCartInfo.Controls.Add(_lblCartCount);
+
+            Label lblCartText = new Label
+            {
+                Text = "Items",
+                Dock = DockStyle.Bottom,
+                Height = 18,
+                Font = new Font("Segoe UI", 8.5F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(220, 255, 220),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Cursor = Cursors.Hand,
+                BackColor = Color.Transparent
+            };
+            lblCartText.Click += (s, e) => ShowCart();
+            pnlCartInfo.Controls.Add(lblCartText);
+
+            pnlHeaderRight.Controls.Add(pnlCartInfo);
+
+            IconButton btnProfile = new IconButton();
+            btnProfile.Text = "Profile";
+            btnProfile.Location = new Point(160, 12);
+            btnProfile.Size = new Size(120, 44);
+            btnProfile.BackColor = Color.FromArgb(52, 152, 219);
+            btnProfile.ForeColor = Color.White;
+            btnProfile.IconChar = IconChar.UserCircle;
+            btnProfile.IconColor = Color.White;
+            btnProfile.IconSize = 20;
+            btnProfile.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnProfile.FlatStyle = FlatStyle.Flat;
+            btnProfile.Cursor = Cursors.Hand;
+            btnProfile.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnProfile.FlatAppearance.BorderSize = 0;
+            btnProfile.Click += (s, e) => ShowProfile();
+            pnlHeaderRight.Controls.Add(btnProfile);
+
+            pnlHeader.Controls.Add(pnlHeaderRight);
+
+            // ADD HEADER LAST - IT WILL APPEAR AT TOP
+            this.Controls.Add(pnlHeader);
+        }
+
+        private async void ToggleFilterPin()
+        {
+            _isFilterPinned = !_isFilterPinned;
+            // Animate collapse/expand using Task.Delay
+            int targetHeight = _isFilterPinned ? 80 : 45; // Collapsed shows just pin button
+            int step = _isFilterPinned ? 5 : -5;
+            while ((_isFilterPinned && _pnlFilter.Height < targetHeight) || (!_isFilterPinned && _pnlFilter.Height > targetHeight))
+            {
+                _pnlFilter.Height = Math.Max(45, Math.Min(80, _pnlFilter.Height + step));
+                await Task.Delay(10);
+            }
+            _pnlFilter.Height = targetHeight;
+            
+            // Hide/show controls except pin button
+            foreach (Control ctrl in _pnlFilter.Controls)
+            {
+                if (ctrl.Name != "btnPinFilter")
+                {
+                    ctrl.Visible = _isFilterPinned;
+                }
+            }
+            
+            // Update pin button - AngleDown when expanded (can collapse), AngleUp when collapsed (can expand)
+            var btnPin = _pnlFilter.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "btnPinFilter") as IconButton;
+            if (btnPin != null)
+            {
+                btnPin.IconChar = _isFilterPinned ? IconChar.AngleDown : IconChar.AngleUp;
+                btnPin.BackColor = _isFilterPinned ? Color.FromArgb(52, 152, 219) : Color.FromArgb(149, 165, 166);
+            }
+        }
+
+        private async void ToggleCategoriesPin()
+        {
+            _isCategoriesPinned = !_isCategoriesPinned;
+            // Animate collapse/expand using Task.Delay
+            int targetHeight = _isCategoriesPinned ? 160 : 45; // Collapsed shows just header
+            int step = _isCategoriesPinned ? 10 : -10;
+            while ((_isCategoriesPinned && _pnlCategoriesSection.Height < targetHeight) || (!_isCategoriesPinned && _pnlCategoriesSection.Height > targetHeight))
+            {
+                _pnlCategoriesSection.Height = Math.Max(45, Math.Min(160, _pnlCategoriesSection.Height + step));
+                await Task.Delay(10);
+            }
+            _pnlCategoriesSection.Height = targetHeight;
+            
+            // Hide/show categories flow panel
+            if (_flpCategories != null)
+            {
+                _flpCategories.Visible = _isCategoriesPinned;
+            }
+            
+            // Update pin button - find it by recursively searching all controls
+            IconButton? btnPin = null;
+            foreach (Control ctrl in _pnlCategoriesSection.Controls)
+            {
+                if (ctrl is Panel panel)
+                {
+                    foreach (Control innerCtrl in panel.Controls)
+                    {
+                        if (innerCtrl.Name == "btnPinCategories" && innerCtrl is IconButton btn)
+                        {
+                            btnPin = btn;
+                            break;
+                        }
+                    }
+                }
+                if (btnPin != null) break;
+            }
+            
+            if (btnPin != null)
+            {
+                btnPin.IconChar = _isCategoriesPinned ? IconChar.AngleDown : IconChar.AngleUp;
+                btnPin.BackColor = _isCategoriesPinned ? Color.FromArgb(52, 152, 219) : Color.FromArgb(149, 165, 166);
+            }
         }
 
         private void LoadData()
@@ -234,10 +531,24 @@ namespace GreenLife_Organic_Store.Forms
                 _categories = CategoryRepository.GetAllCategories();
                 _allProducts = ProductRepository.GetAllProducts();
 
-                ComboBox cmbCategory = (ComboBox)this.Controls[1].Controls["cmbCategory"];
-                foreach (var category in _categories)
+                // Locate the category combobox anywhere in the form (recursively) and populate it
+                ComboBox? cmbCategory = FindControlRecursive<ComboBox>(this, "cmbCategory");
+
+                if (cmbCategory != null)
                 {
-                    cmbCategory.Items.Add(category.CategoryName);
+                    // keep the initial "All Products" entry, remove any other previous entries
+                    for (int i = cmbCategory.Items.Count - 1; i >= 0; i--)
+                    {
+                        var item = cmbCategory.Items[i];
+                        if (item == null) continue;
+                        if (item.ToString() != "All Products")
+                            cmbCategory.Items.RemoveAt(i);
+                    }
+
+                    foreach (var category in _categories)
+                    {
+                        cmbCategory.Items.Add(category.CategoryName);
+                    }
                 }
 
                 DisplayCategories(_categories);
@@ -280,41 +591,63 @@ namespace GreenLife_Organic_Store.Forms
         {
             Panel pnl = new Panel
             {
-                Size = new Size(140, 80),
+                Size = new Size(160, 95),
                 BackColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle,
-                Margin = new Padding(5)
+                BorderStyle = BorderStyle.None,
+                Margin = new Padding(5),
+                Cursor = Cursors.Hand
+            };
+
+            // Shadow panel
+            Panel shadowPanel = new Panel
+            {
+                Size = new Size(160, 95),
+                BackColor = Color.FromArgb(200, 200, 200),
+                Location = new Point(3, 3)
             };
 
             PictureBox pic = new PictureBox
             {
-                Size = new Size(60, 60),
-                Location = new Point(6, 10),
+                Size = new Size(70, 70),
+                Location = new Point(10, 10),
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BorderStyle = BorderStyle.FixedSingle
+                BackColor = Color.FromArgb(240, 240, 240)
             };
+            
             if (category != null && !string.IsNullOrWhiteSpace(category.ImagePath))
             {
                 try { if (File.Exists(category.ImagePath)) pic.ImageLocation = category.ImagePath; } catch { }
             }
             else
             {
-                // optional: leave blank
+                // Default icon
+                IconPictureBox defaultIcon = new IconPictureBox
+                {
+                    IconChar = IconChar.Tag,
+                    IconColor = Color.FromArgb(52, 152, 219),
+                    IconSize = 40,
+                    Size = new Size(70, 70),
+                    Location = new Point(10, 10),
+                    BackColor = Color.FromArgb(240, 240, 240)
+                };
+                pnl.Controls.Add(defaultIcon);
             }
 
             Label lbl = new Label
             {
                 Text = title,
-                Location = new Point(74, 20),
-                Size = new Size(60, 40),
-                Font = new Font("Segoe UI", 8F, FontStyle.Regular),
-                AutoEllipsis = true
+                Location = new Point(88, 25),
+                Size = new Size(65, 50),
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                AutoEllipsis = true,
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.FromArgb(52, 73, 94)
             };
 
-            pnl.Controls.Add(pic);
+            if (category != null)
+                pnl.Controls.Add(pic);
             pnl.Controls.Add(lbl);
 
-            pnl.Cursor = Cursors.Hand;
             EventHandler clickHandler = (s, e) =>
             {
                 if (category == null)
@@ -330,27 +663,39 @@ namespace GreenLife_Organic_Store.Forms
             pic.Click += clickHandler;
             lbl.Click += clickHandler;
 
+            // Hover effect
+            pnl.MouseEnter += (s, e) => pnl.BackColor = Color.FromArgb(240, 255, 240);
+            pnl.MouseLeave += (s, e) => pnl.BackColor = Color.White;
+
             return pnl;
         }
 
         private Panel CreateProductCard(Product product)
         {
-            Panel pnlCard = new Panel
-            {
-                Size = new Size(200, 280),
-                BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.White,
-                Margin = new Padding(5)
-            };
+            Panel pnlCard = new Panel();
+            pnlCard.Size = new Size(180, 270);
+            pnlCard.BorderStyle = BorderStyle.None;
+            pnlCard.BackColor = Color.White;
+            pnlCard.Margin = new Padding(6);
 
-            // Product image placeholder
-            Panel pnlImage = new Panel
-            {
-                Size = new Size(200, 120),
-                BackColor = Color.LightGray,
-                Dock = DockStyle.Top
-            };
-            var pic = new PictureBox { Size = new Size(200, 120), SizeMode = PictureBoxSizeMode.Zoom, Dock = DockStyle.Fill };
+            // Shadow effect
+            Panel shadowPanel = new Panel();
+            shadowPanel.Size = new Size(180, 270);
+            shadowPanel.BackColor = Color.FromArgb(220, 220, 220);
+            shadowPanel.Location = new Point(3, 3);
+
+            // Product image
+            Panel pnlImage = new Panel();
+            pnlImage.Size = new Size(180, 110);
+            pnlImage.BackColor = Color.FromArgb(250, 250, 250);
+            pnlImage.Dock = DockStyle.Top;
+            
+            var pic = new PictureBox();
+            pic.Size = new Size(180, 110);
+            pic.SizeMode = PictureBoxSizeMode.Zoom;
+            pic.Dock = DockStyle.Fill;
+            pic.BackColor = Color.FromArgb(250, 250, 250);
+            
             if (!string.IsNullOrWhiteSpace(product.ImagePath))
             {
                 try
@@ -360,11 +705,6 @@ namespace GreenLife_Organic_Store.Forms
                 }
                 catch { }
             }
-            else
-            {
-                Label lblImage = new Label { Text = "Image", Location = new Point(80, 45), Size = new Size(40, 40), Font = new Font("Arial", 12, FontStyle.Bold) };
-                pnlImage.Controls.Add(lblImage);
-            }
             pnlImage.Controls.Add(pic);
             pnlCard.Controls.Add(pnlImage);
 
@@ -372,48 +712,54 @@ namespace GreenLife_Organic_Store.Forms
             Label lblName = new Label
             {
                 Text = product.ProductName,
-                Location = new Point(5, 125),
-                Size = new Size(190, 40),
-                Font = new Font("Arial", 10, FontStyle.Bold),
+                Location = new Point(10, 135),
+                Size = new Size(180, 40),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = false
             };
             pnlCard.Controls.Add(lblName);
 
             // Stock status
-            Label lblStock = new Label
-            {
-                Text = product.GetStockStatus(),
-                Location = new Point(5, 165),
-                Size = new Size(190, 20),
-                Font = new Font("Arial", 9),
-                ForeColor = product.IsInStock() ? Color.Green : Color.Red
-            };
+            Label lblStock = new Label();
+            lblStock.Text = product.GetStockStatus();
+            lblStock.Location = new Point(10, 152);
+            lblStock.Size = new Size(160, 18);
+            lblStock.Font = new Font("Segoe UI", 8.5F);
+            lblStock.ForeColor = product.IsInStock() ? Color.FromArgb(46, 204, 113) : Color.FromArgb(231, 76, 60);
             pnlCard.Controls.Add(lblStock);
 
             // Price
-            Label lblPrice = new Label
-            {
-                Text = product.GetFormattedPrice(),
-                Location = new Point(5, 185),
-                Size = new Size(190, 25),
-                Font = new Font("Arial", 12, FontStyle.Bold),
-                ForeColor = Color.DarkGreen
-            };
+            Label lblPrice = new Label();
+            lblPrice.Text = product.GetFormattedPrice();
+            lblPrice.Location = new Point(10, 168);
+            lblPrice.Size = new Size(160, 26);
+            lblPrice.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblPrice.ForeColor = Color.FromArgb(34, 139, 34);
             pnlCard.Controls.Add(lblPrice);
 
             // Add to cart button
-            Button btnAdd = new Button
-            {
-                Text = "Add to Cart",
-                Location = new Point(5, 215),
-                Size = new Size(190, 35),
-                BackColor = Color.Green,
-                ForeColor = Color.White,
-                Enabled = product.IsInStock(),
-                Cursor = Cursors.Hand
-            };
+            IconButton btnAdd = new IconButton();
+            btnAdd.Text = "Add to Cart";
+            btnAdd.Location = new Point(10, 200);
+            btnAdd.Size = new Size(160, 36);
+            btnAdd.BackColor = Color.FromArgb(46, 204, 113);
+            btnAdd.ForeColor = Color.White;
+            btnAdd.Enabled = product.IsInStock();
+            btnAdd.Cursor = Cursors.Hand;
+            btnAdd.IconChar = IconChar.CartPlus;
+            btnAdd.IconColor = Color.White;
+            btnAdd.IconSize = 16;
+            btnAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnAdd.FlatStyle = FlatStyle.Flat;
+            btnAdd.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnAdd.FlatAppearance.BorderSize = 0;
             btnAdd.Click += (s, e) => AddToCart(product);
             pnlCard.Controls.Add(btnAdd);
+
+            // Hover effect
+            pnlCard.MouseEnter += (s, e) => pnlCard.BackColor = Color.FromArgb(248, 255, 248);
+            pnlCard.MouseLeave += (s, e) => pnlCard.BackColor = Color.White;
 
             return pnlCard;
         }
@@ -423,17 +769,16 @@ namespace GreenLife_Organic_Store.Forms
             ShoppingCart.AddItem(product, 1);
             // Persist to DB if user is logged in
             if (_currentCustomer != null && _currentCustomer.ID > 0)
-                    {
-                        try
-                        {
-                            GreenLife_Organic_Store.Database.CartRepository.AddOrUpdateCartItem(_currentCustomer.ID, product.ID, 1);
-                        }
-                        catch (Exception ex)
-                        {
-                            // Log or show non-blocking error
-                            MessageBox.Show($"Warning: failed saving cart to database: {ex.Message}", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
+            {
+                try
+                {
+                    GreenLife_Organic_Store.Database.CartRepository.AddOrUpdateCartItem(_currentCustomer.ID, product.ID, 1);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Warning: failed saving cart to database: {ex.Message}", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
             UpdateCartCount();
             MessageBox.Show($"{product.ProductName} added to cart!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -445,7 +790,7 @@ namespace GreenLife_Organic_Store.Forms
                 try
                 {
                     int dbCount = GreenLife_Organic_Store.Database.CartRepository.GetCartItemCount(_currentCustomer.ID);
-                    _lblCartCount.Text = $"Cart: {dbCount}";
+                    _lblCartCount.Text = dbCount.ToString();
                     return;
                 }
                 catch
@@ -454,7 +799,7 @@ namespace GreenLife_Organic_Store.Forms
                 }
             }
 
-            _lblCartCount.Text = $"Cart: {ShoppingCart.GetItemCount()}";
+            _lblCartCount.Text = ShoppingCart.GetItemCount().ToString();
         }
 
         private void ShowCart()
@@ -502,8 +847,29 @@ namespace GreenLife_Organic_Store.Forms
 
         private void ShowProfile()
         {
-            var menuForm = new Form { Text = "Profile Menu", Size = new Size(250, 200), StartPosition = FormStartPosition.CenterParent };
-            var btnEdit = new Button { Text = "Edit Profile", Location = new Point(20, 30), Size = new Size(200, 40), BackColor = Color.LightGreen };
+            var menuForm = new Form 
+            { 
+                Text = "Profile Menu", 
+                Size = new Size(300, 250), 
+                StartPosition = FormStartPosition.CenterParent,
+                BackColor = Color.White
+            };
+            
+            IconButton btnEdit = new IconButton
+            {
+                Text = "Edit Profile",
+                Location = new Point(30, 30),
+                Size = new Size(240, 50),
+                BackColor = Color.FromArgb(46, 204, 113),
+                ForeColor = Color.White,
+                IconChar = IconChar.UserEdit,
+                IconColor = Color.White,
+                IconSize = 22,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 11, FontStyle.Bold)
+            };
+            btnEdit.FlatAppearance.BorderSize = 0;
             btnEdit.Click += (s, e) =>
             {
                 CustomerProfileEditForm editForm = new CustomerProfileEditForm(_currentCustomer);
@@ -513,14 +879,44 @@ namespace GreenLife_Organic_Store.Forms
                 }
                 menuForm.Close();
             };
-            var btnOrders = new Button { Text = "My Orders", Location = new Point(20, 80), Size = new Size(200, 40), BackColor = Color.LightBlue };
+
+            IconButton btnOrders = new IconButton
+            {
+                Text = "My Orders",
+                Location = new Point(30, 90),
+                Size = new Size(240, 50),
+                BackColor = Color.FromArgb(52, 152, 219),
+                ForeColor = Color.White,
+                IconChar = IconChar.ShoppingBag,
+                IconColor = Color.White,
+                IconSize = 22,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 11, FontStyle.Bold)
+            };
+            btnOrders.FlatAppearance.BorderSize = 0;
             btnOrders.Click += (s, e) =>
             {
                 MyOrdersForm ordersForm = new MyOrdersForm(_currentCustomer);
                 ordersForm.ShowDialog();
                 menuForm.Close();
             };
-            var btnPassword = new Button { Text = "Change Password", Location = new Point(20, 130), Size = new Size(200, 40), BackColor = Color.LightYellow };
+
+            IconButton btnPassword = new IconButton
+            {
+                Text = "Change Password",
+                Location = new Point(30, 150),
+                Size = new Size(240, 50),
+                BackColor = Color.FromArgb(155, 89, 182),
+                ForeColor = Color.White,
+                IconChar = IconChar.Key,
+                IconColor = Color.White,
+                IconSize = 22,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 11, FontStyle.Bold)
+            };
+            btnPassword.FlatAppearance.BorderSize = 0;
             btnPassword.Click += (s, e) =>
             {
                 ChangePasswordForm changePassForm = new ChangePasswordForm(_currentCustomer.ID);
