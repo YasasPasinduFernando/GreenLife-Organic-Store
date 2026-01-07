@@ -189,7 +189,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonLogin.Name = "buttonLogin";
             buttonLogin.Size = new Size(350, 38);
             buttonLogin.TabIndex = 8;
-            buttonLogin.Text = "           Login";
+            buttonLogin.Text = "Login";
             buttonLogin.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonLogin.UseVisualStyleBackColor = false;
             buttonLogin.Click += buttonLogin_Click;

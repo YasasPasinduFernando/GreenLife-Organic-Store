@@ -19,11 +19,11 @@ namespace GreenLife_Organic_Store.Forms
             {
                 // Hide this form and show the actual admin dashboard
                 this.Hide();
-                
+
                 // Create and show new admin dashboard as main window
                 var adminDashboardEcommerce = new AdminDashboardEcommerce(_currentAdmin);
                 adminDashboardEcommerce.ShowDialog();
-                
+
                 // Close this form when admin dashboard closes
                 this.Close();
             }
@@ -32,6 +32,11 @@ namespace GreenLife_Organic_Store.Forms
                 MessageBox.Show($"Error loading admin dashboard: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
             }
+        }
+
+        private void buttonRegisterCustomer_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -96,6 +96,8 @@ namespace GreenLife_Organic_Store.Forms
             CreateMenuButton(pnlMenu, "?? Manage Categories", 430, 10, () => OpenManageCategories());
             CreateMenuButton(pnlMenu, "?? Manage Customers", 640, 10, () => OpenManageCustomers());
             CreateMenuButton(pnlMenu, "?? Sales Reports", 10, 60, () => OpenSalesReports());
+            // Add Admin Registrations log button
+            CreateMenuButton(pnlMenu, "?? Admin Registrations", 220, 60, () => OpenAdminRegistrations());
 
             this.Controls.Add(pnlMenu);
 
@@ -328,6 +330,19 @@ namespace GreenLife_Organic_Store.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Error opening Sales Reports: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OpenAdminRegistrations()
+        {
+            try
+            {
+                AdminRegistrationsForm form = new AdminRegistrationsForm();
+                form.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening Admin Registrations: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

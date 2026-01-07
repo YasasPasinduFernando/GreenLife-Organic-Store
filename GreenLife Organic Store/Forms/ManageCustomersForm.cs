@@ -7,6 +7,7 @@ namespace GreenLife_Organic_Store.Forms
     public class ManageCustomersForm : Form
     {
         private List<User> _allCustomers = new();
+        private DataGridView _dgvCustomers;
 
         public ManageCustomersForm()
         {
@@ -83,29 +84,30 @@ namespace GreenLife_Organic_Store.Forms
 
             this.Controls.Add(pnlToolbar);
 
-            // DataGridView
-            DataGridView dgvCustomers = new DataGridView
+            // DataGridView - FIXED: Remove duplicate declaration and dock conflict
+            _dgvCustomers = new DataGridView
             {
                 Name = "dgvCustomers",
-                Dock = DockStyle.Top,
-                Height = 350,
+                Dock = DockStyle.Fill,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White
+                BackgroundColor = Color.White,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
-            dgvCustomers.Columns.Add("ID", "ID");
-            dgvCustomers.Columns.Add("Name", "Customer Name");
-            dgvCustomers.Columns.Add("Email", "Email");
-            dgvCustomers.Columns.Add("Phone", "Phone");
-            dgvCustomers.Columns.Add("Address", "Address");
-            dgvCustomers.Columns.Add("RegistrationDate", "Registered Date");
-            this.Controls.Add(dgvCustomers);
+            _dgvCustomers.Columns.Add("ID", "ID");
+            _dgvCustomers.Columns.Add("Name", "Customer Name");
+            _dgvCustomers.Columns.Add("Email", "Email");
+            _dgvCustomers.Columns.Add("Phone", "Phone");
+            _dgvCustomers.Columns.Add("Address", "Address");
+            _dgvCustomers.Columns.Add("RegistrationDate", "Registered Date");
+            this.Controls.Add(_dgvCustomers);
 
             // Action Buttons
             Panel pnlActions = new Panel
             {
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Bottom,
+                Height = 60,
                 BackColor = Color.White,
                 Padding = new Padding(10)
             };
@@ -113,7 +115,7 @@ namespace GreenLife_Organic_Store.Forms
             Button btnViewDetails = new Button
             {
                 Text = "View Details",
-                Location = new Point(10, 10),
+                Location = new Point(10, 15),
                 Size = new Size(150, 35),
                 BackColor = Color.LightBlue,
                 Cursor = Cursors.Hand
@@ -124,7 +126,7 @@ namespace GreenLife_Organic_Store.Forms
             Button btnDeleteAccount = new Button
             {
                 Text = "Delete Account",
-                Location = new Point(170, 10),
+                Location = new Point(170, 15),
                 Size = new Size(150, 35),
                 BackColor = Color.LightCoral,
                 Cursor = Cursors.Hand
@@ -132,10 +134,32 @@ namespace GreenLife_Organic_Store.Forms
             btnDeleteAccount.Click += (s, e) => DeleteCustomerAccount();
             pnlActions.Controls.Add(btnDeleteAccount);
 
+            Button btnAddCustomer = new Button
+            {
+                Text = "Add Customer",
+                Location = new Point(330, 15),
+                Size = new Size(150, 35),
+                BackColor = Color.LightGreen,
+                Cursor = Cursors.Hand
+            };
+            btnAddCustomer.Click += (s, e) => AddCustomer();
+            pnlActions.Controls.Add(btnAddCustomer);
+
+            Button btnEditCustomer = new Button
+            {
+                Text = "Edit Customer",
+                Location = new Point(490, 15),
+                Size = new Size(150, 35),
+                BackColor = Color.LightBlue,
+                Cursor = Cursors.Hand
+            };
+            btnEditCustomer.Click += (s, e) => EditCustomer();
+            pnlActions.Controls.Add(btnEditCustomer);
+
             Button btnClose = new Button
             {
                 Text = "Close",
-                Location = new Point(330, 10),
+                Location = new Point(650, 15),
                 Size = new Size(150, 35),
                 BackColor = Color.LightGray,
                 Cursor = Cursors.Hand
@@ -153,12 +177,11 @@ namespace GreenLife_Organic_Store.Forms
                 var allUsers = UserRepository.GetAllUsers();
                 _allCustomers = allUsers.Where(u => u.UserType == UserType.Customer).ToList();
                 
-                DataGridView dgvCustomers = (DataGridView)this.Controls[1];
-                dgvCustomers.Rows.Clear();
+                _dgvCustomers.Rows.Clear();
 
                 foreach (var customer in _allCustomers)
                 {
-                    dgvCustomers.Rows.Add(
+                    _dgvCustomers.Rows.Add(
                         customer.ID,
                         customer.Name,
                         customer.Email,
@@ -182,8 +205,7 @@ namespace GreenLife_Organic_Store.Forms
                 return;
             }
 
-            DataGridView dgvCustomers = (DataGridView)this.Controls[1];
-            dgvCustomers.Rows.Clear();
+            _dgvCustomers.Rows.Clear();
 
             var filtered = _allCustomers.Where(c =>
                 c.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
@@ -193,7 +215,7 @@ namespace GreenLife_Organic_Store.Forms
 
             foreach (var customer in filtered)
             {
-                dgvCustomers.Rows.Add(
+                _dgvCustomers.Rows.Add(
                     customer.ID,
                     customer.Name,
                     customer.Email,
@@ -206,10 +228,9 @@ namespace GreenLife_Organic_Store.Forms
 
         private void ViewCustomerDetails()
         {
-            DataGridView dgvCustomers = (DataGridView)this.Controls[1];
-            if (dgvCustomers.SelectedRows.Count > 0)
+            if (_dgvCustomers.SelectedRows.Count > 0)
             {
-                int customerId = (int)dgvCustomers.SelectedRows[0].Cells["ID"].Value;
+                int customerId = (int)_dgvCustomers.SelectedRows[0].Cells["ID"].Value;
                 var customer = _allCustomers.FirstOrDefault(c => c.ID == customerId);
 
                 if (customer != null)
@@ -274,13 +295,46 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
+        private void AddCustomer()
+        {
+            try
+            {
+                var regForm = new CustomerRegistrationForm();
+                regForm.ShowDialog();
+                LoadCustomers();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error adding customer: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void EditCustomer()
+        {
+            if (_dgvCustomers.SelectedRows.Count > 0)
+            {
+                int customerId = (int)_dgvCustomers.SelectedRows[0].Cells["ID"].Value;
+                var customer = _allCustomers.FirstOrDefault(c => c.ID == customerId);
+
+                if (customer != null)
+                {
+                    var detailsForm = new UserDetailsForm(customer, false);
+                    detailsForm.ShowDialog();
+                    LoadCustomers();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a customer to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         private void DeleteCustomerAccount()
         {
-            DataGridView dgvCustomers = (DataGridView)this.Controls[1];
-            if (dgvCustomers.SelectedRows.Count > 0)
+            if (_dgvCustomers.SelectedRows.Count > 0)
             {
-                int customerId = (int)dgvCustomers.SelectedRows[0].Cells["ID"].Value;
-                string customerName = dgvCustomers.SelectedRows[0].Cells["Name"].Value.ToString();
+                int customerId = (int)_dgvCustomers.SelectedRows[0].Cells["ID"].Value;
+                string customerName = _dgvCustomers.SelectedRows[0].Cells["Name"].Value.ToString();
 
                 if (MessageBox.Show($"Are you sure you want to delete {customerName}'s account? This action cannot be undone.", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {

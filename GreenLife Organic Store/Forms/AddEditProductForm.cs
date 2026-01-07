@@ -211,6 +211,11 @@ namespace GreenLife_Organic_Store.Forms
             chkActive.Checked = _existingProduct.IsActive;
         }
 
+        private void InitializeComponent()
+        {
+
+        }
+
         private void BtnSave_Click(object sender, EventArgs e)
         {
             TextBox txtName = (TextBox)this.Controls["txtName"];
