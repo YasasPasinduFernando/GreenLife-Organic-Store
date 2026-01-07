@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Database;
+using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -108,7 +109,8 @@ namespace GreenLife_Organic_Store.Forms
                 Size = new Size(660, 120),
                 ReadOnly = true,
                 AllowUserToAddRows = false,
-                BackColor = Color.White
+                BackColor = Color.White,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
             dgvItems.Columns.Add("ProductName", "Product");
             dgvItems.Columns.Add("Quantity", "Qty");
@@ -143,26 +145,41 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(txtNotes);
 
             // Cancel button
-            Button btnCancel = new Button
+            IconButton btnCancel = new IconButton
             {
                 Text = "Cancel",
                 Location = new Point(200, 510),
                 Size = new Size(120, 40),
-                BackColor = Color.LightGray
+                BackColor = Color.LightGray,
+                ForeColor = Color.Black,
+                IconChar = IconChar.Times,
+                IconColor = Color.Black,
+                IconSize = 18,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
             };
+            btnCancel.FlatAppearance.BorderSize = 0;
             btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
             this.Controls.Add(btnCancel);
 
             // Place Order button
-            Button btnPlaceOrder = new Button
+            IconButton btnPlaceOrder = new IconButton
             {
                 Text = "Place Order",
                 Location = new Point(380, 510),
-                Size = new Size(120, 40),
+                Size = new Size(140, 40),
                 BackColor = Color.Green,
                 ForeColor = Color.White,
-                Font = new Font("Arial", 10, FontStyle.Bold)
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                IconChar = IconChar.ShoppingCart,
+                IconColor = Color.White,
+                IconSize = 18,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
             };
+            btnPlaceOrder.FlatAppearance.BorderSize = 0;
             btnPlaceOrder.Click += BtnPlaceOrder_Click;
             this.Controls.Add(btnPlaceOrder);
         }

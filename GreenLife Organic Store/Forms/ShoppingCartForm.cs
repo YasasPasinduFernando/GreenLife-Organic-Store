@@ -1,19 +1,22 @@
 using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Database;
+using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
     public partial class ShoppingCartForm : Form
     {
         private List<CartItem> _cartItems = new();
+        private DataGridView _dgvCart = null!;
 
         public ShoppingCartForm()
         {
             this.Text = "Shopping Cart";
-            this.Size = new Size(700, 500);
+            this.Size = new Size(820, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.BackColor = Color.FromArgb(245, 245, 245);
             this.Load += ShoppingCartForm_Load;
         }
 
@@ -32,122 +35,263 @@ namespace GreenLife_Organic_Store.Forms
 
         private void InitializeUI()
         {
+            // Header Panel
+            Panel pnlHeader = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 60,
+                BackColor = Color.FromArgb(34, 139, 34)
+            };
+
+            Label lblHeader = new Label
+            {
+                Text = "Shopping Cart",
+                Location = new Point(20, 18),
+                Size = new Size(300, 30),
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = Color.White,
+                BackColor = Color.Transparent
+            };
+            pnlHeader.Controls.Add(lblHeader);
+            this.Controls.Add(pnlHeader);
+
             // Create DataGridView for cart items
-            DataGridView dgvCart = new DataGridView
+            _dgvCart = new DataGridView
             {
                 Name = "dgvCart",
-                Location = new Point(10, 10),
-                Size = new Size(680, 250),
+                Location = new Point(20, 80),
+                Size = new Size(760, 280),
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                ReadOnly = false,
+                ReadOnly = true,
                 AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                BackgroundColor = Color.White,
+                GridColor = Color.LightGray,
+                BorderStyle = BorderStyle.FixedSingle,
+                EnableHeadersVisualStyles = false,
+                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
+                {
+                    BackColor = Color.FromArgb(52, 73, 94),
+                    ForeColor = Color.White,
+                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    Padding = new Padding(5)
+                },
+                ColumnHeadersHeight = 35,
+                RowTemplate = new DataGridViewRow { Height = 35 }
+            };
+
+            // Add text columns
+            _dgvCart.Columns.Add("ProductName", "Product");
+            _dgvCart.Columns.Add("Quantity", "Quantity");
+            _dgvCart.Columns.Add("UnitPrice", "Price");
+            _dgvCart.Columns.Add("Subtotal", "Subtotal");
+
+            // Add button column for Remove
+            DataGridViewButtonColumn btnRemoveColumn = new DataGridViewButtonColumn
+            {
+                Name = "Remove",
+                HeaderText = "Action",
+                Text = "Remove",
+                UseColumnTextForButtonValue = true,
+                Width = 100,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            };
+            _dgvCart.Columns.Add(btnRemoveColumn);
+
+            // Handle button click
+            _dgvCart.CellClick += DgvCart_CellClick;
+
+            this.Controls.Add(_dgvCart);
+
+            // Quantity adjustment panel
+            Panel pnlQuantity = new Panel
+            {
+                Location = new Point(20, 370),
+                Size = new Size(760, 50),
                 BackColor = Color.White,
-                ForeColor = Color.Black
+                BorderStyle = BorderStyle.FixedSingle
             };
 
-            dgvCart.Columns.Add("ProductName", "Product");
-            dgvCart.Columns.Add("Quantity", "Qty");
-            dgvCart.Columns.Add("UnitPrice", "Unit Price");
-            dgvCart.Columns.Add("Subtotal", "Subtotal");
-            dgvCart.Columns.Add("Remove", "Remove");
-
-            this.Controls.Add(dgvCart);
-
-            // Quantity adjustment buttons
-            Button btnIncrement = new Button
+            Label lblQuantityInfo = new Label
             {
-                Text = "+",
-                Location = new Point(600, 270),
-                Size = new Size(40, 30),
-                BackColor = Color.Green,
-                ForeColor = Color.White
+                Text = "Adjust Quantity:",
+                Location = new Point(15, 15),
+                Size = new Size(150, 25),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94)
             };
-            btnIncrement.Click += (s, e) => AdjustQuantity(1);
-            this.Controls.Add(btnIncrement);
+            pnlQuantity.Controls.Add(lblQuantityInfo);
 
-            Button btnDecrement = new Button
+            IconButton btnDecrement = new IconButton
             {
-                Text = "-",
-                Location = new Point(550, 270),
-                Size = new Size(40, 30),
-                BackColor = Color.Orange,
-                ForeColor = Color.White
+                Text = "",
+                Location = new Point(180, 10),
+                Size = new Size(45, 32),
+                BackColor = Color.FromArgb(230, 126, 34),
+                ForeColor = Color.White,
+                IconChar = IconChar.Minus,
+                IconColor = Color.White,
+                IconSize = 20,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 14, FontStyle.Bold)
             };
+            btnDecrement.FlatAppearance.BorderSize = 0;
             btnDecrement.Click += (s, e) => AdjustQuantity(-1);
-            this.Controls.Add(btnDecrement);
+            pnlQuantity.Controls.Add(btnDecrement);
 
-            // Total label
+            IconButton btnIncrement = new IconButton
+            {
+                Text = "",
+                Location = new Point(235, 10),
+                Size = new Size(45, 32),
+                BackColor = Color.FromArgb(46, 204, 113),
+                ForeColor = Color.White,
+                IconChar = IconChar.Plus,
+                IconColor = Color.White,
+                IconSize = 20,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 14, FontStyle.Bold)
+            };
+            btnIncrement.FlatAppearance.BorderSize = 0;
+            btnIncrement.Click += (s, e) => AdjustQuantity(1);
+            pnlQuantity.Controls.Add(btnIncrement);
+
+            IconButton btnClearCart = new IconButton
+            {
+                Text = "Clear Cart",
+                Location = new Point(620, 10),
+                Size = new Size(130, 32),
+                BackColor = Color.FromArgb(231, 76, 60),
+                ForeColor = Color.White,
+                IconChar = IconChar.TrashAlt,
+                IconColor = Color.White,
+                IconSize = 18,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold)
+            };
+            btnClearCart.FlatAppearance.BorderSize = 0;
+            btnClearCart.Click += BtnClearCart_Click;
+            pnlQuantity.Controls.Add(btnClearCart);
+
+            this.Controls.Add(pnlQuantity);
+
+            // Summary Panel
+            Panel pnlSummary = new Panel
+            {
+                Location = new Point(20, 430),
+                Size = new Size(760, 50),
+                BackColor = Color.FromArgb(240, 255, 240),
+                BorderStyle = BorderStyle.FixedSingle
+            };
+
             Label lblTotal = new Label
             {
                 Name = "lblTotal",
                 Text = "Total: Rs. 0.00",
-                Location = new Point(10, 310),
+                Location = new Point(15, 12),
                 Size = new Size(300, 30),
-                Font = new Font("Arial", 14, FontStyle.Bold),
-                ForeColor = Color.DarkGreen
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = Color.FromArgb(34, 139, 34)
             };
-            this.Controls.Add(lblTotal);
+            pnlSummary.Controls.Add(lblTotal);
 
-            // Item count label
             Label lblItemCount = new Label
             {
                 Name = "lblItemCount",
                 Text = "Items: 0",
-                Location = new Point(10, 350),
-                Size = new Size(300, 20),
-                Font = new Font("Arial", 10)
+                Location = new Point(320, 15),
+                Size = new Size(150, 25),
+                Font = new Font("Segoe UI", 11),
+                ForeColor = Color.FromArgb(52, 73, 94)
             };
-            this.Controls.Add(lblItemCount);
+            pnlSummary.Controls.Add(lblItemCount);
 
-            // Continue Shopping button
-            Button btnContinue = new Button
+            this.Controls.Add(pnlSummary);
+
+            // Action buttons
+            IconButton btnContinue = new IconButton
             {
                 Text = "Continue Shopping",
-                Location = new Point(200, 420),
-                Size = new Size(150, 40),
-                BackColor = Color.LightGray,
-                ForeColor = Color.Black
+                Location = new Point(360, 500),
+                Size = new Size(190, 45),
+                BackColor = Color.FromArgb(149, 165, 166),
+                ForeColor = Color.White,
+                IconChar = IconChar.ArrowLeft,
+                IconColor = Color.White,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 11, FontStyle.Bold)
             };
+            btnContinue.FlatAppearance.BorderSize = 0;
             btnContinue.Click += (s, e) => this.Close();
             this.Controls.Add(btnContinue);
 
-            // Checkout button
-            Button btnCheckout = new Button
+            IconButton btnCheckout = new IconButton
             {
                 Text = "Proceed to Checkout",
-                Location = new Point(380, 420),
-                Size = new Size(150, 40),
-                BackColor = Color.Green,
+                Location = new Point(560, 500),
+                Size = new Size(220, 45),
+                BackColor = Color.FromArgb(34, 139, 34),
                 ForeColor = Color.White,
-                Font = new Font("Arial", 10, FontStyle.Bold)
+                IconChar = IconChar.CreditCard,
+                IconColor = Color.White,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Font = new Font("Segoe UI", 11, FontStyle.Bold)
             };
+            btnCheckout.FlatAppearance.BorderSize = 0;
             btnCheckout.Click += BtnCheckout_Click;
             this.Controls.Add(btnCheckout);
+        }
+
+        private void DgvCart_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                // Check if the Remove button column was clicked
+                if (e.RowIndex >= 0 && e.ColumnIndex == _dgvCart.Columns["Remove"].Index)
+                {
+                    var cartItem = _cartItems[e.RowIndex];
+                    
+                    if (MessageBox.Show($"Remove {cartItem.Product.ProductName} from cart?", 
+                        "Confirm Remove", 
+                        MessageBoxButtons.YesNo, 
+                        MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        ShoppingCart.RemoveItem(cartItem.Product.ID);
+                        LoadCartItems();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error removing item: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadCartItems()
         {
             try
             {
-                DataGridView dgvCart = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvCart") as DataGridView;
-                if (dgvCart == null)
-                {
-                    MessageBox.Show("Cart display control not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                dgvCart.Rows.Clear();
+                _dgvCart.Rows.Clear();
                 _cartItems = ShoppingCart.Items;
 
                 foreach (var item in _cartItems)
                 {
-                    dgvCart.Rows.Add(
+                    _dgvCart.Rows.Add(
                         item.Product.ProductName,
                         item.Quantity,
                         item.Product.GetFormattedPrice(),
-                        $"Rs. {item.Subtotal:N2}",
-                        "Remove"
+                        $"Rs. {item.Subtotal:N2}"
                     );
                 }
 
@@ -163,8 +307,13 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
-                Label lblTotal = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "lblTotal") as Label;
-                Label lblItemCount = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "lblItemCount") as Label;
+                Label lblTotal = this.Controls.Cast<Control>()
+                    .SelectMany(c => c is Panel p ? p.Controls.Cast<Control>() : Enumerable.Empty<Control>())
+                    .FirstOrDefault(c => c.Name == "lblTotal") as Label;
+                    
+                Label lblItemCount = this.Controls.Cast<Control>()
+                    .SelectMany(c => c is Panel p ? p.Controls.Cast<Control>() : Enumerable.Empty<Control>())
+                    .FirstOrDefault(c => c.Name == "lblItemCount") as Label;
 
                 if (lblTotal != null)
                     lblTotal.Text = $"Total: Rs. {ShoppingCart.Items.Sum(x => x.Product.GetFinalPrice() * x.Quantity):N2}";
@@ -182,20 +331,29 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
-                DataGridView dgvCart = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvCart") as DataGridView;
-                if (dgvCart == null || dgvCart.SelectedRows.Count == 0)
+                if (_dgvCart.SelectedRows.Count == 0)
                 {
                     MessageBox.Show("Please select an item to adjust quantity.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                int rowIndex = dgvCart.SelectedRows[0].Index;
+                int rowIndex = _dgvCart.SelectedRows[0].Index;
                 var cartItem = _cartItems[rowIndex];
                 int newQuantity = cartItem.Quantity + adjustment;
 
                 if (newQuantity <= 0)
                 {
-                    ShoppingCart.RemoveItem(cartItem.Product.ID);
+                    if (MessageBox.Show($"Remove {cartItem.Product.ProductName} from cart?", 
+                        "Remove Item", 
+                        MessageBoxButtons.YesNo, 
+                        MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        ShoppingCart.RemoveItem(cartItem.Product.ID);
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 else if (newQuantity <= cartItem.Product.Stock)
                 {
@@ -212,6 +370,32 @@ namespace GreenLife_Organic_Store.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Error adjusting quantity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnClearCart_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!ShoppingCart.HasItems())
+                {
+                    MessageBox.Show("Cart is already empty.", "Empty Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (MessageBox.Show("Are you sure you want to clear all items from cart?", 
+                    "Clear Cart", 
+                    MessageBoxButtons.YesNo, 
+                    MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    ShoppingCart.Clear();
+                    LoadCartItems();
+                    MessageBox.Show("Cart cleared successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error clearing cart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
