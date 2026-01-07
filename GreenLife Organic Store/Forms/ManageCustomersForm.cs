@@ -8,6 +8,8 @@ namespace GreenLife_Organic_Store.Forms
     {
         private List<User> _allCustomers = new();
         private DataGridView _dgvCustomers;
+        private Button _btnEditCustomer;
+        private Button _btnChangePassword;
 
         public ManageCustomersForm()
         {
@@ -16,6 +18,42 @@ namespace GreenLife_Organic_Store.Forms
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.Load += ManageCustomersForm_Load;
+        }
+
+        private void EditCustomerDetails()
+        {
+            if (_dgvCustomers.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a customer to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int customerId = (int)_dgvCustomers.SelectedRows[0].Cells["ID"].Value;
+            var customer = _allCustomers.FirstOrDefault(c => c.ID == customerId);
+
+            if (customer == null)
+            {
+                MessageBox.Show("Selected customer not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var detailsForm = new UserDetailsForm(customer);
+            detailsForm.ShowDialog();
+            LoadCustomers();
+        }
+
+        private void ChangeSelectedCustomerPassword()
+        {
+            if (_dgvCustomers.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a customer to change password.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int customerId = (int)_dgvCustomers.SelectedRows[0].Cells["ID"].Value;
+
+            var changeForm = new ChangePasswordForm(customerId);
+            changeForm.ShowDialog();
         }
 
         private void ManageCustomersForm_Load(object sender, EventArgs e)
@@ -84,16 +122,16 @@ namespace GreenLife_Organic_Store.Forms
 
             this.Controls.Add(pnlToolbar);
 
-            // DataGridView - FIXED: Remove duplicate declaration and dock conflict
+            // DataGridView
             _dgvCustomers = new DataGridView
             {
                 Name = "dgvCustomers",
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Top,
+                Height = 350,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackgroundColor = Color.White,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                BackColor = Color.White
             };
             _dgvCustomers.Columns.Add("ID", "ID");
             _dgvCustomers.Columns.Add("Name", "Customer Name");
@@ -101,13 +139,14 @@ namespace GreenLife_Organic_Store.Forms
             _dgvCustomers.Columns.Add("Phone", "Phone");
             _dgvCustomers.Columns.Add("Address", "Address");
             _dgvCustomers.Columns.Add("RegistrationDate", "Registered Date");
+            _dgvCustomers.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) EditCustomerDetails(); };
             this.Controls.Add(_dgvCustomers);
 
-            // Action Buttons
+            // Action Buttons Panel - Changed from DockStyle.Fill to Top
             Panel pnlActions = new Panel
             {
-                Dock = DockStyle.Bottom,
-                Height = 60,
+                Dock = DockStyle.Top,
+                Height = 110,
                 BackColor = Color.White,
                 Padding = new Padding(10)
             };
@@ -115,7 +154,7 @@ namespace GreenLife_Organic_Store.Forms
             Button btnViewDetails = new Button
             {
                 Text = "View Details",
-                Location = new Point(10, 15),
+                Location = new Point(10, 10),
                 Size = new Size(150, 35),
                 BackColor = Color.LightBlue,
                 Cursor = Cursors.Hand
@@ -123,10 +162,32 @@ namespace GreenLife_Organic_Store.Forms
             btnViewDetails.Click += (s, e) => ViewCustomerDetails();
             pnlActions.Controls.Add(btnViewDetails);
 
+            _btnEditCustomer = new Button
+            {
+                Text = "Edit",
+                Location = new Point(10, 55),
+                Size = new Size(150, 35),
+                BackColor = Color.LightGreen,
+                Cursor = Cursors.Hand
+            };
+            _btnEditCustomer.Click += (s, e) => EditCustomerDetails();
+            pnlActions.Controls.Add(_btnEditCustomer);
+
+            _btnChangePassword = new Button
+            {
+                Text = "Change Password",
+                Location = new Point(170, 55),
+                Size = new Size(150, 35),
+                BackColor = Color.LightSkyBlue,
+                Cursor = Cursors.Hand
+            };
+            _btnChangePassword.Click += (s, e) => ChangeSelectedCustomerPassword();
+            pnlActions.Controls.Add(_btnChangePassword);
+
             Button btnDeleteAccount = new Button
             {
                 Text = "Delete Account",
-                Location = new Point(170, 15),
+                Location = new Point(170, 10),
                 Size = new Size(150, 35),
                 BackColor = Color.LightCoral,
                 Cursor = Cursors.Hand
@@ -134,32 +195,10 @@ namespace GreenLife_Organic_Store.Forms
             btnDeleteAccount.Click += (s, e) => DeleteCustomerAccount();
             pnlActions.Controls.Add(btnDeleteAccount);
 
-            Button btnAddCustomer = new Button
-            {
-                Text = "Add Customer",
-                Location = new Point(330, 15),
-                Size = new Size(150, 35),
-                BackColor = Color.LightGreen,
-                Cursor = Cursors.Hand
-            };
-            btnAddCustomer.Click += (s, e) => AddCustomer();
-            pnlActions.Controls.Add(btnAddCustomer);
-
-            Button btnEditCustomer = new Button
-            {
-                Text = "Edit Customer",
-                Location = new Point(490, 15),
-                Size = new Size(150, 35),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
-            };
-            btnEditCustomer.Click += (s, e) => EditCustomer();
-            pnlActions.Controls.Add(btnEditCustomer);
-
             Button btnClose = new Button
             {
                 Text = "Close",
-                Location = new Point(650, 15),
+                Location = new Point(330, 10),
                 Size = new Size(150, 35),
                 BackColor = Color.LightGray,
                 Cursor = Cursors.Hand
@@ -292,40 +331,6 @@ namespace GreenLife_Organic_Store.Forms
             else
             {
                 MessageBox.Show("Please select a customer to view details.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void AddCustomer()
-        {
-            try
-            {
-                var regForm = new CustomerRegistrationForm();
-                regForm.ShowDialog();
-                LoadCustomers();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error adding customer: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void EditCustomer()
-        {
-            if (_dgvCustomers.SelectedRows.Count > 0)
-            {
-                int customerId = (int)_dgvCustomers.SelectedRows[0].Cells["ID"].Value;
-                var customer = _allCustomers.FirstOrDefault(c => c.ID == customerId);
-
-                if (customer != null)
-                {
-                    var detailsForm = new UserDetailsForm(customer, false);
-                    detailsForm.ShowDialog();
-                    LoadCustomers();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Please select a customer to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
