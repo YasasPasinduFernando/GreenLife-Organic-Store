@@ -103,6 +103,9 @@ namespace GreenLife_Organic_Store.Forms
                 BackColor = Color.White,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            // Add image thumbnail column
+            var imgCol = new DataGridViewImageColumn { Name = "Image", HeaderText = "Image", ImageLayout = DataGridViewImageCellLayout.Zoom, Width = 60 };
+            _dgvProducts.Columns.Add(imgCol);
             _dgvProducts.Columns.Add("ID", "ID");
             _dgvProducts.Columns.Add("ProductName", "Product Name");
             _dgvProducts.Columns.Add("Category", "Category");
@@ -178,7 +181,19 @@ namespace GreenLife_Organic_Store.Forms
 
                 foreach (var product in _allProducts)
                 {
+                    Image? thumb = null;
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(product.ImagePath) && File.Exists(product.ImagePath))
+                        {
+                            using var img = Image.FromFile(product.ImagePath);
+                            thumb = new Bitmap(img, new Size(60, 60));
+                        }
+                    }
+                    catch { }
+
                     _dgvProducts.Rows.Add(
+                        thumb,
                         product.ID,
                         product.ProductName,
                         product.CategoryName,

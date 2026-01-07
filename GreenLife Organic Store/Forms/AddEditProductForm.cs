@@ -1,5 +1,7 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using System.IO;
+using System;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -142,6 +144,16 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(chkActive);
             yPosition += 45;
 
+            // Image selection
+            Label lblImage = new Label { Text = "Image:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
+            PictureBox picPreview = new PictureBox { Name = "picPreview", Location = new Point(120, yPosition), Size = new Size(100, 100), BorderStyle = BorderStyle.FixedSingle, SizeMode = PictureBoxSizeMode.Zoom };
+            Button btnChooseImage = new Button { Name = "btnChooseImage", Text = "Choose Image...", Location = new Point(230, yPosition + 35), Size = new Size(140, 30) };
+            btnChooseImage.Click += BtnChooseImage_Click;
+            this.Controls.Add(lblImage);
+            this.Controls.Add(picPreview);
+            this.Controls.Add(btnChooseImage);
+            yPosition += 110;
+
             // Save button
             Button btnSave = new Button
             {
@@ -258,6 +270,7 @@ namespace GreenLife_Organic_Store.Forms
                     DiscountPrice = numDiscount.Value > 0 ? numDiscount.Value : null,
                     Stock = (int)numStock.Value,
                     Supplier = string.IsNullOrWhiteSpace(txtSupplier.Text) ? null : txtSupplier.Text,
+                ImagePath = ((PictureBox)this.Controls["picPreview"]).Tag as string,
                     IsFeatured = chkFeatured.Checked,
                     IsActive = chkActive.Checked
                 };
@@ -265,6 +278,9 @@ namespace GreenLife_Organic_Store.Forms
                 if (_existingProduct != null)
                 {
                     product.ID = _existingProduct.ID;
+                    // If no new image selected, keep existing path
+                    if (string.IsNullOrWhiteSpace(product.ImagePath))
+                        product.ImagePath = _existingProduct.ImagePath;
                     if (ProductRepository.UpdateProduct(product))
                     {
                         MessageBox.Show("Product updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -283,6 +299,35 @@ namespace GreenLife_Organic_Store.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnChooseImage_Click(object? sender, EventArgs e)
+        {
+            using OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    var imagesDir = Path.Combine(Application.StartupPath, "images");
+                    Directory.CreateDirectory(imagesDir);
+                    var destFileName = Path.Combine(imagesDir, Path.GetFileName(ofd.FileName));
+                    // If file exists, create a unique name
+                    if (File.Exists(destFileName))
+                    {
+                        var unique = Guid.NewGuid().ToString().Split('-')[0];
+                        destFileName = Path.Combine(imagesDir, Path.GetFileNameWithoutExtension(ofd.FileName) + "_" + unique + Path.GetExtension(ofd.FileName));
+                    }
+                    File.Copy(ofd.FileName, destFileName);
+                    var pic = (PictureBox)this.Controls["picPreview"];
+                    pic.ImageLocation = destFileName;
+                    pic.Tag = destFileName; // store path in Tag so it can be saved to DB
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to add image: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

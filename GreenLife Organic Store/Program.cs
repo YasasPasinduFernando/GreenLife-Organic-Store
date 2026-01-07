@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using System.IO;
 using GreenLife_Organic_Store.Forms;
 
 namespace GreenLife_Organic_Store
@@ -17,6 +18,16 @@ namespace GreenLife_Organic_Store
             // Enable visual styles for Windows Forms
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            // Ensure images directory exists for storing uploaded product/category images
+            try
+            {
+                var imagesDir = Path.Combine(Application.StartupPath, "images");
+                Directory.CreateDirectory(imagesDir);
+            }
+            catch
+            {
+                // non-fatal - if we cannot create directory, UI will still allow selecting images but saving may fail
+            }
             
             // Start the login form
             LoginForm loginForm = new LoginForm();

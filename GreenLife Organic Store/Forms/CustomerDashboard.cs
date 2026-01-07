@@ -261,8 +261,22 @@ namespace GreenLife_Organic_Store.Forms
                 BackColor = Color.LightGray,
                 Dock = DockStyle.Top
             };
-            Label lblImage = new Label { Text = "Image", Location = new Point(80, 45), Size = new Size(40, 40), Font = new Font("Arial", 12, FontStyle.Bold) };
-            pnlImage.Controls.Add(lblImage);
+            var pic = new PictureBox { Size = new Size(200, 120), SizeMode = PictureBoxSizeMode.Zoom, Dock = DockStyle.Fill };
+            if (!string.IsNullOrWhiteSpace(product.ImagePath))
+            {
+                try
+                {
+                    if (File.Exists(product.ImagePath))
+                        pic.ImageLocation = product.ImagePath;
+                }
+                catch { }
+            }
+            else
+            {
+                Label lblImage = new Label { Text = "Image", Location = new Point(80, 45), Size = new Size(40, 40), Font = new Font("Arial", 12, FontStyle.Bold) };
+                pnlImage.Controls.Add(lblImage);
+            }
+            pnlImage.Controls.Add(pic);
             pnlCard.Controls.Add(pnlImage);
 
             // Product name
