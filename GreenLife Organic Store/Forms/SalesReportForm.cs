@@ -10,9 +10,11 @@ namespace GreenLife_Organic_Store.Forms
         public SalesReportForm()
         {
             this.Text = "Sales Reports";
-            this.Size = new Size(900, 700);
+            this.Size = new Size(1000, 800);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(245, 245, 245);
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Load += SalesReportForm_Load;
         }
 

@@ -17,17 +17,22 @@ namespace GreenLife_Organic_Store.Reports
                 page.Size = PdfSharpCore.PageSize.A4;
                 var gfx = XGraphics.FromPdfPage(page);
 
-                var fontTitle = new XFont("Arial", 16, XFontStyle.Bold);
+                var fontTitle = new XFont("Arial", 18, XFontStyle.Bold);
                 var fontHeader = new XFont("Arial", 12, XFontStyle.Bold);
                 var fontText = new XFont("Arial", 10, XFontStyle.Regular);
+                var fontSmall = new XFont("Arial", 9, XFontStyle.Regular);
 
                 double x = 40;
                 double y = 40;
 
-                gfx.DrawString(storeName, fontTitle, XBrushes.DarkGreen, new XRect(x, y, page.Width - 80, 20), XStringFormats.TopLeft);
-                y += 30;
-                gfx.DrawString($"Sales Report: {fromDate:dd/MM/yyyy} - {toDate:dd/MM/yyyy}", fontHeader, XBrushes.Black, new XRect(x, y, page.Width - 80, 20), XStringFormats.TopLeft);
-                y += 30;
+                // Header block with subtle line
+                gfx.DrawString(storeName, fontTitle, XBrushes.DarkGreen, new XRect(x, y, page.Width - 80, 24), XStringFormats.TopLeft);
+                y += 26;
+                gfx.DrawString($"Sales Report", fontHeader, XBrushes.Black, new XRect(x, y, 200, 20), XStringFormats.TopLeft);
+                gfx.DrawString($"{fromDate:dd/MM/yyyy} - {toDate:dd/MM/yyyy}", fontSmall, XBrushes.Gray, new XRect(x + 200, y + 2, page.Width - 300, 18), XStringFormats.TopLeft);
+                y += 24;
+                gfx.DrawLine(XPens.LightGray, x, y, page.Width - 40, y);
+                y += 12;
 
                 // Summary
                 gfx.DrawString("Summary", fontHeader, XBrushes.Black, new XRect(x, y, 200, 20), XStringFormats.TopLeft);
@@ -44,13 +49,22 @@ namespace GreenLife_Organic_Store.Reports
                 y += 25;
 
                 // Daily sales
+                // Daily sales - render in two columns if space allows
                 gfx.DrawString("Daily Sales", fontHeader, XBrushes.Black, new XRect(x, y, 200, 20), XStringFormats.TopLeft);
-                y += 20;
+                y += 18;
+                double colX = x;
+                double colWidth = (page.Width - 80) / 2;
+                int col = 0;
                 foreach (var ds in dailySales)
                 {
-                    gfx.DrawString($"{ds.date:dd/MM/yyyy} - Orders: {ds.orders} - Amount: Rs. {ds.amount:N2}", fontText, XBrushes.Black, new XRect(x, y, page.Width - 80, 16), XStringFormats.TopLeft);
-                    y += 14;
-                    if (y > page.Height - 60)
+                    double drawX = x + col * (colWidth + 10);
+                    gfx.DrawString($"{ds.date:dd/MM/yyyy}", fontText, XBrushes.Black, new XRect(drawX, y, colWidth, 14), XStringFormats.TopLeft);
+                    gfx.DrawString($"Orders: {ds.orders}", fontSmall, XBrushes.Gray, new XRect(drawX + 90, y, colWidth - 90, 14), XStringFormats.TopLeft);
+                    gfx.DrawString($"Rs. {ds.amount:N2}", fontSmall, XBrushes.Gray, new XRect(drawX + 160, y, colWidth - 160, 14), XStringFormats.TopLeft);
+                    y += 16;
+                    col = (col + 1) % 2;
+                    if (col == 0) y += 4; // extra spacing after both cols used
+                    if (y > page.Height - 80)
                     {
                         page = document.AddPage();
                         page.Size = PdfSharpCore.PageSize.A4;
@@ -63,11 +77,14 @@ namespace GreenLife_Organic_Store.Reports
                 gfx.DrawString("Top Products", fontHeader, XBrushes.Black, new XRect(x, y, 200, 20), XStringFormats.TopLeft);
                 y += 20;
 
+                // Top products with bold names
                 foreach (var tp in topProducts)
                 {
-                    gfx.DrawString($"{tp.name} - Qty: {tp.qty} - Revenue: Rs. {tp.revenue:N2}", fontText, XBrushes.Black, new XRect(x, y, page.Width - 80, 16), XStringFormats.TopLeft);
-                    y += 14;
-                    if (y > page.Height - 60)
+                    gfx.DrawString(tp.name, fontText, XBrushes.Black, new XRect(x, y, page.Width - 160, 14), XStringFormats.TopLeft);
+                    gfx.DrawString($"Qty: {tp.qty}", fontSmall, XBrushes.Gray, new XRect(x + page.Width - 260, y, 80, 14), XStringFormats.TopLeft);
+                    gfx.DrawString($"Rs. {tp.revenue:N2}", fontSmall, XBrushes.Gray, new XRect(x + page.Width - 180, y, 160, 14), XStringFormats.TopLeft);
+                    y += 16;
+                    if (y > page.Height - 80)
                     {
                         page = document.AddPage();
                         page.Size = PdfSharpCore.PageSize.A4;
