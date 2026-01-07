@@ -59,25 +59,26 @@ namespace GreenLife_Organic_Store.Forms
             // iconLogo
             // 
             iconLogo.BackColor = Color.FromArgb(34, 139, 34);
-            iconLogo.ForeColor = SystemColors.ControlText;
-            iconLogo.IconChar = IconChar.None;
-            iconLogo.IconColor = SystemColors.ControlText;
+            iconLogo.ForeColor = Color.White;
+            iconLogo.IconChar = IconChar.Leaf;
+            iconLogo.IconColor = Color.White;
             iconLogo.IconFont = IconFont.Auto;
-            iconLogo.IconSize = 24;
-            iconLogo.Location = new Point(0, 0);
+            iconLogo.IconSize = 40;
+            iconLogo.Location = new Point(10, 10);
             iconLogo.Margin = new Padding(3, 2, 3, 2);
             iconLogo.Name = "iconLogo";
-            iconLogo.Size = new Size(28, 24);
+            iconLogo.Size = new Size(40, 40);
             iconLogo.TabIndex = 0;
             iconLogo.TabStop = false;
             // 
             // labelWelcome
             // 
             labelWelcome.AutoSize = true;
+            labelWelcome.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             labelWelcome.ForeColor = Color.White;
-            labelWelcome.Location = new Point(52, 15);
+            labelWelcome.Location = new Point(60, 17);
             labelWelcome.Name = "labelWelcome";
-            labelWelcome.Size = new Size(102, 15);
+            labelWelcome.Size = new Size(150, 25);
             labelWelcome.TabIndex = 0;
             labelWelcome.Text = "Welcome, Admin!";
             // 
@@ -104,6 +105,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonRegisterAdmin.IconChar = IconChar.UserPlus;
             buttonRegisterAdmin.IconColor = Color.White;
             buttonRegisterAdmin.IconFont = IconFont.Auto;
+            buttonRegisterAdmin.IconSize = 20;
             buttonRegisterAdmin.Location = new Point(18, 11);
             buttonRegisterAdmin.Margin = new Padding(3, 2, 3, 2);
             buttonRegisterAdmin.Name = "buttonRegisterAdmin";
@@ -112,6 +114,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonRegisterAdmin.Text = "Register Admin";
             buttonRegisterAdmin.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonRegisterAdmin.UseVisualStyleBackColor = false;
+            buttonRegisterAdmin.Cursor = Cursors.Hand;
             // 
             // buttonRegisterCustomer
             // 
@@ -120,39 +123,44 @@ namespace GreenLife_Organic_Store.Forms
             buttonRegisterCustomer.IconChar = IconChar.User;
             buttonRegisterCustomer.IconColor = Color.White;
             buttonRegisterCustomer.IconFont = IconFont.Auto;
+            buttonRegisterCustomer.IconSize = 20;
             buttonRegisterCustomer.Location = new Point(175, 11);
             buttonRegisterCustomer.Margin = new Padding(3, 2, 3, 2);
             buttonRegisterCustomer.Name = "buttonRegisterCustomer";
-            buttonRegisterCustomer.Size = new Size(149, 34);
+            buttonRegisterCustomer.Size = new Size(165, 34);
             buttonRegisterCustomer.TabIndex = 1;
             buttonRegisterCustomer.Text = "Register Customer";
             buttonRegisterCustomer.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonRegisterCustomer.UseVisualStyleBackColor = false;
+            buttonRegisterCustomer.Cursor = Cursors.Hand;
             buttonRegisterCustomer.Click += buttonRegisterCustomer_Click;
             // 
             // buttonViewUsers
             // 
             buttonViewUsers.BackColor = Color.FromArgb(100, 149, 237);
             buttonViewUsers.ForeColor = Color.White;
-            buttonViewUsers.IconChar = IconChar.Refresh;
+            buttonViewUsers.IconChar = IconChar.Sync;
             buttonViewUsers.IconColor = Color.White;
             buttonViewUsers.IconFont = IconFont.Auto;
-            buttonViewUsers.Location = new Point(332, 11);
+            buttonViewUsers.IconSize = 20;
+            buttonViewUsers.Location = new Point(348, 11);
             buttonViewUsers.Margin = new Padding(3, 2, 3, 2);
             buttonViewUsers.Name = "buttonViewUsers";
-            buttonViewUsers.Size = new Size(149, 34);
+            buttonViewUsers.Size = new Size(133, 34);
             buttonViewUsers.TabIndex = 2;
             buttonViewUsers.Text = "Refresh Users";
             buttonViewUsers.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonViewUsers.UseVisualStyleBackColor = false;
+            buttonViewUsers.Cursor = Cursors.Hand;
             // 
             // buttonEditUser
             // 
             buttonEditUser.BackColor = Color.LightBlue;
             buttonEditUser.ForeColor = Color.Black;
             buttonEditUser.IconChar = IconChar.Edit;
-            buttonEditUser.IconColor = Color.White;
+            buttonEditUser.IconColor = Color.Black;
             buttonEditUser.IconFont = IconFont.Auto;
+            buttonEditUser.IconSize = 20;
             buttonEditUser.Location = new Point(18, 56);
             buttonEditUser.Margin = new Padding(3, 2, 3, 2);
             buttonEditUser.Name = "buttonEditUser";
@@ -161,6 +169,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonEditUser.Text = "Edit User";
             buttonEditUser.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonEditUser.UseVisualStyleBackColor = false;
+            buttonEditUser.Cursor = Cursors.Hand;
             // 
             // buttonDeleteUser
             // 
@@ -169,6 +178,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonDeleteUser.IconChar = IconChar.TrashAlt;
             buttonDeleteUser.IconColor = Color.White;
             buttonDeleteUser.IconFont = IconFont.Auto;
+            buttonDeleteUser.IconSize = 20;
             buttonDeleteUser.Location = new Point(175, 56);
             buttonDeleteUser.Margin = new Padding(3, 2, 3, 2);
             buttonDeleteUser.Name = "buttonDeleteUser";
@@ -177,6 +187,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonDeleteUser.Text = "Delete User";
             buttonDeleteUser.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonDeleteUser.UseVisualStyleBackColor = false;
+            buttonDeleteUser.Cursor = Cursors.Hand;
             // 
             // buttonLogout
             // 
@@ -185,19 +196,22 @@ namespace GreenLife_Organic_Store.Forms
             buttonLogout.IconChar = IconChar.SignOutAlt;
             buttonLogout.IconColor = Color.White;
             buttonLogout.IconFont = IconFont.Auto;
-            buttonLogout.Location = new Point(332, 56);
+            buttonLogout.IconSize = 20;
+            buttonLogout.Location = new Point(348, 56);
             buttonLogout.Margin = new Padding(3, 2, 3, 2);
             buttonLogout.Name = "buttonLogout";
-            buttonLogout.Size = new Size(149, 34);
+            buttonLogout.Size = new Size(133, 34);
             buttonLogout.TabIndex = 5;
             buttonLogout.Text = "Logout";
             buttonLogout.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonLogout.UseVisualStyleBackColor = false;
+            buttonLogout.Cursor = Cursors.Hand;
             // 
             // dataGridViewUsers
             // 
             dataGridViewUsers.AllowUserToAddRows = false;
             dataGridViewUsers.AllowUserToDeleteRows = false;
+            dataGridViewUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewUsers.Dock = DockStyle.Fill;
             dataGridViewUsers.Location = new Point(0, 158);
