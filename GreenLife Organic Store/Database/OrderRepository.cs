@@ -174,6 +174,13 @@ namespace GreenLife_Organic_Store.Database
 
             try
             {
+                // Ensure referenced customer exists to avoid foreign key violations
+                var customer = UserRepository.GetUserById(order.CustomerID);
+                if (customer == null)
+                {
+                    throw new Exception($"Cannot create order: customer with ID {order.CustomerID} does not exist.");
+                }
+
                 connection = DatabaseConnection.GetConnection();
                 connection.Open();
                 transaction = connection.BeginTransaction();

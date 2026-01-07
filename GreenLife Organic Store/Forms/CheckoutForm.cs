@@ -290,6 +290,36 @@ namespace GreenLife_Organic_Store.Forms
                 }
 
                 // Save to database
+                // Ensure customer exists in DB. If no logged-in user, attempt to find by email or create a new customer user.
+                if (_currentUser == null || _currentUser.ID == 0)
+                {
+                    // Try to find an existing user by email
+                    var existing = UserRepository.GetUserByEmail(order.CustomerEmail);
+                    if (existing != null)
+                    {
+                        order.CustomerID = existing.ID;
+                    }
+                    else
+                    {
+                        // Create a new customer user with a random password placeholder
+                        var newUser = new User
+                        {
+                            Email = order.CustomerEmail,
+                            Name = order.CustomerName,
+                            Phone = order.CustomerPhone,
+                            Address = order.ShippingAddress,
+                            UserType = UserType.Customer,
+                            Password = Guid.NewGuid().ToString()
+                        };
+
+                        int newUserId = UserRepository.CreateUser(newUser);
+                        if (newUserId <= 0)
+                            throw new Exception("Failed to create customer account for guest checkout.");
+
+                        order.CustomerID = newUserId;
+                    }
+                }
+
                 int orderId = OrderRepository.CreateOrder(order);
 
                 if (orderId > 0)
