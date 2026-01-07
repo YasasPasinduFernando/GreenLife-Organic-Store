@@ -1,6 +1,8 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
 using FontAwesome.Sharp;
+using System.IO;
+using System;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -76,6 +78,9 @@ namespace GreenLife_Organic_Store.Forms
                 BackColor = Color.White,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            // Image thumbnail column
+            var imgCol = new DataGridViewImageColumn { Name = "Image", HeaderText = "Image", ImageLayout = DataGridViewImageCellLayout.Zoom, Width = 60 };
+            dgvCategories.Columns.Add(imgCol);
             dgvCategories.Columns.Add("ID", "ID");
             dgvCategories.Columns.Add("CategoryName", "Category Name");
             dgvCategories.Columns.Add("Description", "Description");
@@ -148,7 +153,18 @@ namespace GreenLife_Organic_Store.Forms
 
                 foreach (var cat in _categories)
                 {
-                    dgv.Rows.Add(cat.ID, cat.CategoryName, cat.Description ?? "", cat.IsActive ? "Active" : "Inactive");
+                    Image? thumb = null;
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(cat.ImagePath) && File.Exists(cat.ImagePath))
+                        {
+                            using var img = Image.FromFile(cat.ImagePath);
+                            thumb = new Bitmap(img, new Size(60, 60));
+                        }
+                    }
+                    catch { }
+
+                    dgv.Rows.Add(thumb, cat.ID, cat.CategoryName, cat.Description ?? "", cat.IsActive ? "Active" : "Inactive");
                 }
             }
             catch (Exception ex)
@@ -174,10 +190,42 @@ namespace GreenLife_Organic_Store.Forms
             Label lblDesc = new Label { Text = "Description:", Location = new Point(10, 60), Size = new Size(120, 20) };
             TextBox txtDesc = new TextBox { Location = new Point(150, 60), Size = new Size(300, 60), Multiline = true };
 
+            // Image selection
+            Label lblImage = new Label { Text = "Image:", Location = new Point(10, 130), Size = new Size(120, 20) };
+            PictureBox picPreview = new PictureBox { Name = "picPreview", Location = new Point(150, 130), Size = new Size(80, 80), BorderStyle = BorderStyle.FixedSingle, SizeMode = PictureBoxSizeMode.Zoom };
+            Button btnChoose = new Button { Text = "Choose Image...", Location = new Point(240, 150), Size = new Size(120, 30) };
+            btnChoose.Click += (s, e) =>
+            {
+                using OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var imagesDir = Path.Combine(Application.StartupPath, "images");
+                        Directory.CreateDirectory(imagesDir);
+                        var destFileName = Path.Combine(imagesDir, Path.GetFileName(ofd.FileName));
+                        if (File.Exists(destFileName))
+                        {
+                            var unique = Guid.NewGuid().ToString().Split('-')[0];
+                            destFileName = Path.Combine(imagesDir, Path.GetFileNameWithoutExtension(ofd.FileName) + "_" + unique + Path.GetExtension(ofd.FileName));
+                        }
+                        File.Copy(ofd.FileName, destFileName);
+                        picPreview.ImageLocation = destFileName;
+                        picPreview.Tag = destFileName;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to add image: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            };
+
             IconButton btnSave = new IconButton
             {
                 Text = "Save",
-                Location = new Point(150, 140),
+                // move below image preview
+                Location = new Point(150, 220),
                 Size = new Size(120, 35),
                 BackColor = Color.Green,
                 ForeColor = Color.White,
@@ -195,6 +243,11 @@ namespace GreenLife_Organic_Store.Forms
                         CategoryName = txtName.Text,
                         Description = txtDesc.Text
                     };
+                    // Check for image from preview
+                    if (form.Controls.Find("picPreview", true).FirstOrDefault() is PictureBox pp && pp.Tag is string imgPath)
+                    {
+                        cat.ImagePath = imgPath;
+                    }
                     CategoryRepository.CreateCategory(cat);
                     MessageBox.Show("Category added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     form.Close();
@@ -209,7 +262,7 @@ namespace GreenLife_Organic_Store.Forms
             IconButton btnCancel = new IconButton
             {
                 Text = "Cancel",
-                Location = new Point(280, 140),
+                Location = new Point(280, 220),
                 Size = new Size(120, 35),
                 BackColor = Color.LightGray,
                 IconChar = IconChar.Times,
@@ -223,6 +276,9 @@ namespace GreenLife_Organic_Store.Forms
             form.Controls.Add(txtName);
             form.Controls.Add(lblDesc);
             form.Controls.Add(txtDesc);
+            form.Controls.Add(lblImage);
+            form.Controls.Add(picPreview);
+            form.Controls.Add(btnChoose);
             form.Controls.Add(btnSave);
             form.Controls.Add(btnCancel);
 
@@ -253,10 +309,44 @@ namespace GreenLife_Organic_Store.Forms
                     Label lblDesc = new Label { Text = "Description:", Location = new Point(10, 60), Size = new Size(120, 20) };
                     TextBox txtDesc = new TextBox { Location = new Point(150, 60), Size = new Size(300, 60), Multiline = true, Text = cat.Description ?? "" };
 
+                    // Image selection for edit
+                    Label lblImage = new Label { Text = "Image:", Location = new Point(10, 130), Size = new Size(120, 20) };
+                    PictureBox picPreview = new PictureBox { Name = "picPreview", Location = new Point(150, 130), Size = new Size(80, 80), BorderStyle = BorderStyle.FixedSingle, SizeMode = PictureBoxSizeMode.Zoom };
+                    if (!string.IsNullOrWhiteSpace(cat.ImagePath) && File.Exists(cat.ImagePath))
+                        picPreview.ImageLocation = cat.ImagePath;
+                    Button btnChoose = new Button { Text = "Choose Image...", Location = new Point(240, 150), Size = new Size(120, 30) };
+                    btnChoose.Click += (s, e) =>
+                    {
+                        using OpenFileDialog ofd = new OpenFileDialog();
+                        ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
+                        if (ofd.ShowDialog() == DialogResult.OK)
+                        {
+                            try
+                            {
+                                var imagesDir = Path.Combine(Application.StartupPath, "images");
+                                Directory.CreateDirectory(imagesDir);
+                                var destFileName = Path.Combine(imagesDir, Path.GetFileName(ofd.FileName));
+                                if (File.Exists(destFileName))
+                                {
+                                    var unique = Guid.NewGuid().ToString().Split('-')[0];
+                                    destFileName = Path.Combine(imagesDir, Path.GetFileNameWithoutExtension(ofd.FileName) + "_" + unique + Path.GetExtension(ofd.FileName));
+                                }
+                                File.Copy(ofd.FileName, destFileName);
+                                picPreview.ImageLocation = destFileName;
+                                picPreview.Tag = destFileName;
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Failed to add image: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    };
+
                     IconButton btnSave = new IconButton
                     {
                         Text = "Update",
-                        Location = new Point(150, 140),
+                        // move below image preview
+                        Location = new Point(150, 220),
                         Size = new Size(120, 35),
                         BackColor = Color.Green,
                         ForeColor = Color.White,
@@ -271,6 +361,9 @@ namespace GreenLife_Organic_Store.Forms
                         {
                             cat.CategoryName = txtName.Text;
                             cat.Description = txtDesc.Text;
+                            // Keep existing image unless new chosen
+                            if (picPreview.Tag is string newImg)
+                                cat.ImagePath = newImg;
                             CategoryRepository.UpdateCategory(cat);
                             MessageBox.Show("Category updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             form.Close();
@@ -285,7 +378,7 @@ namespace GreenLife_Organic_Store.Forms
                     IconButton btnCancel = new IconButton
                     {
                         Text = "Cancel",
-                        Location = new Point(280, 140),
+                        Location = new Point(280, 220),
                         Size = new Size(120, 35),
                         BackColor = Color.LightGray,
                         IconChar = IconChar.Times,
@@ -299,6 +392,10 @@ namespace GreenLife_Organic_Store.Forms
                     form.Controls.Add(txtName);
                     form.Controls.Add(lblDesc);
                     form.Controls.Add(txtDesc);
+                    // Add image controls for edit dialog
+                    form.Controls.Add(lblImage);
+                    form.Controls.Add(picPreview);
+                    form.Controls.Add(btnChoose);
                     form.Controls.Add(btnSave);
                     form.Controls.Add(btnCancel);
 

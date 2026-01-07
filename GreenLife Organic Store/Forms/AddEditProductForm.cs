@@ -146,13 +146,13 @@ namespace GreenLife_Organic_Store.Forms
 
             // Image selection
             Label lblImage = new Label { Text = "Image:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            PictureBox picPreview = new PictureBox { Name = "picPreview", Location = new Point(120, yPosition), Size = new Size(100, 100), BorderStyle = BorderStyle.FixedSingle, SizeMode = PictureBoxSizeMode.Zoom };
-            Button btnChooseImage = new Button { Name = "btnChooseImage", Text = "Choose Image...", Location = new Point(230, yPosition + 35), Size = new Size(140, 30) };
+            PictureBox picPreview = new PictureBox { Name = "picPreview", Location = new Point(120, yPosition), Size = new Size(120, 120), BorderStyle = BorderStyle.FixedSingle, SizeMode = PictureBoxSizeMode.Zoom };
+            Button btnChooseImage = new Button { Name = "btnChooseImage", Text = "Choose Image...", Location = new Point(250, yPosition + 45), Size = new Size(140, 30) };
             btnChooseImage.Click += BtnChooseImage_Click;
             this.Controls.Add(lblImage);
             this.Controls.Add(picPreview);
             this.Controls.Add(btnChooseImage);
-            yPosition += 110;
+            yPosition += 140;
 
             // Save button
             Button btnSave = new Button
@@ -171,7 +171,7 @@ namespace GreenLife_Organic_Store.Forms
             Button btnCancel = new Button
             {
                 Text = "Cancel",
-                Location = new Point(310, yPosition),
+                Location = new Point(310, yPosition + 10),
                 Size = new Size(150, 40),
                 BackColor = Color.LightGray
             };
@@ -221,6 +221,26 @@ namespace GreenLife_Organic_Store.Forms
             txtSupplier.Text = _existingProduct.Supplier ?? "";
             chkFeatured.Checked = _existingProduct.IsFeatured;
             chkActive.Checked = _existingProduct.IsActive;
+
+            // Populate image preview if available
+            try
+            {
+                var pic = (PictureBox)this.Controls["picPreview"];
+                if (!string.IsNullOrWhiteSpace(_existingProduct.ImagePath) && File.Exists(_existingProduct.ImagePath))
+                {
+                    pic.ImageLocation = _existingProduct.ImagePath;
+                    pic.Tag = _existingProduct.ImagePath;
+                }
+                else
+                {
+                    pic.Image = null;
+                    pic.Tag = _existingProduct.ImagePath; // keep path in tag even if missing file so save logic can preserve value
+                }
+            }
+            catch
+            {
+                // ignore if preview not available
+            }
         }
 
         private void InitializeComponent()
