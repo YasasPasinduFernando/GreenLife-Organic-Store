@@ -8,8 +8,8 @@ namespace GreenLife_Organic_Store.Forms
     {
         private List<User> _allCustomers = new();
         private DataGridView _dgvCustomers;
-        private Button _btnEditCustomer;
-        private Button _btnChangePassword;
+        private IconButton _btnEditCustomer;
+        private IconButton _btnChangePassword;
 
         public ManageCustomersForm()
         {
@@ -90,6 +90,7 @@ namespace GreenLife_Organic_Store.Forms
                 Cursor = Cursors.Hand,
                 IconChar = IconChar.Search,
                 IconColor = Color.Black,
+                IconSize = 20,
                 TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnSearch.Click += (s, e) => SearchCustomers(txtSearch.Text);
@@ -104,18 +105,23 @@ namespace GreenLife_Organic_Store.Forms
                 Cursor = Cursors.Hand,
                 IconChar = IconChar.Sync,
                 IconColor = Color.Black,
+                IconSize = 20,
                 TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnRefresh.Click += (s, e) => LoadCustomers();
             pnlToolbar.Controls.Add(btnRefresh);
 
-            Button btnExport = new Button
+            IconButton btnExport = new IconButton
             {
                 Text = "Export to CSV",
                 Location = new Point(440, 10),
                 Size = new Size(120, 30),
                 BackColor = Color.LightGreen,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.FileExport,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnExport.Click += (s, e) => ExportToCSV();
             pnlToolbar.Controls.Add(btnExport);
@@ -131,7 +137,8 @@ namespace GreenLife_Organic_Store.Forms
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White
+                BackColor = Color.White,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
             _dgvCustomers.Columns.Add("ID", "ID");
             _dgvCustomers.Columns.Add("Name", "Customer Name");
@@ -151,57 +158,77 @@ namespace GreenLife_Organic_Store.Forms
                 Padding = new Padding(10)
             };
 
-            Button btnViewDetails = new Button
+            IconButton btnViewDetails = new IconButton
             {
                 Text = "View Details",
                 Location = new Point(10, 10),
                 Size = new Size(150, 35),
                 BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Eye,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnViewDetails.Click += (s, e) => ViewCustomerDetails();
             pnlActions.Controls.Add(btnViewDetails);
 
-            _btnEditCustomer = new Button
+            _btnEditCustomer = new IconButton
             {
                 Text = "Edit",
                 Location = new Point(10, 55),
                 Size = new Size(150, 35),
                 BackColor = Color.LightGreen,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Edit,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             _btnEditCustomer.Click += (s, e) => EditCustomerDetails();
             pnlActions.Controls.Add(_btnEditCustomer);
 
-            _btnChangePassword = new Button
+            _btnChangePassword = new IconButton
             {
                 Text = "Change Password",
                 Location = new Point(170, 55),
                 Size = new Size(150, 35),
                 BackColor = Color.LightSkyBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Key,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             _btnChangePassword.Click += (s, e) => ChangeSelectedCustomerPassword();
             pnlActions.Controls.Add(_btnChangePassword);
 
-            Button btnDeleteAccount = new Button
+            IconButton btnDeleteAccount = new IconButton
             {
                 Text = "Delete Account",
                 Location = new Point(170, 10),
                 Size = new Size(150, 35),
                 BackColor = Color.LightCoral,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.TrashAlt,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnDeleteAccount.Click += (s, e) => DeleteCustomerAccount();
             pnlActions.Controls.Add(btnDeleteAccount);
 
-            Button btnClose = new Button
+            IconButton btnClose = new IconButton
             {
                 Text = "Close",
                 Location = new Point(330, 10),
                 Size = new Size(150, 35),
                 BackColor = Color.LightGray,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Times,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnClose.Click += (s, e) => this.Close();
             pnlActions.Controls.Add(btnClose);
