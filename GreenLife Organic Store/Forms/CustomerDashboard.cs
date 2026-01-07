@@ -1,6 +1,8 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
 using FontAwesome.Sharp;
+using System.IO;
+using System.Linq;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -10,6 +12,7 @@ namespace GreenLife_Organic_Store.Forms
         private List<Product> _allProducts = new();
         private List<Category> _categories = new();
         private FlowLayoutPanel _flpProducts = null!;
+        private FlowLayoutPanel _flpCategories = null!;
         private Label _lblCartCount = null!;
 
         public CustomerDashboard(User customer)
@@ -201,6 +204,18 @@ namespace GreenLife_Organic_Store.Forms
 
             this.Controls.Add(pnlFilter);
 
+            // Categories horizontal panel (shows clickable category cards)
+            _flpCategories = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                Height = 100,
+                AutoSize = false,
+                AutoScroll = true,
+                BackColor = Color.White,
+                Padding = new Padding(10)
+            };
+            this.Controls.Add(_flpCategories);
+
             // Products Flow Panel
             _flpProducts = new FlowLayoutPanel
             {
@@ -225,6 +240,7 @@ namespace GreenLife_Organic_Store.Forms
                     cmbCategory.Items.Add(category.CategoryName);
                 }
 
+                DisplayCategories(_categories);
                 DisplayProducts(_allProducts);
             }
             catch (Exception ex)
@@ -242,6 +258,79 @@ namespace GreenLife_Organic_Store.Forms
                 Panel pnlProduct = CreateProductCard(product);
                 _flpProducts.Controls.Add(pnlProduct);
             }
+        }
+
+        private void DisplayCategories(List<Category> categories)
+        {
+            if (_flpCategories == null) return;
+            _flpCategories.Controls.Clear();
+
+            // Add "All" card
+            var allCard = CreateCategoryCard(null, "All Products");
+            _flpCategories.Controls.Add(allCard);
+
+            foreach (var cat in categories)
+            {
+                var card = CreateCategoryCard(cat, cat.CategoryName);
+                _flpCategories.Controls.Add(card);
+            }
+        }
+
+        private Control CreateCategoryCard(Category? category, string title)
+        {
+            Panel pnl = new Panel
+            {
+                Size = new Size(140, 80),
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(5)
+            };
+
+            PictureBox pic = new PictureBox
+            {
+                Size = new Size(60, 60),
+                Location = new Point(6, 10),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                BorderStyle = BorderStyle.FixedSingle
+            };
+            if (category != null && !string.IsNullOrWhiteSpace(category.ImagePath))
+            {
+                try { if (File.Exists(category.ImagePath)) pic.ImageLocation = category.ImagePath; } catch { }
+            }
+            else
+            {
+                // optional: leave blank
+            }
+
+            Label lbl = new Label
+            {
+                Text = title,
+                Location = new Point(74, 20),
+                Size = new Size(60, 40),
+                Font = new Font("Segoe UI", 8F, FontStyle.Regular),
+                AutoEllipsis = true
+            };
+
+            pnl.Controls.Add(pic);
+            pnl.Controls.Add(lbl);
+
+            pnl.Cursor = Cursors.Hand;
+            EventHandler clickHandler = (s, e) =>
+            {
+                if (category == null)
+                    DisplayProducts(_allProducts);
+                else
+                {
+                    var filtered = _allProducts.Where(p => p.CategoryID == category.ID).ToList();
+                    DisplayProducts(filtered);
+                }
+            };
+
+            pnl.Click += clickHandler;
+            pic.Click += clickHandler;
+            lbl.Click += clickHandler;
+
+            return pnl;
         }
 
         private Panel CreateProductCard(Product product)
