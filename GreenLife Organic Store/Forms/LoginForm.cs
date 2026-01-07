@@ -108,17 +108,17 @@ namespace GreenLife_Organic_Store.Forms
                 {
                     // Verify user type matches selected radio button
                     string selectedUserType = radioButtonAdmin.Checked ? "Admin" : "Customer";
-                    
+
                     if (_currentUser.UserType.ToString() != selectedUserType)
                     {
-                        MessageBox.Show("The selected user type does not match your account. Please select the correct user type.", 
+                        MessageBox.Show("The selected user type does not match your account. Please select the correct user type.",
                             "User Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
                     // Login successful
                     MessageBox.Show($"Welcome, {_currentUser.Name}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    
+
                     // Open appropriate dashboard
                     if (_currentUser.UserType == UserType.Admin)
                     {
@@ -173,9 +173,19 @@ namespace GreenLife_Organic_Store.Forms
             // Test database connection on form load
             if (!DatabaseConnection.TestConnection())
             {
-                MessageBox.Show("Warning: Unable to connect to the database. Please ensure MySQL is running and the database is configured correctly.", 
+                MessageBox.Show("Warning: Unable to connect to the database. Please ensure MySQL is running and the database is configured correctly.",
                     "Database Connection Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void labelTitle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButtonAdmin_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

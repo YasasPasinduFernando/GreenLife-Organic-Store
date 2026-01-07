@@ -31,6 +31,7 @@ namespace GreenLife_Organic_Store.Forms
         private void InitializeComponent()
         {
             panelContainer = new Panel();
+            iconLogo = new IconPictureBox();
             labelTitle = new Label();
             labelEmail = new Label();
             textBoxEmail = new TextBox();
@@ -40,15 +41,14 @@ namespace GreenLife_Organic_Store.Forms
             radioButtonAdmin = new RadioButton();
             radioButtonCustomer = new RadioButton();
             buttonLogin = new IconButton();
-            iconLogo = new IconPictureBox();
-            linkLabelRegister = new LinkLabel();
             labelRegisterPrompt = new Label();
-
+            linkLabelRegister = new LinkLabel();
             panelContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(iconLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)iconLogo).BeginInit();
             SuspendLayout();
-
+            // 
             // panelContainer
+            // 
             panelContainer.BackColor = Color.White;
             panelContainer.Controls.Add(iconLogo);
             panelContainer.Controls.Add(labelTitle);
@@ -64,95 +64,116 @@ namespace GreenLife_Organic_Store.Forms
             panelContainer.Controls.Add(linkLabelRegister);
             panelContainer.Dock = DockStyle.Fill;
             panelContainer.Location = new Point(0, 0);
+            panelContainer.Margin = new Padding(3, 2, 3, 2);
             panelContainer.Name = "panelContainer";
-            panelContainer.Size = new Size(500, 600);
+            panelContainer.Size = new Size(438, 450);
             panelContainer.TabIndex = 0;
-
+            // 
             // iconLogo
+            // 
+            iconLogo.BackColor = Color.Transparent;
+            iconLogo.ForeColor = Color.FromArgb(34, 139, 34);
             iconLogo.IconChar = IconChar.Leaf;
             iconLogo.IconColor = Color.FromArgb(34, 139, 34);
-            iconLogo.Location = new Point(50, 40);
-            iconLogo.Size = new Size(48, 48);
-            iconLogo.BackColor = Color.Transparent;
+            iconLogo.IconFont = IconFont.Auto;
+            iconLogo.IconSize = 36;
+            iconLogo.Location = new Point(44, 30);
+            iconLogo.Margin = new Padding(3, 2, 3, 2);
+            iconLogo.Name = "iconLogo";
+            iconLogo.Size = new Size(42, 36);
+            iconLogo.TabIndex = 0;
             iconLogo.TabStop = false;
-
+            // 
             // labelTitle
+            // 
             labelTitle.AutoSize = true;
             labelTitle.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             labelTitle.ForeColor = Color.FromArgb(34, 139, 34);
-            labelTitle.Location = new Point(108, 48);
+            labelTitle.Location = new Point(92, 29);
             labelTitle.Name = "labelTitle";
-            labelTitle.Size = new Size(210, 37);
+            labelTitle.Size = new Size(219, 37);
             labelTitle.TabIndex = 0;
             labelTitle.Text = "GreenLife Login";
-
+            labelTitle.Click += labelTitle_Click;
+            // 
             // labelEmail
+            // 
             labelEmail.AutoSize = true;
             labelEmail.Font = new Font("Segoe UI", 10F);
-            labelEmail.Location = new Point(50, 130);
+            labelEmail.Location = new Point(44, 95);
             labelEmail.Name = "labelEmail";
-            labelEmail.Size = new Size(52, 19);
+            labelEmail.Size = new Size(44, 19);
             labelEmail.TabIndex = 1;
             labelEmail.Text = "Email:";
-
+            // 
             // textBoxEmail
+            // 
             textBoxEmail.Font = new Font("Segoe UI", 11F);
-            textBoxEmail.Location = new Point(50, 155);
+            textBoxEmail.Location = new Point(44, 116);
+            textBoxEmail.Margin = new Padding(3, 2, 3, 2);
             textBoxEmail.Name = "textBoxEmail";
-            textBoxEmail.Size = new Size(400, 32);
+            textBoxEmail.Size = new Size(350, 27);
             textBoxEmail.TabIndex = 2;
-            textBoxEmail.Padding = new Padding(8, 5, 8, 5);
-
+            // 
             // labelPassword
+            // 
             labelPassword.AutoSize = true;
             labelPassword.Font = new Font("Segoe UI", 10F);
-            labelPassword.Location = new Point(50, 200);
+            labelPassword.Location = new Point(44, 150);
             labelPassword.Name = "labelPassword";
-            labelPassword.Size = new Size(73, 19);
+            labelPassword.Size = new Size(70, 19);
             labelPassword.TabIndex = 3;
             labelPassword.Text = "Password:";
-
+            // 
             // textBoxPassword
+            // 
             textBoxPassword.Font = new Font("Segoe UI", 11F);
-            textBoxPassword.Location = new Point(50, 225);
+            textBoxPassword.Location = new Point(44, 169);
+            textBoxPassword.Margin = new Padding(3, 2, 3, 2);
             textBoxPassword.Name = "textBoxPassword";
-            textBoxPassword.Size = new Size(400, 32);
+            textBoxPassword.Size = new Size(350, 27);
             textBoxPassword.TabIndex = 4;
             textBoxPassword.UseSystemPasswordChar = true;
-            textBoxPassword.Padding = new Padding(8, 5, 8, 5);
-
+            // 
             // labelUserType
+            // 
             labelUserType.AutoSize = true;
             labelUserType.Font = new Font("Segoe UI", 10F);
-            labelUserType.Location = new Point(50, 270);
+            labelUserType.Location = new Point(44, 202);
             labelUserType.Name = "labelUserType";
-            labelUserType.Size = new Size(76, 19);
+            labelUserType.Size = new Size(72, 19);
             labelUserType.TabIndex = 5;
             labelUserType.Text = "User Type:";
-
+            // 
             // radioButtonAdmin
+            // 
             radioButtonAdmin.AutoSize = true;
             radioButtonAdmin.Font = new Font("Segoe UI", 10F);
-            radioButtonAdmin.Location = new Point(50, 295);
+            radioButtonAdmin.Location = new Point(61, 235);
+            radioButtonAdmin.Margin = new Padding(3, 2, 3, 2);
             radioButtonAdmin.Name = "radioButtonAdmin";
-            radioButtonAdmin.Size = new Size(72, 23);
+            radioButtonAdmin.Size = new Size(67, 23);
             radioButtonAdmin.TabIndex = 6;
             radioButtonAdmin.Text = "Admin";
             radioButtonAdmin.UseVisualStyleBackColor = true;
-
+            radioButtonAdmin.CheckedChanged += radioButtonAdmin_CheckedChanged;
+            // 
             // radioButtonCustomer
+            // 
             radioButtonCustomer.AutoSize = true;
             radioButtonCustomer.Checked = true;
             radioButtonCustomer.Font = new Font("Segoe UI", 10F);
-            radioButtonCustomer.Location = new Point(180, 295);
+            radioButtonCustomer.Location = new Point(224, 235);
+            radioButtonCustomer.Margin = new Padding(3, 2, 3, 2);
             radioButtonCustomer.Name = "radioButtonCustomer";
-            radioButtonCustomer.Size = new Size(90, 23);
+            radioButtonCustomer.Size = new Size(87, 23);
             radioButtonCustomer.TabIndex = 7;
             radioButtonCustomer.TabStop = true;
             radioButtonCustomer.Text = "Customer";
             radioButtonCustomer.UseVisualStyleBackColor = true;
-
+            // 
             // buttonLogin
+            // 
             buttonLogin.BackColor = Color.FromArgb(34, 139, 34);
             buttonLogin.Cursor = Cursors.Hand;
             buttonLogin.FlatAppearance.BorderSize = 0;
@@ -163,53 +184,57 @@ namespace GreenLife_Organic_Store.Forms
             buttonLogin.IconColor = Color.White;
             buttonLogin.IconFont = IconFont.Auto;
             buttonLogin.IconSize = 24;
-            buttonLogin.Location = new Point(50, 350);
+            buttonLogin.Location = new Point(44, 282);
+            buttonLogin.Margin = new Padding(3, 2, 3, 2);
             buttonLogin.Name = "buttonLogin";
-            buttonLogin.Size = new Size(400, 50);
+            buttonLogin.Size = new Size(350, 38);
             buttonLogin.TabIndex = 8;
-            buttonLogin.Text = "Login";
+            buttonLogin.Text = "           Login";
             buttonLogin.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonLogin.UseVisualStyleBackColor = false;
             buttonLogin.Click += buttonLogin_Click;
-
+            // 
             // labelRegisterPrompt
+            // 
             labelRegisterPrompt.AutoSize = true;
             labelRegisterPrompt.Font = new Font("Segoe UI", 9.5F);
-            labelRegisterPrompt.Location = new Point(100, 430);
+            labelRegisterPrompt.Location = new Point(85, 361);
             labelRegisterPrompt.Name = "labelRegisterPrompt";
-            labelRegisterPrompt.Size = new Size(179, 17);
+            labelRegisterPrompt.Size = new Size(164, 17);
             labelRegisterPrompt.TabIndex = 9;
             labelRegisterPrompt.Text = "Don't have an account yet?";
-
+            // 
             // linkLabelRegister
+            // 
             linkLabelRegister.AutoSize = true;
             linkLabelRegister.Font = new Font("Segoe UI", 9.5F);
             linkLabelRegister.LinkColor = Color.FromArgb(34, 139, 34);
-            linkLabelRegister.Location = new Point(285, 430);
+            linkLabelRegister.Location = new Point(246, 361);
             linkLabelRegister.Name = "linkLabelRegister";
             linkLabelRegister.Size = new Size(86, 17);
             linkLabelRegister.TabIndex = 10;
             linkLabelRegister.TabStop = true;
             linkLabelRegister.Text = "Register here";
             linkLabelRegister.LinkClicked += linkLabelRegister_LinkClicked;
-
+            // 
             // LoginForm
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(500, 600);
+            ClientSize = new Size(438, 450);
             Controls.Add(panelContainer);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             Name = "LoginForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "GreenLife Organic Store - Login";
             FormClosing += LoginForm_FormClosing;
             Load += LoginForm_Load;
-
             panelContainer.ResumeLayout(false);
             panelContainer.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(iconLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)iconLogo).EndInit();
             ResumeLayout(false);
         }
 
