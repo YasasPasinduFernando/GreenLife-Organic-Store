@@ -12,6 +12,7 @@ namespace GreenLife_Organic_Store.Forms
             this.Size = new Size(900, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(245, 245, 245);
+            this.Load += SalesReportForm_Load;
         }
 
         private void SalesReportForm_Load(object sender, EventArgs e)

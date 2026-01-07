@@ -3,23 +3,34 @@ using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Forms
 {
-    public partial class AdminDashboardEcommerce : Form
+    public class AdminDashboardEcommerce : Form
     {
         private User _currentAdmin;
+        private Dictionary<string, Control> _controls = new();
 
         public AdminDashboardEcommerce(User admin)
         {
             _currentAdmin = admin;
             this.Text = "Admin Dashboard - GreenLife Organic Store";
-            this.Size = new Size(900, 700);
+            this.Size = new Size(1000, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(245, 245, 245);
+            this.Load += AdminDashboardEcommerce_Load;
         }
 
-        private void AdminDashboardEcommerce_Load(object sender, EventArgs e)
+        private void AdminDashboardEcommerce_Load(object? sender, EventArgs? e)
         {
-            InitializeUI();
-            LoadStatistics();
+            try
+            {
+                this.Controls.Clear();
+                _controls.Clear();
+                InitializeUI();
+                LoadStatistics();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}\n\n{ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void InitializeUI()
@@ -42,11 +53,12 @@ namespace GreenLife_Organic_Store.Forms
             Button btnLogout = new Button
             {
                 Text = "Logout",
-                Location = new Point(800, 10),
+                Location = new Point(900, 10),
                 Size = new Size(80, 30),
                 BackColor = Color.Red,
                 ForeColor = Color.White,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Font = new Font("Arial", 10)
             };
             btnLogout.Click += (s, e) => LogoutAdmin();
             pnlHeader.Controls.Add(lblHeader);
@@ -62,10 +74,10 @@ namespace GreenLife_Organic_Store.Forms
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            CreateStatCard(pnlStats, "Total Products", 10, 10, "lblTotalProducts");
-            CreateStatCard(pnlStats, "Pending Orders", 210, 10, "lblPendingOrders");
-            CreateStatCard(pnlStats, "Total Customers", 410, 10, "lblTotalCustomers");
-            CreateStatCard(pnlStats, "Low Stock Items", 610, 10, "lblLowStock");
+            _controls["lblTotalProducts"] = CreateStatCard(pnlStats, "Total Products", 10, 10, "lblTotalProducts");
+            _controls["lblPendingOrders"] = CreateStatCard(pnlStats, "Pending Orders", 210, 10, "lblPendingOrders");
+            _controls["lblTotalCustomers"] = CreateStatCard(pnlStats, "Total Customers", 410, 10, "lblTotalCustomers");
+            _controls["lblLowStock"] = CreateStatCard(pnlStats, "Low Stock Items", 610, 10, "lblLowStock");
 
             this.Controls.Add(pnlStats);
 
@@ -100,7 +112,8 @@ namespace GreenLife_Organic_Store.Forms
                 Text = "Recent Orders (Last 10)",
                 Location = new Point(10, 10),
                 Size = new Size(400, 20),
-                Font = new Font("Arial", 12, FontStyle.Bold)
+                Font = new Font("Arial", 12, FontStyle.Bold),
+                ForeColor = Color.DarkGreen
             };
             pnlRecent.Controls.Add(lblRecent);
 
@@ -108,10 +121,12 @@ namespace GreenLife_Organic_Store.Forms
             {
                 Name = "dgvRecent",
                 Location = new Point(10, 40),
-                Size = new Size(860, 200),
+                Size = new Size(960, 300),
                 ReadOnly = true,
                 AllowUserToAddRows = false,
-                BackColor = Color.White
+                BackColor = Color.White,
+                ForeColor = Color.Black,
+                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.LightGray }
             };
             dgvRecent.Columns.Add("OrderNumber", "Order #");
             dgvRecent.Columns.Add("CustomerName", "Customer");
@@ -119,11 +134,12 @@ namespace GreenLife_Organic_Store.Forms
             dgvRecent.Columns.Add("Amount", "Amount");
             dgvRecent.Columns.Add("Date", "Date");
             pnlRecent.Controls.Add(dgvRecent);
+            _controls["dgvRecent"] = dgvRecent;
 
             this.Controls.Add(pnlRecent);
         }
 
-        private void CreateStatCard(Panel parent, string title, int x, int y, string labelName)
+        private Label CreateStatCard(Panel parent, string title, int x, int y, string labelName)
         {
             Panel card = new Panel
             {
@@ -155,6 +171,8 @@ namespace GreenLife_Organic_Store.Forms
             card.Controls.Add(lblTitle);
             card.Controls.Add(lblValue);
             parent.Controls.Add(card);
+
+            return lblValue;
         }
 
         private void CreateMenuButton(Panel parent, string text, int x, int y, Action onClick)
@@ -165,10 +183,24 @@ namespace GreenLife_Organic_Store.Forms
                 Location = new Point(x, y),
                 Size = new Size(200, 40),
                 BackColor = Color.LightGreen,
+                ForeColor = Color.Black,
                 Font = new Font("Arial", 10, FontStyle.Bold),
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                FlatStyle = FlatStyle.Flat,
+                TabStop = true,
+                TabIndex = parent.Controls.Count
             };
-            btn.Click += (s, e) => onClick();
+            btn.Click += (s, e) =>
+            {
+                try
+                {
+                    onClick();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
             parent.Controls.Add(btn);
         }
 
@@ -182,27 +214,35 @@ namespace GreenLife_Organic_Store.Forms
                 var lowStockProducts = ProductRepository.GetLowStockProducts();
                 var pendingOrders = allOrders.Where(o => o.Status == OrderStatus.Pending).ToList();
 
-                Panel pnlStats = this.Controls[1] as Panel;
-                ((Label)pnlStats.Controls["lblTotalProducts"]).Text = allProducts.Count.ToString();
-                ((Label)pnlStats.Controls["lblPendingOrders"]).Text = pendingOrders.Count.ToString();
-                ((Label)pnlStats.Controls["lblTotalCustomers"]).Text = allUsers.Count(u => u.UserType == UserType.Customer).ToString();
-                ((Label)pnlStats.Controls["lblLowStock"]).Text = lowStockProducts.Count.ToString();
+                // Update stat cards
+                if (_controls.TryGetValue("lblTotalProducts", out var ctrl1) && ctrl1 is Label lbl1)
+                    lbl1.Text = allProducts.Count.ToString();
+
+                if (_controls.TryGetValue("lblPendingOrders", out var ctrl2) && ctrl2 is Label lbl2)
+                    lbl2.Text = pendingOrders.Count.ToString();
+
+                if (_controls.TryGetValue("lblTotalCustomers", out var ctrl3) && ctrl3 is Label lbl3)
+                    lbl3.Text = allUsers.Count(u => u.UserType == UserType.Customer).ToString();
+
+                if (_controls.TryGetValue("lblLowStock", out var ctrl4) && ctrl4 is Label lbl4)
+                    lbl4.Text = lowStockProducts.Count.ToString();
 
                 // Load recent orders
-                Panel pnlRecent = this.Controls[3] as Panel;
-                DataGridView dgvRecent = (DataGridView)pnlRecent.Controls["dgvRecent"];
-                dgvRecent.Rows.Clear();
-
-                var recent = allOrders.OrderByDescending(o => o.OrderDate).Take(10).ToList();
-                foreach (var order in recent)
+                if (_controls.TryGetValue("dgvRecent", out var ctrl5) && ctrl5 is DataGridView dgvRecent)
                 {
-                    dgvRecent.Rows.Add(
-                        order.OrderNumber,
-                        order.CustomerName,
-                        order.GetStatusText(),
-                        order.GetFormattedTotal(),
-                        order.OrderDate.ToString("dd/MM/yyyy")
-                    );
+                    dgvRecent.Rows.Clear();
+
+                    var recent = allOrders.OrderByDescending(o => o.OrderDate).Take(10).ToList();
+                    foreach (var order in recent)
+                    {
+                        dgvRecent.Rows.Add(
+                            order.OrderNumber,
+                            order.CustomerName,
+                            order.GetStatusText(),
+                            order.GetFormattedTotal(),
+                            order.OrderDate.ToString("dd/MM/yyyy")
+                        );
+                    }
                 }
             }
             catch (Exception ex)
@@ -213,35 +253,69 @@ namespace GreenLife_Organic_Store.Forms
 
         private void OpenManageProducts()
         {
-            ManageProductsForm form = new ManageProductsForm();
-            form.ShowDialog();
-            LoadStatistics();
+            try
+            {
+                ManageProductsForm form = new ManageProductsForm();
+                form.ShowDialog();
+                LoadStatistics();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening Manage Products: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OpenManageOrders()
         {
-            ManageOrdersForm form = new ManageOrdersForm();
-            form.ShowDialog();
-            LoadStatistics();
+            try
+            {
+                ManageOrdersForm form = new ManageOrdersForm();
+                form.ShowDialog();
+                LoadStatistics();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening Manage Orders: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OpenManageCategories()
         {
-            ManageCategoriesForm form = new ManageCategoriesForm();
-            form.ShowDialog();
+            try
+            {
+                ManageCategoriesForm form = new ManageCategoriesForm();
+                form.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening Manage Categories: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OpenManageCustomers()
         {
-            var form = new Form { Text = "Manage Customers", Size = new Size(900, 600), StartPosition = FormStartPosition.CenterScreen };
-            MessageBox.Show("Customer management form to be implemented.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            form.ShowDialog();
+            try
+            {
+                ManageCustomersForm form = new ManageCustomersForm();
+                form.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening Manage Customers: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OpenSalesReports()
         {
-            SalesReportForm form = new SalesReportForm();
-            form.ShowDialog();
+            try
+            {
+                SalesReportForm form = new SalesReportForm();
+                form.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening Sales Reports: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LogoutAdmin()

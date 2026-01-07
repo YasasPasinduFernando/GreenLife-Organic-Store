@@ -13,6 +13,7 @@ namespace GreenLife_Organic_Store.Forms
             this.Size = new Size(900, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.Load += ManageOrdersForm_Load;
         }
 
         private void ManageOrdersForm_Load(object sender, EventArgs e)

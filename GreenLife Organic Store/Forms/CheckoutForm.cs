@@ -16,6 +16,7 @@ namespace GreenLife_Organic_Store.Forms
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.Load += CheckoutForm_Load;
         }
 
         public CheckoutForm(User currentUser) : this()
@@ -25,9 +26,16 @@ namespace GreenLife_Organic_Store.Forms
 
         private void CheckoutForm_Load(object sender, EventArgs e)
         {
-            InitializeUI();
-            LoadCustomerInfo();
-            LoadOrderSummary();
+            try
+            {
+                InitializeUI();
+                LoadCustomerInfo();
+                LoadOrderSummary();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading checkout: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void InitializeUI()
@@ -161,41 +169,60 @@ namespace GreenLife_Organic_Store.Forms
 
         private void LoadCustomerInfo()
         {
-            if (_currentUser != null)
+            try
             {
-                TextBox txtName = (TextBox)this.Controls["txtName"];
-                TextBox txtPhone = (TextBox)this.Controls["txtPhone"];
-                TextBox txtEmail = (TextBox)this.Controls["txtEmail"];
-                TextBox txtAddress = (TextBox)this.Controls["txtAddress"];
+                if (_currentUser != null)
+                {
+                    TextBox txtName = this.Controls.Cast<Control>().FirstOrDefault(c => c is TextBox && ((TextBox)c).Name == "txtName") as TextBox;
+                    TextBox txtPhone = this.Controls.Cast<Control>().FirstOrDefault(c => c is TextBox && ((TextBox)c).Name == "txtPhone") as TextBox;
+                    TextBox txtEmail = this.Controls.Cast<Control>().FirstOrDefault(c => c is TextBox && ((TextBox)c).Name == "txtEmail") as TextBox;
+                    TextBox txtAddress = this.Controls.Cast<Control>().FirstOrDefault(c => c is TextBox && ((TextBox)c).Name == "txtAddress") as TextBox;
 
-                txtName.Text = _currentUser.Name;
-                txtPhone.Text = _currentUser.Phone ?? "";
-                txtEmail.Text = _currentUser.Email;
-                txtAddress.Text = _currentUser.Address ?? "";
+                    if (txtName != null) txtName.Text = _currentUser.Name;
+                    if (txtPhone != null) txtPhone.Text = _currentUser.Phone ?? "";
+                    if (txtEmail != null) txtEmail.Text = _currentUser.Email;
+                    if (txtAddress != null) txtAddress.Text = _currentUser.Address ?? "";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading customer info: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void LoadOrderSummary()
         {
-            DataGridView dgvItems = (DataGridView)this.Controls["dgvItems"];
-            dgvItems.Rows.Clear();
-
-            _cartItems = ShoppingCart.Items;
-            _totalAmount = 0;
-
-            foreach (var item in _cartItems)
+            try
             {
-                dgvItems.Rows.Add(
-                    item.Product.ProductName,
-                    item.Quantity,
-                    item.Product.GetFormattedPrice(),
-                    $"Rs. {item.Subtotal:N2}"
-                );
-                _totalAmount += item.Subtotal;
-            }
+                DataGridView dgvItems = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvItems") as DataGridView;
+                Label lblTotal = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "lblTotal") as Label;
 
-            Label lblTotal = (Label)this.Controls["lblTotal"];
-            lblTotal.Text = $"Total Amount: Rs. {_totalAmount:N2}";
+                if (dgvItems != null)
+                {
+                    dgvItems.Rows.Clear();
+
+                    _cartItems = ShoppingCart.Items;
+                    _totalAmount = 0;
+
+                    foreach (var item in _cartItems)
+                    {
+                        dgvItems.Rows.Add(
+                            item.Product.ProductName,
+                            item.Quantity,
+                            item.Product.GetFormattedPrice(),
+                            $"Rs. {item.Subtotal:N2}"
+                        );
+                        _totalAmount += item.Subtotal;
+                    }
+                }
+
+                if (lblTotal != null)
+                    lblTotal.Text = $"Total Amount: Rs. {_totalAmount:N2}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading order summary: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void BtnPlaceOrder_Click(object sender, EventArgs e)

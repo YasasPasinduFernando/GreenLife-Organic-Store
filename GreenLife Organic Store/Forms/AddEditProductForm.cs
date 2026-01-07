@@ -15,6 +15,7 @@ namespace GreenLife_Organic_Store.Forms
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.Load += AddEditProductForm_Load;
         }
 
         public AddEditProductForm(Product product) : this()

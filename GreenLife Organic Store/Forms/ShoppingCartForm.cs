@@ -14,12 +14,20 @@ namespace GreenLife_Organic_Store.Forms
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.Load += ShoppingCartForm_Load;
         }
 
         private void ShoppingCartForm_Load(object sender, EventArgs e)
         {
-            InitializeUI();
-            LoadCartItems();
+            try
+            {
+                InitializeUI();
+                LoadCartItems();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading shopping cart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void InitializeUI()
@@ -120,38 +128,67 @@ namespace GreenLife_Organic_Store.Forms
 
         private void LoadCartItems()
         {
-            DataGridView dgvCart = (DataGridView)this.Controls["dgvCart"];
-            dgvCart.Rows.Clear();
-            _cartItems = ShoppingCart.Items;
-
-            foreach (var item in _cartItems)
+            try
             {
-                dgvCart.Rows.Add(
-                    item.Product.ProductName,
-                    item.Quantity,
-                    item.Product.GetFormattedPrice(),
-                    $"Rs. {item.Subtotal:N2}",
-                    "Remove"
-                );
-            }
+                DataGridView dgvCart = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvCart") as DataGridView;
+                if (dgvCart == null)
+                {
+                    MessageBox.Show("Cart display control not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-            UpdateTotals();
+                dgvCart.Rows.Clear();
+                _cartItems = ShoppingCart.Items;
+
+                foreach (var item in _cartItems)
+                {
+                    dgvCart.Rows.Add(
+                        item.Product.ProductName,
+                        item.Quantity,
+                        item.Product.GetFormattedPrice(),
+                        $"Rs. {item.Subtotal:N2}",
+                        "Remove"
+                    );
+                }
+
+                UpdateTotals();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading cart items: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void UpdateTotals()
         {
-            Label lblTotal = (Label)this.Controls["lblTotal"];
-            Label lblItemCount = (Label)this.Controls["lblItemCount"];
+            try
+            {
+                Label lblTotal = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "lblTotal") as Label;
+                Label lblItemCount = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "lblItemCount") as Label;
 
-            lblTotal.Text = $"Total: {ShoppingCart.Items.Sum(x => x.Product.GetFinalPrice() * x.Quantity):C}";
-            lblItemCount.Text = $"Items: {ShoppingCart.GetItemCount()}";
+                if (lblTotal != null)
+                    lblTotal.Text = $"Total: Rs. {ShoppingCart.Items.Sum(x => x.Product.GetFinalPrice() * x.Quantity):N2}";
+                
+                if (lblItemCount != null)
+                    lblItemCount.Text = $"Items: {ShoppingCart.GetItemCount()}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating totals: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void AdjustQuantity(int adjustment)
         {
-            DataGridView dgvCart = (DataGridView)this.Controls["dgvCart"];
-            if (dgvCart.SelectedRows.Count > 0)
+            try
             {
+                DataGridView dgvCart = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvCart") as DataGridView;
+                if (dgvCart == null || dgvCart.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select an item to adjust quantity.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 int rowIndex = dgvCart.SelectedRows[0].Index;
                 var cartItem = _cartItems[rowIndex];
                 int newQuantity = cartItem.Quantity + adjustment;
@@ -171,6 +208,10 @@ namespace GreenLife_Organic_Store.Forms
                 }
 
                 LoadCartItems();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error adjusting quantity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

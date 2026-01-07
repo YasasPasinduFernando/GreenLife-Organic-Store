@@ -15,6 +15,7 @@ namespace GreenLife_Organic_Store.Forms
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.Load += MyOrdersForm_Load;
         }
 
         public MyOrdersForm(User currentUser) : this()
@@ -24,8 +25,15 @@ namespace GreenLife_Organic_Store.Forms
 
         private void MyOrdersForm_Load(object sender, EventArgs e)
         {
-            InitializeUI();
-            LoadOrders();
+            try
+            {
+                InitializeUI();
+                LoadOrders();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void InitializeUI()
@@ -168,41 +176,58 @@ namespace GreenLife_Organic_Store.Forms
 
         private void CmbStatus_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DataGridView dgvOrders = (DataGridView)this.Controls["dgvOrders"];
-            ComboBox cmbStatus = (ComboBox)this.Controls["cmbStatus"];
-            dgvOrders.Rows.Clear();
-
-            string selectedStatus = cmbStatus.SelectedItem.ToString();
-
-            List<Order> filteredOrders;
-            if (selectedStatus == "All Orders")
+            try
             {
-                filteredOrders = _orders;
+                DataGridView dgvOrders = (DataGridView)this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvOrders");
+                if (dgvOrders == null) return;
+
+                ComboBox cmbStatus = sender as ComboBox;
+                if (cmbStatus == null) return;
+
+                dgvOrders.Rows.Clear();
+
+                string selectedStatus = cmbStatus.SelectedItem?.ToString() ?? "All Orders";
+
+                List<Order> filteredOrders;
+                if (selectedStatus == "All Orders")
+                {
+                    filteredOrders = _orders;
+                }
+                else
+                {
+                    var status = Enum.Parse<OrderStatus>(selectedStatus);
+                    filteredOrders = _orders.Where(o => o.Status == status).ToList();
+                }
+
+                foreach (var order in filteredOrders)
+                {
+                    dgvOrders.Rows.Add(
+                        order.OrderNumber,
+                        order.OrderDate.ToString("dd/MM/yyyy HH:mm"),
+                        order.GetStatusText(),
+                        order.GetFormattedTotal()
+                    );
+                }
             }
-            else
+            catch (Exception ex)
             {
-                var status = Enum.Parse<OrderStatus>(selectedStatus);
-                filteredOrders = _orders.Where(o => o.Status == status).ToList();
-            }
-
-            foreach (var order in filteredOrders)
-            {
-                dgvOrders.Rows.Add(
-                    order.OrderNumber,
-                    order.OrderDate.ToString("dd/MM/yyyy HH:mm"),
-                    order.GetStatusText(),
-                    order.GetFormattedTotal()
-                );
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void BtnViewDetails_Click(object sender, EventArgs e)
         {
-            DataGridView dgvOrders = (DataGridView)this.Controls["dgvOrders"];
-            if (dgvOrders.SelectedRows.Count > 0)
+            try
             {
+                DataGridView dgvOrders = (DataGridView)this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvOrders");
+                if (dgvOrders == null || dgvOrders.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select an order to view details.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 int rowIndex = dgvOrders.SelectedRows[0].Index;
-                string orderNumber = dgvOrders.Rows[rowIndex].Cells["OrderNumber"].Value.ToString();
+                string orderNumber = dgvOrders.Rows[rowIndex].Cells["OrderNumber"].Value?.ToString();
 
                 var selectedOrder = _orders.FirstOrDefault(o => o.OrderNumber == orderNumber);
                 if (selectedOrder != null)
@@ -211,9 +236,9 @@ namespace GreenLife_Organic_Store.Forms
                     detailsForm.ShowDialog();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Please select an order to view details.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
