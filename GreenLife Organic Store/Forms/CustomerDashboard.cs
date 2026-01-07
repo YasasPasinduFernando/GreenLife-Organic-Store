@@ -727,16 +727,67 @@ namespace GreenLife_Organic_Store.Forms
             // Trim any leading ellipsis/dots that may come from source
             var stockText = product.GetStockStatus() ?? string.Empty;
             stockText = stockText.TrimStart('.', ' ', '\u2026');
+
+            // Reserve space for an optional status icon (exclamation or X)
+            int stockY = lblName.Bottom + 4;
+            IconPictureBox stockIcon = new IconPictureBox
+            {
+                Size = new Size(16, 16),
+                Location = new Point(8, stockY + 2),
+                BackColor = Color.Transparent,
+                IconSize = 16,
+                Visible = false
+            };
+
+            // Default label placement; may be moved to the right of the icon when the icon is shown
             lblStock.Text = stockText;
-            // Position stock below the product name using dynamic layout
-            lblStock.Location = new Point(8, lblName.Bottom + 4);
+            lblStock.Location = new Point(8, stockY);
             lblStock.Size = new Size(144, 16);
             lblStock.Font = new Font("Segoe UI", 8.5F);
-            // Neutral gray for stock text
-            lblStock.ForeColor = Color.FromArgb(80, 80, 80);
             lblStock.TextAlign = ContentAlignment.MiddleLeft;
             lblStock.BackColor = Color.Transparent;
             lblStock.AutoSize = false;
+
+            // Determine visual treatment based on numeric stock when available
+            try
+            {
+                if (product.Stock <= 0)
+                {
+                    // Out of stock - bright red with a red X icon
+                    lblStock.Text = "Out of stock";
+                    lblStock.ForeColor = Color.FromArgb(192, 57, 43); // red
+                    stockIcon.IconChar = IconChar.TimesCircle;
+                    stockIcon.IconColor = lblStock.ForeColor;
+                    stockIcon.Visible = true;
+                }
+                else if (product.Stock <= 5)
+                {
+                    // Low stock - less intense warning color with text
+                    lblStock.Text = $"Low stock: {product.Stock}";
+                    lblStock.ForeColor = Color.FromArgb(211, 84, 0); // orange-ish
+                    stockIcon.IconChar = IconChar.ExclamationTriangle;
+                    stockIcon.IconColor = lblStock.ForeColor;
+                    stockIcon.Visible = true;
+                }
+                else
+                {
+                    // Normal stock
+                    lblStock.ForeColor = Color.FromArgb(80, 80, 80);
+                }
+            }
+            catch
+            {
+                // If product.Stock isn't set or any error, fall back to existing text color
+                lblStock.ForeColor = Color.FromArgb(80, 80, 80);
+            }
+
+            // If icon is visible add it and move the label to the right of the icon
+            if (stockIcon.Visible)
+            {
+                pnlCard.Controls.Add(stockIcon);
+                lblStock.Location = new Point(stockIcon.Right + 6, stockIcon.Top - 2);
+            }
+
             pnlCard.Controls.Add(lblStock);
 
             // Price
@@ -759,14 +810,29 @@ namespace GreenLife_Organic_Store.Forms
             btnAdd.Size = new Size(144, 36);
             btnAdd.BackColor = Color.FromArgb(46, 204, 113);
             btnAdd.ForeColor = Color.White;
-            btnAdd.Enabled = product.IsInStock();
+            bool inStock = product.IsInStock();
+            btnAdd.Enabled = inStock;
             btnAdd.Cursor = Cursors.Hand;
             btnAdd.IconChar = IconChar.CartPlus;
             btnAdd.IconColor = Color.White;
             btnAdd.IconSize = 16;
             btnAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnAdd.FlatStyle = FlatStyle.Flat;
-            btnAdd.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            // Base font (bold)
+            var baseBtnFont = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            // If out of stock, show strike-through on the text to indicate unavailable
+            if (!inStock)
+            {
+                btnAdd.Font = new Font(baseBtnFont.FontFamily, baseBtnFont.Size, baseBtnFont.Style | FontStyle.Strikeout);
+                // Gray out the button to indicate disabled state
+                btnAdd.BackColor = Color.FromArgb(189, 195, 199);
+                btnAdd.ForeColor = Color.FromArgb(99, 110, 114);
+                btnAdd.IconColor = Color.FromArgb(99, 110, 114);
+            }
+            else
+            {
+                btnAdd.Font = baseBtnFont;
+            }
             btnAdd.FlatAppearance.BorderSize = 0;
             btnAdd.Click += (s, e) => AddToCart(product);
             pnlCard.Controls.Add(btnAdd);
