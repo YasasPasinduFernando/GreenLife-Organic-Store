@@ -1,6 +1,7 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
 using System.Globalization;
+using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -66,25 +67,33 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(lblToDate);
             this.Controls.Add(dtToDate);
 
-            Button btnGenerate = new Button
+            IconButton btnGenerate = new IconButton
             {
                 Text = "Generate Report",
                 Location = new Point(510, yPosition - 5),
                 Size = new Size(150, 30),
                 BackColor = Color.Green,
                 ForeColor = Color.White,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.ChartBar,
+                IconColor = Color.White,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnGenerate.Click += (s, e) => GenerateReport();
             this.Controls.Add(btnGenerate);
 
-            Button btnExport = new Button
+            IconButton btnExport = new IconButton
             {
                 Text = "Export to CSV",
                 Location = new Point(670, yPosition - 5),
                 Size = new Size(120, 30),
                 BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.FileExport,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnExport.Click += (s, e) => ExportToCSV();
             this.Controls.Add(btnExport);
@@ -223,7 +232,7 @@ namespace GreenLife_Organic_Store.Forms
             DateTimePicker? dtToDate = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dtToDate") as DateTimePicker;
 
             if (cmbReportType == null || dtFromDate == null || dtToDate == null)
-                return; // controls not ready
+                return;
 
             string reportType = cmbReportType.SelectedItem?.ToString() ?? string.Empty;
             DateTime today = DateTime.Now;
@@ -261,7 +270,6 @@ namespace GreenLife_Organic_Store.Forms
                 var orders = OrderRepository.GetOrdersByDateRange(dtFromDate.Value.Date, dtToDate.Value.Date.AddDays(1));
                 var allItems = new List<(string name, int qty, decimal revenue)>();
 
-                // Calculate summary
                 // For sales/totals we consider only completed (Delivered) orders
                 var completedOrderList = orders.Where(o => o.Status == OrderStatus.Delivered).ToList();
                 decimal totalSales = completedOrderList.Sum(o => o.TotalAmount);
@@ -271,7 +279,7 @@ namespace GreenLife_Organic_Store.Forms
                 int pendingOrders = orders.Count(o => o.Status == OrderStatus.Pending);
 
                 // Update summary labels
-                Panel pnlSummary = null;
+                Panel? pnlSummary = null;
                 foreach (var control in this.Controls)
                 {
                     if (control is Panel p && p.BorderStyle == BorderStyle.FixedSingle)
@@ -310,12 +318,12 @@ namespace GreenLife_Organic_Store.Forms
                     }
 
                     var topProduct = allItems.OrderByDescending(x => x.qty).FirstOrDefault();
-                    ((Label)pnlSummary.Controls["lblTopProduct"]).Text = topProduct.name != null ? 
+                    ((Label)pnlSummary.Controls["lblTopProduct"]).Text = !string.IsNullOrEmpty(topProduct.name) ? 
                         $"Top Product: {topProduct.name} ({topProduct.qty} units)" : "Top Product: -";
                 }
 
                 // Load daily sales
-                DataGridView dgvDaily = (DataGridView)this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvDaily") as DataGridView;
+                DataGridView? dgvDaily = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvDaily") as DataGridView;
                 if (dgvDaily != null)
                 {
                     dgvDaily.Rows.Clear();
@@ -332,7 +340,7 @@ namespace GreenLife_Organic_Store.Forms
                 }
 
                 // Load top products
-                DataGridView dgvTopProducts = (DataGridView)this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvTopProducts") as DataGridView;
+                DataGridView? dgvTopProducts = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvTopProducts") as DataGridView;
                 if (dgvTopProducts != null)
                 {
                     dgvTopProducts.Rows.Clear();
@@ -372,7 +380,7 @@ namespace GreenLife_Organic_Store.Forms
                         writer.WriteLine();
 
                         // Write summary
-                        Panel pnlSummary = null;
+                        Panel? pnlSummary = null;
                         foreach (var control in this.Controls)
                         {
                             if (control is Panel p && p.BorderStyle == BorderStyle.FixedSingle)
@@ -391,7 +399,7 @@ namespace GreenLife_Organic_Store.Forms
                         }
 
                         // Write daily sales
-                        DataGridView dgvDaily = (DataGridView)this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvDaily") as DataGridView;
+                        DataGridView? dgvDaily = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvDaily") as DataGridView;
                         if (dgvDaily != null)
                         {
                             writer.WriteLine("Daily Sales");
