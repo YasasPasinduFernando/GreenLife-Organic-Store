@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -41,24 +42,30 @@ namespace GreenLife_Organic_Store.Forms
             };
             pnlToolbar.Controls.Add(txtSearch);
 
-            Button btnSearch = new Button
+            IconButton btnSearch = new IconButton
             {
                 Text = "Search",
                 Location = new Point(220, 10),
                 Size = new Size(100, 30),
                 BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Search,
+                IconColor = Color.Black,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnSearch.Click += (s, e) => SearchCustomers(txtSearch.Text);
             pnlToolbar.Controls.Add(btnSearch);
 
-            Button btnRefresh = new Button
+            IconButton btnRefresh = new IconButton
             {
                 Text = "Refresh",
                 Location = new Point(330, 10),
                 Size = new Size(100, 30),
                 BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Sync,
+                IconColor = Color.Black,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnRefresh.Click += (s, e) => LoadCustomers();
             pnlToolbar.Controls.Add(btnRefresh);

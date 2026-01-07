@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -177,7 +178,15 @@ namespace GreenLife_Organic_Store.Forms
 
         private void CreateMenuButton(Panel parent, string text, int x, int y, Action onClick)
         {
-            Button btn = new Button
+            // Map keywords to FontAwesome icons
+            IconChar icon = IconChar.QuestionCircle;
+            if (text.Contains("Product", StringComparison.OrdinalIgnoreCase)) icon = IconChar.Cubes;
+            else if (text.Contains("Order", StringComparison.OrdinalIgnoreCase)) icon = IconChar.ClipboardList;
+            else if (text.Contains("Category", StringComparison.OrdinalIgnoreCase)) icon = IconChar.Tags;
+            else if (text.Contains("Customer", StringComparison.OrdinalIgnoreCase)) icon = IconChar.Users;
+            else if (text.Contains("Sales", StringComparison.OrdinalIgnoreCase)) icon = IconChar.ChartBar;
+
+            IconButton btn = new IconButton
             {
                 Text = text,
                 Location = new Point(x, y),
@@ -188,7 +197,11 @@ namespace GreenLife_Organic_Store.Forms
                 Cursor = Cursors.Hand,
                 FlatStyle = FlatStyle.Flat,
                 TabStop = true,
-                TabIndex = parent.Controls.Count
+                TabIndex = parent.Controls.Count,
+                IconChar = icon,
+                IconColor = Color.DarkGreen,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btn.Click += (s, e) =>
             {

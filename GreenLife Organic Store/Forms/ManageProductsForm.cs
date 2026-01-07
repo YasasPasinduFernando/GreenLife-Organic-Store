@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -32,14 +33,17 @@ namespace GreenLife_Organic_Store.Forms
                 BackColor = Color.LightGray
             };
 
-            Button btnAdd = new Button
+            IconButton btnAdd = new IconButton
             {
                 Text = "Add New Product",
                 Location = new Point(10, 10),
                 Size = new Size(150, 30),
                 BackColor = Color.Green,
                 ForeColor = Color.White,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Plus,
+                IconColor = Color.White,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnAdd.Click += (s, e) => AddProduct();
             pnlToolbar.Controls.Add(btnAdd);
@@ -53,24 +57,30 @@ namespace GreenLife_Organic_Store.Forms
             };
             pnlToolbar.Controls.Add(txtSearch);
 
-            Button btnSearch = new Button
+            IconButton btnSearch = new IconButton
             {
                 Text = "Search",
                 Location = new Point(380, 10),
                 Size = new Size(100, 30),
                 BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Search,
+                IconColor = Color.Black,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnSearch.Click += (s, e) => SearchProducts(txtSearch.Text);
             pnlToolbar.Controls.Add(btnSearch);
 
-            Button btnRefresh = new Button
+            IconButton btnRefresh = new IconButton
             {
                 Text = "Refresh",
                 Location = new Point(490, 10),
                 Size = new Size(100, 30),
                 BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Sync,
+                IconColor = Color.Black,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnRefresh.Click += (s, e) => LoadProducts();
             pnlToolbar.Controls.Add(btnRefresh);
