@@ -19,7 +19,7 @@ namespace GreenLife_Organic_Store.Forms
 
         private void CustomerDashboard_Load(object sender, EventArgs e)
         {
-            this.Text = "?? GreenLife Organic Store - Shopping";
+            this.Text = "GreenLife Organic Store - Shopping";
             this.Size = new Size(1000, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(245, 245, 245);
@@ -65,20 +65,20 @@ namespace GreenLife_Organic_Store.Forms
 
             Label lblTitle = new Label
             {
-                Text = "?? GreenLife Organic Store",
+                Text = "GreenLife Organic Store",
                 Location = new Point(10, 15),
                 Size = new Size(400, 30),
-                Font = new Font("Arial", 16, FontStyle.Bold),
+                Font = new Font("Segoe UI", 16F, FontStyle.Bold),
                 ForeColor = Color.White
             };
             pnlHeader.Controls.Add(lblTitle);
 
             _lblCartCount = new Label
             {
-                Text = "?? Cart: 0",
+                Text = "Cart: 0",
                 Location = new Point(600, 15),
                 Size = new Size(150, 30),
-                Font = new Font("Arial", 11, FontStyle.Bold),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand
             };
@@ -87,10 +87,11 @@ namespace GreenLife_Organic_Store.Forms
 
             Button btnProfile = new Button
             {
-                Text = "?? Profile",
+                Text = "Profile",
                 Location = new Point(780, 15),
                 Size = new Size(100, 30),
                 BackColor = Color.LightBlue,
+                Font = new Font("Segoe UI", 10F),
                 Cursor = Cursors.Hand
             };
             btnProfile.Click += (s, e) => ShowProfile();
@@ -120,10 +121,11 @@ namespace GreenLife_Organic_Store.Forms
 
             Label lblSearch = new Label { Text = "Search:", Location = new Point(10, 10), Size = new Size(60, 20) };
             TextBox txtSearch = new TextBox { Name = "txtSearch", Location = new Point(80, 10), Size = new Size(200, 25) };
-            Button btnSearch = new Button { Text = "??", Location = new Point(290, 10), Size = new Size(50, 25), BackColor = Color.LightGreen };
+            Button btnSearch = new Button { Text = "Search", Location = new Point(290, 10), Size = new Size(70, 25), BackColor = Color.LightGreen };
             btnSearch.Click += (s, e) => SearchProducts(txtSearch.Text);
             pnlFilter.Controls.Add(lblSearch);
             pnlFilter.Controls.Add(txtSearch);
+            btnSearch.Font = new Font("Segoe UI", 9F);
             pnlFilter.Controls.Add(btnSearch);
 
             Label lblCategory = new Label { Text = "Category:", Location = new Point(360, 10), Size = new Size(70, 20) };
@@ -230,7 +232,7 @@ namespace GreenLife_Organic_Store.Forms
                 BackColor = Color.LightGray,
                 Dock = DockStyle.Top
             };
-            Label lblImage = new Label { Text = "??", Location = new Point(80, 45), Size = new Size(40, 40), Font = new Font("Arial", 24) };
+            Label lblImage = new Label { Text = "Image", Location = new Point(80, 45), Size = new Size(40, 40), Font = new Font("Arial", 12, FontStyle.Bold) };
             pnlImage.Controls.Add(lblImage);
             pnlCard.Controls.Add(pnlImage);
 
@@ -311,7 +313,7 @@ namespace GreenLife_Organic_Store.Forms
                 try
                 {
                     int dbCount = GreenLife_Organic_Store.Database.CartRepository.GetCartItemCount(_currentCustomer.ID);
-                    _lblCartCount.Text = $"?? Cart: {dbCount}";
+                    _lblCartCount.Text = $"Cart: {dbCount}";
                     return;
                 }
                 catch
@@ -320,7 +322,7 @@ namespace GreenLife_Organic_Store.Forms
                 }
             }
 
-            _lblCartCount.Text = $"?? Cart: {ShoppingCart.GetItemCount()}";
+            _lblCartCount.Text = $"Cart: {ShoppingCart.GetItemCount()}";
         }
 
         private void ShowCart()
