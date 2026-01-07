@@ -81,8 +81,7 @@ namespace GreenLife_Organic_Store.Forms
             DataGridView dgvProducts = new DataGridView
             {
                 Name = "dgvProducts",
-                Dock = DockStyle.Top,
-                Height = 350,
+                Dock = DockStyle.Fill,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
@@ -99,8 +98,9 @@ namespace GreenLife_Organic_Store.Forms
             // Action Buttons
             Panel pnlActions = new Panel
             {
-                Dock = DockStyle.Fill,
-                BackColor = Color.White,
+                Dock = DockStyle.Bottom,
+                Height = 50,
+                BackColor = Color.WhiteSmoke,
                 Padding = new Padding(10)
             };
 
@@ -108,7 +108,7 @@ namespace GreenLife_Organic_Store.Forms
             {
                 Text = "Edit Product",
                 Location = new Point(10, 10),
-                Size = new Size(150, 35),
+                Size = new Size(130, 30),
                 BackColor = Color.LightBlue,
                 Cursor = Cursors.Hand
             };
@@ -118,8 +118,8 @@ namespace GreenLife_Organic_Store.Forms
             Button btnDelete = new Button
             {
                 Text = "Delete Product",
-                Location = new Point(170, 10),
-                Size = new Size(150, 35),
+                Location = new Point(150, 10),
+                Size = new Size(130, 30),
                 BackColor = Color.LightCoral,
                 Cursor = Cursors.Hand
             };
@@ -129,8 +129,8 @@ namespace GreenLife_Organic_Store.Forms
             Button btnClose = new Button
             {
                 Text = "Close",
-                Location = new Point(330, 10),
-                Size = new Size(150, 35),
+                Location = new Point(290, 10),
+                Size = new Size(100, 30),
                 BackColor = Color.LightGray,
                 Cursor = Cursors.Hand
             };

@@ -59,8 +59,7 @@ namespace GreenLife_Organic_Store.Forms
             DataGridView dgvCategories = new DataGridView
             {
                 Name = "dgvCategories",
-                Dock = DockStyle.Top,
-                Height = 300,
+                Dock = DockStyle.Fill,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
@@ -74,8 +73,9 @@ namespace GreenLife_Organic_Store.Forms
 
             Panel pnlActions = new Panel
             {
-                Dock = DockStyle.Fill,
-                BackColor = Color.White,
+                Dock = DockStyle.Bottom,
+                Height = 50,
+                BackColor = Color.WhiteSmoke,
                 Padding = new Padding(10)
             };
 
@@ -83,7 +83,7 @@ namespace GreenLife_Organic_Store.Forms
             {
                 Text = "Edit",
                 Location = new Point(10, 10),
-                Size = new Size(120, 35),
+                Size = new Size(100, 30),
                 BackColor = Color.LightBlue,
                 Cursor = Cursors.Hand
             };
@@ -93,8 +93,8 @@ namespace GreenLife_Organic_Store.Forms
             Button btnDelete = new Button
             {
                 Text = "Delete",
-                Location = new Point(140, 10),
-                Size = new Size(120, 35),
+                Location = new Point(120, 10),
+                Size = new Size(100, 30),
                 BackColor = Color.LightCoral,
                 Cursor = Cursors.Hand
             };
@@ -104,8 +104,8 @@ namespace GreenLife_Organic_Store.Forms
             Button btnClose = new Button
             {
                 Text = "Close",
-                Location = new Point(270, 10),
-                Size = new Size(120, 35),
+                Location = new Point(230, 10),
+                Size = new Size(100, 30),
                 BackColor = Color.LightGray,
                 Cursor = Cursors.Hand
             };
@@ -265,6 +265,10 @@ namespace GreenLife_Organic_Store.Forms
 
                     form.ShowDialog();
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please select a category to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
