@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -31,25 +32,33 @@ namespace GreenLife_Organic_Store.Forms
                 BackColor = Color.LightGray
             };
 
-            Button btnAdd = new Button
+            IconButton btnAdd = new IconButton
             {
                 Text = "Add Category",
                 Location = new Point(10, 10),
                 Size = new Size(150, 30),
                 BackColor = Color.Green,
                 ForeColor = Color.White,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Plus,
+                IconColor = Color.White,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnAdd.Click += (s, e) => AddCategory();
             pnlToolbar.Controls.Add(btnAdd);
 
-            Button btnRefresh = new Button
+            IconButton btnRefresh = new IconButton
             {
                 Text = "Refresh",
                 Location = new Point(170, 10),
                 Size = new Size(100, 30),
                 BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Sync,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnRefresh.Click += (s, e) => LoadCategories();
             pnlToolbar.Controls.Add(btnRefresh);
@@ -59,11 +68,13 @@ namespace GreenLife_Organic_Store.Forms
             DataGridView dgvCategories = new DataGridView
             {
                 Name = "dgvCategories",
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Top,
+                Height = 300,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White
+                BackColor = Color.White,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
             dgvCategories.Columns.Add("ID", "ID");
             dgvCategories.Columns.Add("CategoryName", "Category Name");
@@ -73,41 +84,53 @@ namespace GreenLife_Organic_Store.Forms
 
             Panel pnlActions = new Panel
             {
-                Dock = DockStyle.Bottom,
+                Dock = DockStyle.Top,
                 Height = 50,
                 BackColor = Color.WhiteSmoke,
                 Padding = new Padding(10)
             };
 
-            Button btnEdit = new Button
+            IconButton btnEdit = new IconButton
             {
                 Text = "Edit",
                 Location = new Point(10, 10),
                 Size = new Size(100, 30),
                 BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Edit,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnEdit.Click += (s, e) => EditCategory();
             pnlActions.Controls.Add(btnEdit);
 
-            Button btnDelete = new Button
+            IconButton btnDelete = new IconButton
             {
                 Text = "Delete",
                 Location = new Point(120, 10),
                 Size = new Size(100, 30),
                 BackColor = Color.LightCoral,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.TrashAlt,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnDelete.Click += (s, e) => DeleteCategory();
             pnlActions.Controls.Add(btnDelete);
 
-            Button btnClose = new Button
+            IconButton btnClose = new IconButton
             {
                 Text = "Close",
                 Location = new Point(230, 10),
                 Size = new Size(100, 30),
                 BackColor = Color.LightGray,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Times,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnClose.Click += (s, e) => this.Close();
             pnlActions.Controls.Add(btnClose);
@@ -151,13 +174,17 @@ namespace GreenLife_Organic_Store.Forms
             Label lblDesc = new Label { Text = "Description:", Location = new Point(10, 60), Size = new Size(120, 20) };
             TextBox txtDesc = new TextBox { Location = new Point(150, 60), Size = new Size(300, 60), Multiline = true };
 
-            Button btnSave = new Button
+            IconButton btnSave = new IconButton
             {
                 Text = "Save",
                 Location = new Point(150, 140),
                 Size = new Size(120, 35),
                 BackColor = Color.Green,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                IconChar = IconChar.Save,
+                IconColor = Color.White,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnSave.Click += (s, e) =>
             {
@@ -179,12 +206,16 @@ namespace GreenLife_Organic_Store.Forms
                 }
             };
 
-            Button btnCancel = new Button
+            IconButton btnCancel = new IconButton
             {
                 Text = "Cancel",
                 Location = new Point(280, 140),
                 Size = new Size(120, 35),
-                BackColor = Color.LightGray
+                BackColor = Color.LightGray,
+                IconChar = IconChar.Times,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnCancel.Click += (s, e) => form.Close();
 
@@ -222,13 +253,17 @@ namespace GreenLife_Organic_Store.Forms
                     Label lblDesc = new Label { Text = "Description:", Location = new Point(10, 60), Size = new Size(120, 20) };
                     TextBox txtDesc = new TextBox { Location = new Point(150, 60), Size = new Size(300, 60), Multiline = true, Text = cat.Description ?? "" };
 
-                    Button btnSave = new Button
+                    IconButton btnSave = new IconButton
                     {
                         Text = "Update",
                         Location = new Point(150, 140),
                         Size = new Size(120, 35),
                         BackColor = Color.Green,
-                        ForeColor = Color.White
+                        ForeColor = Color.White,
+                        IconChar = IconChar.Save,
+                        IconColor = Color.White,
+                        IconSize = 20,
+                        TextImageRelation = TextImageRelation.ImageBeforeText
                     };
                     btnSave.Click += (s, e) =>
                     {
@@ -247,12 +282,16 @@ namespace GreenLife_Organic_Store.Forms
                         }
                     };
 
-                    Button btnCancel = new Button
+                    IconButton btnCancel = new IconButton
                     {
                         Text = "Cancel",
                         Location = new Point(280, 140),
                         Size = new Size(120, 35),
-                        BackColor = Color.LightGray
+                        BackColor = Color.LightGray,
+                        IconChar = IconChar.Times,
+                        IconColor = Color.Black,
+                        IconSize = 20,
+                        TextImageRelation = TextImageRelation.ImageBeforeText
                     };
                     btnCancel.Click += (s, e) => form.Close();
 

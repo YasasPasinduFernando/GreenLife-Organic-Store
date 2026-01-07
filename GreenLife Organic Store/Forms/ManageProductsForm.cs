@@ -7,6 +7,7 @@ namespace GreenLife_Organic_Store.Forms
     public partial class ManageProductsForm : Form
     {
         private List<Product> _allProducts = new();
+        private DataGridView _dgvProducts;
 
         public ManageProductsForm()
         {
@@ -43,6 +44,7 @@ namespace GreenLife_Organic_Store.Forms
                 Cursor = Cursors.Hand,
                 IconChar = IconChar.Plus,
                 IconColor = Color.White,
+                IconSize = 20,
                 TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnAdd.Click += (s, e) => AddProduct();
@@ -66,6 +68,7 @@ namespace GreenLife_Organic_Store.Forms
                 Cursor = Cursors.Hand,
                 IconChar = IconChar.Search,
                 IconColor = Color.Black,
+                IconSize = 20,
                 TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnSearch.Click += (s, e) => SearchProducts(txtSearch.Text);
@@ -80,6 +83,7 @@ namespace GreenLife_Organic_Store.Forms
                 Cursor = Cursors.Hand,
                 IconChar = IconChar.Sync,
                 IconColor = Color.Black,
+                IconSize = 20,
                 TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnRefresh.Click += (s, e) => LoadProducts();
@@ -88,61 +92,76 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(pnlToolbar);
 
             // DataGridView
-            DataGridView dgvProducts = new DataGridView
+            _dgvProducts = new DataGridView
             {
                 Name = "dgvProducts",
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Top,
+                Height = 400,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White
+                BackColor = Color.White,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
-            dgvProducts.Columns.Add("ID", "ID");
-            dgvProducts.Columns.Add("ProductName", "Product Name");
-            dgvProducts.Columns.Add("Category", "Category");
-            dgvProducts.Columns.Add("Price", "Price");
-            dgvProducts.Columns.Add("Stock", "Stock");
-            dgvProducts.Columns.Add("Status", "Status");
-            this.Controls.Add(dgvProducts);
+            _dgvProducts.Columns.Add("ID", "ID");
+            _dgvProducts.Columns.Add("ProductName", "Product Name");
+            _dgvProducts.Columns.Add("Category", "Category");
+            _dgvProducts.Columns.Add("Price", "Price");
+            _dgvProducts.Columns.Add("Stock", "Stock");
+            _dgvProducts.Columns.Add("Status", "Status");
+            _dgvProducts.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) EditSelectedProduct(); };
+            this.Controls.Add(_dgvProducts);
 
             // Action Buttons
             Panel pnlActions = new Panel
             {
-                Dock = DockStyle.Bottom,
+                Dock = DockStyle.Top,
                 Height = 50,
                 BackColor = Color.WhiteSmoke,
                 Padding = new Padding(10)
             };
 
-            Button btnEdit = new Button
+            IconButton btnEdit = new IconButton
             {
                 Text = "Edit Product",
                 Location = new Point(10, 10),
                 Size = new Size(130, 30),
                 BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Edit,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnEdit.Click += (s, e) => EditSelectedProduct();
             pnlActions.Controls.Add(btnEdit);
 
-            Button btnDelete = new Button
+            IconButton btnDelete = new IconButton
             {
                 Text = "Delete Product",
                 Location = new Point(150, 10),
                 Size = new Size(130, 30),
                 BackColor = Color.LightCoral,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.TrashAlt,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnDelete.Click += (s, e) => DeleteSelectedProduct();
             pnlActions.Controls.Add(btnDelete);
 
-            Button btnClose = new Button
+            IconButton btnClose = new IconButton
             {
                 Text = "Close",
                 Location = new Point(290, 10),
                 Size = new Size(100, 30),
                 BackColor = Color.LightGray,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                IconChar = IconChar.Times,
+                IconColor = Color.Black,
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText
             };
             btnClose.Click += (s, e) => this.Close();
             pnlActions.Controls.Add(btnClose);
@@ -155,12 +174,11 @@ namespace GreenLife_Organic_Store.Forms
             try
             {
                 _allProducts = ProductRepository.GetAllProducts();
-                DataGridView dgvProducts = (DataGridView)this.Controls[1];
-                dgvProducts.Rows.Clear();
+                _dgvProducts.Rows.Clear();
 
                 foreach (var product in _allProducts)
                 {
-                    dgvProducts.Rows.Add(
+                    _dgvProducts.Rows.Add(
                         product.ID,
                         product.ProductName,
                         product.CategoryName,
@@ -179,12 +197,11 @@ namespace GreenLife_Organic_Store.Forms
         private void SearchProducts(string searchTerm)
         {
             var results = ProductRepository.SearchProducts(searchTerm);
-            DataGridView dgvProducts = (DataGridView)this.Controls[1];
-            dgvProducts.Rows.Clear();
+            _dgvProducts.Rows.Clear();
 
             foreach (var product in results)
             {
-                dgvProducts.Rows.Add(
+                _dgvProducts.Rows.Add(
                     product.ID,
                     product.ProductName,
                     product.CategoryName,
@@ -206,10 +223,9 @@ namespace GreenLife_Organic_Store.Forms
 
         private void EditSelectedProduct()
         {
-            DataGridView dgvProducts = (DataGridView)this.Controls[1];
-            if (dgvProducts.SelectedRows.Count > 0)
+            if (_dgvProducts.SelectedRows.Count > 0)
             {
-                int productId = (int)dgvProducts.SelectedRows[0].Cells["ID"].Value;
+                int productId = (int)_dgvProducts.SelectedRows[0].Cells["ID"].Value;
                 var product = _allProducts.FirstOrDefault(p => p.ID == productId);
                 if (product != null)
                 {
@@ -228,10 +244,9 @@ namespace GreenLife_Organic_Store.Forms
 
         private void DeleteSelectedProduct()
         {
-            DataGridView dgvProducts = (DataGridView)this.Controls[1];
-            if (dgvProducts.SelectedRows.Count > 0)
+            if (_dgvProducts.SelectedRows.Count > 0)
             {
-                int productId = (int)dgvProducts.SelectedRows[0].Cells["ID"].Value;
+                int productId = (int)_dgvProducts.SelectedRows[0].Cells["ID"].Value;
                 if (MessageBox.Show("Are you sure you want to delete this product?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     try
