@@ -25,6 +25,21 @@ CREATE TABLE IF NOT EXISTS Users (
     INDEX idx_createddate (CreatedDate)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- CartItems Table (store user cart between sessions)
+CREATE TABLE IF NOT EXISTS CartItems (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    UserID INT NOT NULL,
+    ProductID INT NOT NULL,
+    Quantity INT NOT NULL DEFAULT 1,
+    CreatedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedDate DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES Users(ID) ON DELETE CASCADE,
+    FOREIGN KEY (ProductID) REFERENCES Products(ID) ON DELETE CASCADE,
+    UNIQUE KEY ux_user_product (UserID, ProductID),
+    INDEX idx_user (UserID),
+    INDEX idx_product (ProductID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Categories Table
 CREATE TABLE IF NOT EXISTS Categories (
     ID INT PRIMARY KEY AUTO_INCREMENT,

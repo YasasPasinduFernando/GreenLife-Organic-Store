@@ -325,6 +325,18 @@ namespace GreenLife_Organic_Store.Forms
                 if (orderId > 0)
                 {
                     ShoppingCart.Clear();
+                    // Clear DB cart for logged-in user
+                    try
+                    {
+                        if (_currentUser != null && _currentUser.ID > 0)
+                        {
+                            GreenLife_Organic_Store.Database.CartRepository.ClearCart(_currentUser.ID);
+                        }
+                    }
+                    catch
+                    {
+                        // non-fatal
+                    }
                     MessageBox.Show(
                         $"Order placed successfully!\nOrder Number: {order.OrderNumber}\n\nTotal: Rs. {_totalAmount:N2}",
                         "Order Confirmed",

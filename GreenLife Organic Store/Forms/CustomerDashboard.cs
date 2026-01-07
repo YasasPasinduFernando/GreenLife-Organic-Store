@@ -26,6 +26,31 @@ namespace GreenLife_Organic_Store.Forms
 
             InitializeUI();
             LoadData();
+            // If logged in user, load DB cart into in-memory cart so shopping cart UI reflects DB
+            try
+            {
+                if (_currentCustomer != null && _currentCustomer.ID > 0)
+                {
+                    var dbItems = GreenLife_Organic_Store.Database.CartRepository.GetCartItems(_currentCustomer.ID);
+                    foreach (var kv in dbItems)
+                    {
+                        var product = ProductRepository.GetProductById(kv.Key);
+                        if (product != null)
+                        {
+                            // ensure in-memory quantity matches DB
+                            int existing = ShoppingCart.GetProductQuantity(product.ID);
+                            int toAdd = kv.Value - existing;
+                            if (toAdd > 0)
+                                ShoppingCart.AddItem(product, toAdd);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // non-fatal
+            }
+            UpdateCartCount();
         }
 
         private void InitializeUI()
@@ -262,12 +287,39 @@ namespace GreenLife_Organic_Store.Forms
         private void AddToCart(Product product)
         {
             ShoppingCart.AddItem(product, 1);
+            // Persist to DB if user is logged in
+            if (_currentCustomer != null && _currentCustomer.ID > 0)
+                    {
+                        try
+                        {
+                            GreenLife_Organic_Store.Database.CartRepository.AddOrUpdateCartItem(_currentCustomer.ID, product.ID, 1);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log or show non-blocking error
+                            MessageBox.Show($"Warning: failed saving cart to database: {ex.Message}", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
             UpdateCartCount();
             MessageBox.Show($"{product.ProductName} added to cart!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void UpdateCartCount()
         {
+            if (_currentCustomer != null && _currentCustomer.ID > 0)
+            {
+                try
+                {
+                    int dbCount = GreenLife_Organic_Store.Database.CartRepository.GetCartItemCount(_currentCustomer.ID);
+                    _lblCartCount.Text = $"?? Cart: {dbCount}";
+                    return;
+                }
+                catch
+                {
+                    // fallback to in-memory count on error
+                }
+            }
+
             _lblCartCount.Text = $"?? Cart: {ShoppingCart.GetItemCount()}";
         }
 
