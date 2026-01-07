@@ -673,25 +673,26 @@ namespace GreenLife_Organic_Store.Forms
         private Panel CreateProductCard(Product product)
         {
             Panel pnlCard = new Panel();
-            pnlCard.Size = new Size(180, 270);
+            // Reduced width/height so more product cards fit per row
+            pnlCard.Size = new Size(160, 250);
             pnlCard.BorderStyle = BorderStyle.None;
             pnlCard.BackColor = Color.White;
             pnlCard.Margin = new Padding(6);
 
             // Shadow effect
             Panel shadowPanel = new Panel();
-            shadowPanel.Size = new Size(180, 270);
+            shadowPanel.Size = new Size(160, 250);
             shadowPanel.BackColor = Color.FromArgb(220, 220, 220);
             shadowPanel.Location = new Point(3, 3);
 
             // Product image
             Panel pnlImage = new Panel();
-            pnlImage.Size = new Size(180, 110);
+            pnlImage.Size = new Size(160, 100);
             pnlImage.BackColor = Color.FromArgb(250, 250, 250);
             pnlImage.Dock = DockStyle.Top;
             
             var pic = new PictureBox();
-            pic.Size = new Size(180, 110);
+            pic.Size = new Size(160, 100);
             pic.SizeMode = PictureBoxSizeMode.Zoom;
             pic.Dock = DockStyle.Fill;
             pic.BackColor = Color.FromArgb(250, 250, 250);
@@ -712,37 +713,50 @@ namespace GreenLife_Organic_Store.Forms
             Label lblName = new Label
             {
                 Text = product.ProductName,
-                Location = new Point(10, 135),
-                Size = new Size(180, 40),
+                Location = new Point(8, 120),
+                Size = new Size(144, 36),
                 Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
-                AutoSize = false
+                AutoSize = false,
+                BackColor = Color.Transparent
             };
             pnlCard.Controls.Add(lblName);
 
             // Stock status
             Label lblStock = new Label();
-            lblStock.Text = product.GetStockStatus();
-            lblStock.Location = new Point(10, 152);
-            lblStock.Size = new Size(160, 18);
+            // Trim any leading ellipsis/dots that may come from source
+            var stockText = product.GetStockStatus() ?? string.Empty;
+            stockText = stockText.TrimStart('.', ' ', '\u2026');
+            lblStock.Text = stockText;
+            // Position stock below the product name using dynamic layout
+            lblStock.Location = new Point(8, lblName.Bottom + 4);
+            lblStock.Size = new Size(144, 16);
             lblStock.Font = new Font("Segoe UI", 8.5F);
-            lblStock.ForeColor = product.IsInStock() ? Color.FromArgb(46, 204, 113) : Color.FromArgb(231, 76, 60);
+            // Neutral gray for stock text
+            lblStock.ForeColor = Color.FromArgb(80, 80, 80);
+            lblStock.TextAlign = ContentAlignment.MiddleLeft;
+            lblStock.BackColor = Color.Transparent;
+            lblStock.AutoSize = false;
             pnlCard.Controls.Add(lblStock);
 
             // Price
             Label lblPrice = new Label();
             lblPrice.Text = product.GetFormattedPrice();
-            lblPrice.Location = new Point(10, 168);
-            lblPrice.Size = new Size(160, 26);
+            // Place price below stock to avoid overlap
+            lblPrice.Location = new Point(8, lblStock.Bottom + 4);
+            lblPrice.Size = new Size(144, 22);
             lblPrice.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblPrice.ForeColor = Color.FromArgb(34, 139, 34);
+            lblPrice.BackColor = Color.Transparent;
+            lblPrice.AutoSize = false;
             pnlCard.Controls.Add(lblPrice);
 
             // Add to cart button
             IconButton btnAdd = new IconButton();
             btnAdd.Text = "Add to Cart";
-            btnAdd.Location = new Point(10, 200);
-            btnAdd.Size = new Size(160, 36);
+            // Place button below price with a small gap
+            btnAdd.Location = new Point(8, lblPrice.Bottom + 8);
+            btnAdd.Size = new Size(144, 36);
             btnAdd.BackColor = Color.FromArgb(46, 204, 113);
             btnAdd.ForeColor = Color.White;
             btnAdd.Enabled = product.IsInStock();
