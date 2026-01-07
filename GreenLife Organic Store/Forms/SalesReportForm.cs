@@ -218,11 +218,14 @@ namespace GreenLife_Organic_Store.Forms
 
         private void UpdateDateControls()
         {
-            ComboBox cmbReportType = (ComboBox)this.Controls["cmbReportType"];
-            DateTimePicker dtFromDate = (DateTimePicker)this.Controls[2];
-            DateTimePicker dtToDate = (DateTimePicker)this.Controls[4];
+            ComboBox? cmbReportType = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "cmbReportType") as ComboBox;
+            DateTimePicker? dtFromDate = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dtFromDate") as DateTimePicker;
+            DateTimePicker? dtToDate = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dtToDate") as DateTimePicker;
 
-            string reportType = cmbReportType.SelectedItem.ToString();
+            if (cmbReportType == null || dtFromDate == null || dtToDate == null)
+                return; // controls not ready
+
+            string reportType = cmbReportType.SelectedItem?.ToString() ?? string.Empty;
             DateTime today = DateTime.Now;
 
             switch (reportType)
@@ -246,17 +249,25 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
-                DateTimePicker dtFromDate = (DateTimePicker)this.Controls[2];
-                DateTimePicker dtToDate = (DateTimePicker)this.Controls[4];
+                DateTimePicker? dtFromDate = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dtFromDate") as DateTimePicker;
+                DateTimePicker? dtToDate = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dtToDate") as DateTimePicker;
+
+                if (dtFromDate == null || dtToDate == null)
+                {
+                    MessageBox.Show("Date controls are not available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 var orders = OrderRepository.GetOrdersByDateRange(dtFromDate.Value.Date, dtToDate.Value.Date.AddDays(1));
                 var allItems = new List<(string name, int qty, decimal revenue)>();
 
                 // Calculate summary
-                decimal totalSales = orders.Sum(o => o.TotalAmount);
-                int totalOrdersCount = orders.Count;
+                // For sales/totals we consider only completed (Delivered) orders
+                var completedOrderList = orders.Where(o => o.Status == OrderStatus.Delivered).ToList();
+                decimal totalSales = completedOrderList.Sum(o => o.TotalAmount);
+                int totalOrdersCount = completedOrderList.Count;
                 decimal avgOrder = totalOrdersCount > 0 ? totalSales / totalOrdersCount : 0;
-                int completedOrders = orders.Count(o => o.Status == OrderStatus.Delivered);
+                int completedOrders = completedOrderList.Count;
                 int pendingOrders = orders.Count(o => o.Status == OrderStatus.Pending);
 
                 // Update summary labels
@@ -278,13 +289,15 @@ namespace GreenLife_Organic_Store.Forms
                     ((Label)pnlSummary.Controls["lblCompletedOrders"]).Text = $"Completed Orders: {completedOrders}";
                     ((Label)pnlSummary.Controls["lblPendingOrders"]).Text = $"Pending Orders: {pendingOrders}";
 
-                    // Top product - build allItems first
-                    foreach (var order in orders)
+                    // Top product - build allItems from completed orders only
+                    foreach (var order in completedOrderList)
                     {
+                        if (order.Items == null) continue;
+
                         foreach (var item in order.Items)
                         {
                             var existing = allItems.FirstOrDefault(x => x.name == item.ProductName);
-                            if (existing.name != null)
+                            if (!string.IsNullOrEmpty(existing.name))
                             {
                                 allItems.Remove(existing);
                                 allItems.Add((existing.name, existing.qty + item.Quantity, existing.revenue + item.Subtotal));
