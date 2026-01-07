@@ -15,11 +15,19 @@ namespace GreenLife_Organic_Store.Forms
         private ComboBox cmbStatus;
         private TextBox txtShippingAddress;
         private TextBox txtNotes;
+        private bool _allowStatusEdit = true;
 
         public OrderEditForm(Order order)
+            : this(order, true)
+        {
+        }
+
+        // allowStatusEdit: set to false for customer edits so status cannot be changed
+        public OrderEditForm(Order order, bool allowStatusEdit)
         {
             _order = order;
             EditedOrder = order;
+            _allowStatusEdit = allowStatusEdit;
 
             this.Text = $"Edit Order - {order.OrderNumber}";
             this.Size = new Size(600, 500);
@@ -92,6 +100,9 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(txtNotes);
             this.Controls.Add(btnSave);
             this.Controls.Add(btnCancel);
+
+            // Disable status editing if not allowed
+            cmbStatus.Enabled = _allowStatusEdit;
         }
 
         private void LoadOrderData()

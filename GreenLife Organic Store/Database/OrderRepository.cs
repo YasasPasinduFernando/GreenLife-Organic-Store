@@ -22,13 +22,11 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = "SELECT * FROM Orders ORDER BY OrderDate DESC";
                     using (var cmd = new MySqlCommand(query, connection))
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        using (var reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                orders.Add(MapReaderToOrder(reader));
-                            }
+                            orders.Add(MapReaderToOrder(reader));
                         }
                     }
                 }
@@ -39,6 +37,80 @@ namespace GreenLife_Organic_Store.Database
             }
 
             return orders;
+        }
+
+        /// <summary>
+        /// Deletes an order and its items, restoring product stock quantities.
+        /// </summary>
+        /// <param name="orderId">Order ID to delete</param>
+        /// <returns>True if delete succeeded</returns>
+        public static bool DeleteOrder(int orderId)
+        {
+            MySqlConnection? connection = null;
+            MySqlTransaction? transaction = null;
+
+            try
+            {
+                connection = DatabaseConnection.GetConnection();
+                connection.Open();
+                transaction = connection.BeginTransaction();
+
+                // Read items so we can restore stock
+                var items = new List<(int ProductID, int Quantity)>();
+                string selectItems = "SELECT ProductID, Quantity FROM OrderItems WHERE OrderID = @OrderID";
+                using (var cmd = new MySqlCommand(selectItems, connection, transaction))
+                {
+                    cmd.Parameters.AddWithValue("@OrderID", orderId);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            items.Add(((int)reader["ProductID"], (int)reader["Quantity"]));
+                        }
+                    }
+                }
+
+                // Restore product stock
+                string stockUpdate = "UPDATE Products SET Stock = Stock + @Quantity WHERE ID = @ProductID";
+                foreach (var it in items)
+                {
+                    using (var cmd = new MySqlCommand(stockUpdate, connection, transaction))
+                    {
+                        cmd.Parameters.AddWithValue("@Quantity", it.Quantity);
+                        cmd.Parameters.AddWithValue("@ProductID", it.ProductID);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Delete order items
+                string deleteItems = "DELETE FROM OrderItems WHERE OrderID = @OrderID";
+                using (var cmd = new MySqlCommand(deleteItems, connection, transaction))
+                {
+                    cmd.Parameters.AddWithValue("@ORDERID", orderId);
+                    cmd.Parameters.AddWithValue("@OrderID", orderId);
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Delete order
+                string deleteOrder = "DELETE FROM Orders WHERE ID = @ID";
+                using (var cmd = new MySqlCommand(deleteOrder, connection, transaction))
+                {
+                    cmd.Parameters.AddWithValue("@ID", orderId);
+                    int affected = cmd.ExecuteNonQuery();
+                    transaction.Commit();
+                    return affected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                throw new Exception($"Error deleting order: {ex.Message}", ex);
+            }
+            finally
+            {
+                connection?.Close();
+                connection?.Dispose();
+            }
         }
 
         /// <summary>
@@ -57,15 +129,20 @@ namespace GreenLife_Organic_Store.Database
                     using (var cmd = new MySqlCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", id);
+                        Order? order = null;
                         using (var reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                var order = MapReaderToOrder(reader);
-                                // Get order items
-                                order.Items = GetOrderItems(id, connection);
-                                return order;
+                                order = MapReaderToOrder(reader);
                             }
+                        }
+
+                        if (order != null)
+                        {
+                            // Get order items after reader is closed
+                            order.Items = GetOrderItems(id, connection);
+                            return order;
                         }
                     }
                 }

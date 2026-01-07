@@ -7,6 +7,7 @@ namespace GreenLife_Organic_Store.Forms
     {
         private User _currentUser;
         private List<Order> _orders = new();
+        private DataGridView _dgvOrders = null!;
 
         public MyOrdersForm()
         {
@@ -16,6 +17,10 @@ namespace GreenLife_Organic_Store.Forms
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Load += MyOrdersForm_Load;
+            // Improve theming
+            this.BackColor = Color.FromArgb(245, 245, 245);
+            this.ForeColor = Color.FromArgb(34, 34, 34);
+            this.DoubleBuffered = true;
         }
 
         public MyOrdersForm(User currentUser) : this()
@@ -76,7 +81,7 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(btnRefresh);
 
             // DataGridView for orders
-            DataGridView dgvOrders = new DataGridView
+            _dgvOrders = new DataGridView
             {
                 Name = "dgvOrders",
                 Location = new Point(10, 50),
@@ -85,19 +90,21 @@ namespace GreenLife_Organic_Store.Forms
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White
+                BackgroundColor = Color.White,
+                GridColor = Color.LightGray,
+                EnableHeadersVisualStyles = false,
+                ColumnHeadersDefaultCellStyle = { BackColor = Color.FromArgb(230,230,230), ForeColor = Color.FromArgb(34,34,34) }
             };
+            _dgvOrders.Columns.Add("OrderNumber", "Order #");
+            _dgvOrders.Columns.Add("OrderDate", "Date");
+            _dgvOrders.Columns.Add("Status", "Status");
+            _dgvOrders.Columns.Add("TotalAmount", "Amount");
+            this.Controls.Add(_dgvOrders);
 
-            dgvOrders.Columns.Add("OrderNumber", "Order #");
-            dgvOrders.Columns.Add("OrderDate", "Date");
-            dgvOrders.Columns.Add("Status", "Status");
-            dgvOrders.Columns.Add("TotalAmount", "Amount");
-            this.Controls.Add(dgvOrders);
-
-            // View Details button
+            // Track Order button (previously 'View Details')
             Button btnViewDetails = new Button
             {
-                Text = "View Details",
+                Text = "Track Order",
                 Location = new Point(200, 370),
                 Size = new Size(120, 35),
                 BackColor = Color.LightGreen
@@ -105,27 +112,91 @@ namespace GreenLife_Organic_Store.Forms
             btnViewDetails.Click += BtnViewDetails_Click;
             this.Controls.Add(btnViewDetails);
 
-            // Track Order button
-            Button btnTrack = new Button
+            // Edit Order button (customers can edit pending orders)
+            Button btnEdit = new Button
             {
-                Text = "Track Order",
+                Text = "Edit Order",
                 Location = new Point(340, 370),
                 Size = new Size(120, 35),
-                BackColor = Color.LightBlue
+                BackColor = Color.LightSkyBlue
             };
-            btnTrack.Click += BtnTrack_Click;
-            this.Controls.Add(btnTrack);
+            btnEdit.Click += BtnEdit_Click;
+            this.Controls.Add(btnEdit);
+
+            // Delete Order button (customers can delete pending orders)
+            Button btnDelete = new Button
+            {
+                Text = "Delete Order",
+                Location = new Point(480, 370),
+                Size = new Size(120, 35),
+                BackColor = Color.LightCoral
+            };
+            btnDelete.Click += BtnDelete_Click;
+            this.Controls.Add(btnDelete);
 
             // Close button
             Button btnClose = new Button
             {
                 Text = "Close",
-                Location = new Point(480, 370),
+                Location = new Point(620, 370),
                 Size = new Size(120, 35),
                 BackColor = Color.LightGray
             };
             btnClose.Click += (s, e) => this.Close();
             this.Controls.Add(btnClose);
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_dgvOrders == null || _dgvOrders.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select an order to delete.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                int rowIndex = _dgvOrders.SelectedRows[0].Index;
+                string orderNumber = _dgvOrders.Rows[rowIndex].Cells["OrderNumber"].Value?.ToString();
+
+                var order = _orders.FirstOrDefault(o => o.OrderNumber == orderNumber);
+                if (order == null)
+                {
+                    MessageBox.Show("Selected order not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (order.Status != OrderStatus.Pending)
+                {
+                    MessageBox.Show("Only orders with status 'Pending' can be deleted.", "Delete Not Allowed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (MessageBox.Show("Are you sure you want to delete the selected order? This will restore product stock.", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    return;
+
+                try
+                {
+                    bool success = OrderRepository.DeleteOrder(order.ID);
+                    if (success)
+                    {
+                        MessageBox.Show("Order deleted successfully.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadOrders();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to delete order.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error deleting order: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadOrders()
@@ -134,12 +205,11 @@ namespace GreenLife_Organic_Store.Forms
             {
                 _orders = OrderRepository.GetOrdersByCustomerId(_currentUser.ID);
 
-                DataGridView dgvOrders = (DataGridView)this.Controls["dgvOrders"];
-                dgvOrders.Rows.Clear();
+                _dgvOrders.Rows.Clear();
 
                 foreach (var order in _orders)
                 {
-                    dgvOrders.Rows.Add(
+                    _dgvOrders.Rows.Add(
                         order.OrderNumber,
                         order.OrderDate.ToString("dd/MM/yyyy HH:mm"),
                         order.GetStatusText(),
@@ -147,23 +217,23 @@ namespace GreenLife_Organic_Store.Forms
                     );
 
                     // Color code by status
-                    int lastRowIndex = dgvOrders.Rows.Count - 1;
+                    int lastRowIndex = _dgvOrders.Rows.Count - 1;
                     switch (order.Status)
                     {
                         case OrderStatus.Pending:
-                            dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightYellow;
+                            _dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightYellow;
                             break;
                         case OrderStatus.Processing:
-                            dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightBlue;
+                            _dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightBlue;
                             break;
                         case OrderStatus.Shipped:
-                            dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightCyan;
+                            _dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightCyan;
                             break;
                         case OrderStatus.Delivered:
-                            dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
+                            _dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
                             break;
                         case OrderStatus.Cancelled:
-                            dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightCoral;
+                            _dgvOrders.Rows[lastRowIndex].DefaultCellStyle.BackColor = Color.LightCoral;
                             break;
                     }
                 }
@@ -178,13 +248,12 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
-                DataGridView dgvOrders = (DataGridView)this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvOrders");
-                if (dgvOrders == null) return;
+                if (_dgvOrders == null) return;
 
                 ComboBox cmbStatus = sender as ComboBox;
                 if (cmbStatus == null) return;
 
-                dgvOrders.Rows.Clear();
+                _dgvOrders.Rows.Clear();
 
                 string selectedStatus = cmbStatus.SelectedItem?.ToString() ?? "All Orders";
 
@@ -201,7 +270,7 @@ namespace GreenLife_Organic_Store.Forms
 
                 foreach (var order in filteredOrders)
                 {
-                    dgvOrders.Rows.Add(
+                    _dgvOrders.Rows.Add(
                         order.OrderNumber,
                         order.OrderDate.ToString("dd/MM/yyyy HH:mm"),
                         order.GetStatusText(),
@@ -219,15 +288,14 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
-                DataGridView dgvOrders = (DataGridView)this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvOrders");
-                if (dgvOrders == null || dgvOrders.SelectedRows.Count == 0)
+                if (_dgvOrders == null || _dgvOrders.SelectedRows.Count == 0)
                 {
                     MessageBox.Show("Please select an order to view details.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                int rowIndex = dgvOrders.SelectedRows[0].Index;
-                string orderNumber = dgvOrders.Rows[rowIndex].Cells["OrderNumber"].Value?.ToString();
+                int rowIndex = _dgvOrders.SelectedRows[0].Index;
+                string orderNumber = _dgvOrders.Rows[rowIndex].Cells["OrderNumber"].Value?.ToString();
 
                 var selectedOrder = _orders.FirstOrDefault(o => o.OrderNumber == orderNumber);
                 if (selectedOrder != null)
@@ -242,9 +310,65 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
-        private void BtnTrack_Click(object sender, EventArgs e)
+        private void BtnEdit_Click(object sender, EventArgs e)
         {
-            BtnViewDetails_Click(sender, e);
+            try
+            {
+                if (_dgvOrders == null || _dgvOrders.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select an order to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                int rowIndex = _dgvOrders.SelectedRows[0].Index;
+                string orderNumber = _dgvOrders.Rows[rowIndex].Cells["OrderNumber"].Value?.ToString();
+
+                var order = _orders.FirstOrDefault(o => o.OrderNumber == orderNumber);
+                if (order == null)
+                {
+                    MessageBox.Show("Selected order not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (order.Status != OrderStatus.Pending)
+                {
+                    MessageBox.Show("Only orders with status 'Pending' can be edited.", "Edit Not Allowed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Reload full order (with items) from DB
+                var fullOrder = OrderRepository.GetOrderById(order.ID);
+                if (fullOrder == null)
+                {
+                    MessageBox.Show("Unable to load order details for editing.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var editForm = new OrderEditForm(fullOrder, false); // customer edits should not change status
+                if (editForm.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        if (OrderRepository.UpdateOrder(editForm.EditedOrder))
+                        {
+                            MessageBox.Show("Order updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadOrders();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to update order.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error saving order: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

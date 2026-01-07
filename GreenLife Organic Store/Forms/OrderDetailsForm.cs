@@ -1,4 +1,5 @@
 using GreenLife_Organic_Store.Models;
+using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -13,6 +14,11 @@ namespace GreenLife_Organic_Store.Forms
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            // Improve visual theming to avoid default black backgrounds
+            this.BackColor = Color.FromArgb(245, 245, 245);
+            this.ForeColor = Color.FromArgb(34, 34, 34);
+            this.DoubleBuffered = true;
+            this.Load += OrderDetailsForm_Load;
         }
 
         public OrderDetailsForm(Order order) : this()
@@ -30,15 +36,30 @@ namespace GreenLife_Organic_Store.Forms
         private void InitializeUI()
         {
             int yPosition = 10;
+            // allow scrolling if content is taller than the window
+            this.AutoScroll = true;
 
             // Order Header
+            // Header icon
+            IconPictureBox headerIcon = new IconPictureBox
+            {
+                IconChar = IconChar.ShoppingBag,
+                IconColor = Color.FromArgb(34, 139, 34),
+                IconSize = 28,
+                Location = new Point(10, yPosition - 2),
+                Size = new Size(34, 34),
+                BackColor = Color.Transparent
+            };
+            this.Controls.Add(headerIcon);
+
             Label lblOrderHeader = new Label
             {
                 Text = $"Order #{_order.OrderNumber}",
-                Location = new Point(10, yPosition),
-                Size = new Size(300, 25),
-                Font = new Font("Arial", 14, FontStyle.Bold),
-                ForeColor = Color.DarkGreen
+                Location = new Point(54, yPosition),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 16F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(34, 139, 34),
+                BackColor = Color.Transparent
             };
             this.Controls.Add(lblOrderHeader);
             yPosition += 35;
@@ -56,29 +77,33 @@ namespace GreenLife_Organic_Store.Forms
             yPosition += 30;
 
             // Status
-            Label lblStatusLabel = new Label { Text = "Status:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
+            Label lblStatusLabel = new Label { Text = "Status:", Location = new Point(10, yPosition), AutoSize = true };
             Label lblStatus = new Label
             {
                 Name = "lblStatus",
                 Location = new Point(120, yPosition),
-                Size = new Size(200, 20),
-                Font = new Font("Arial", 10, FontStyle.Bold)
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
             };
             this.Controls.Add(lblStatusLabel);
             this.Controls.Add(lblStatus);
-            yPosition += 30;
+            yPosition += 40; // add extra spacing so the progress indicators don't overlap the status label
 
             // Status Tracking Progress
             Panel pnlProgress = new Panel
             {
+                Name = "pnlProgress",
                 Location = new Point(10, yPosition),
-                Size = new Size(680, 50),
-                BorderStyle = BorderStyle.FixedSingle
+                Size = new Size(680, 70),
+                BorderStyle = BorderStyle.None,
+                BackColor = Color.White
             };
 
-            DrawProgressBar(pnlProgress, _order.Status);
+            // Paint progress in the panel to avoid CreateGraphics flicker/blank issues
+            pnlProgress.Paint += (s, e) => DrawProgressBar(e.Graphics, pnlProgress.ClientRectangle, _order?.Status ?? OrderStatus.Pending);
+            pnlProgress.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.Controls.Add(pnlProgress);
-            yPosition += 60;
+            yPosition += 80;
 
             // Items Section
             Label lblItemsHeader = new Label
@@ -97,10 +122,14 @@ namespace GreenLife_Organic_Store.Forms
             {
                 Name = "dgvItems",
                 Location = new Point(10, yPosition),
-                Size = new Size(680, 150),
+                Size = new Size(680, 180),
                 ReadOnly = true,
                 AllowUserToAddRows = false,
-                BackColor = Color.White
+                BackgroundColor = Color.White,
+                GridColor = Color.LightGray,
+                EnableHeadersVisualStyles = false,
+                ColumnHeadersDefaultCellStyle = { BackColor = Color.FromArgb(230, 230, 230), ForeColor = Color.FromArgb(34,34,34) },
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
             dgvItems.Columns.Add("ProductName", "Product");
             dgvItems.Columns.Add("Quantity", "Qty");
@@ -117,7 +146,8 @@ namespace GreenLife_Organic_Store.Forms
                 Location = new Point(120, yPosition),
                 Size = new Size(300, 25),
                 Font = new Font("Arial", 12, FontStyle.Bold),
-                ForeColor = Color.DarkGreen
+                ForeColor = Color.FromArgb(34, 139, 34),
+                BackColor = Color.Transparent
             };
             this.Controls.Add(lblTotalLabel);
             this.Controls.Add(lblTotal);
@@ -130,7 +160,8 @@ namespace GreenLife_Organic_Store.Forms
                 Location = new Point(10, yPosition),
                 Size = new Size(300, 20),
                 Font = new Font("Arial", 11, FontStyle.Bold),
-                ForeColor = Color.DarkGreen
+                ForeColor = Color.FromArgb(34, 139, 34),
+                BackColor = Color.Transparent
             };
             this.Controls.Add(lblDeliveryHeader);
             yPosition += 30;
@@ -178,18 +209,33 @@ namespace GreenLife_Organic_Store.Forms
                 Name = "lblAddress",
                 Location = new Point(120, yPosition),
                 Size = new Size(400, 60),
-                AutoSize = true
+                AutoSize = true,
+                BackColor = Color.Transparent
             };
             this.Controls.Add(lblAddressLabel);
             this.Controls.Add(lblAddress);
 
-            // Close button
+            // Move yPosition past the address so the Close button sits well below content
+            yPosition = lblAddress.Bottom + 30;
+
+            // Close button - place below all content and center
             Button btnClose = new Button
             {
                 Text = "Close",
-                Location = new Point(300, 580),
-                Size = new Size(100, 35),
-                BackColor = Color.LightGray
+                Size = new Size(120, 40),
+                BackColor = Color.LightGray,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnClose.Location = new Point(Math.Max(10, (this.ClientSize.Width - btnClose.Width) / 2), yPosition);
+            btnClose.Anchor = AnchorStyles.Top;
+            // keep horizontally centered when the form resizes
+            this.Resize += (s, e) =>
+            {
+                try
+                {
+                    btnClose.Left = Math.Max(10, (this.ClientSize.Width - btnClose.Width) / 2);
+                }
+                catch { }
             };
             btnClose.Click += (s, e) => this.Close();
             this.Controls.Add(btnClose);
@@ -225,39 +271,52 @@ namespace GreenLife_Organic_Store.Forms
                     $"Rs. {item.Subtotal:N2}"
                 );
             }
-        }
 
-        private void DrawProgressBar(Panel panel, OrderStatus status)
+            // Ensure progress panel repaints with updated status
+            var pnl = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "pnlProgress") as Panel;
+            pnl?.Invalidate();
+        }
+        private void DrawProgressBar(Graphics g, Rectangle rect, OrderStatus status)
         {
             // Create status indicators
             string[] statuses = { "Pending", "Processing", "Shipped", "Delivered" };
             int statusIndex = (int)status;
 
-            // Draw circles and lines
-            using (Graphics g = panel.CreateGraphics())
-            {
-                int startX = 20;
-                int spacing = 150;
-                int circleRadius = 10;
-                int y = 25;
+            // Prepare drawing
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
+            // leave extra left margin to avoid overlapping left-side labels/icons
+            int startX = rect.Left + 40;
+            int available = Math.Max(10, rect.Width - 80);
+            int spacing = Math.Max(1, available / Math.Max(1, statuses.Length));
+            // Limit spacing to a reasonable max so labels don't overflow
+            spacing = Math.Min(spacing, 180);
+            int circleRadius = 8;
+            int y = rect.Top + rect.Height / 2 - 6;
+
+            using (var penActive = new Pen(Color.FromArgb(34, 139, 34), 3))
+            using (var penInactive = new Pen(Color.LightGray, 3))
+            using (var brushActive = new SolidBrush(Color.FromArgb(34, 139, 34)))
+            using (var brushInactive = new SolidBrush(Color.LightGray))
+            using (var textBrush = new SolidBrush(Color.FromArgb(34,34,34)))
+            {
                 for (int i = 0; i < statuses.Length; i++)
                 {
                     int x = startX + (i * spacing);
 
-                    // Draw line to next circle
                     if (i < statuses.Length - 1)
                     {
-                        Pen linePen = new Pen(i < statusIndex ? Color.Green : Color.LightGray, 3);
-                        g.DrawLine(linePen, x + circleRadius, y, x + spacing - circleRadius, y);
+                        g.DrawLine(i < statusIndex ? penActive : penInactive, x + circleRadius, y, x + spacing - circleRadius, y);
                     }
 
-                    // Draw circle
-                    Brush circleBrush = i <= statusIndex ? Brushes.Green : Brushes.LightGray;
-                    g.FillEllipse(circleBrush, x - circleRadius, y - circleRadius, circleRadius * 2, circleRadius * 2);
+                    g.FillEllipse(i <= statusIndex ? brushActive : brushInactive, x - circleRadius, y - circleRadius, circleRadius * 2, circleRadius * 2);
 
-                    // Draw text
-                    g.DrawString(statuses[i], this.Font, Brushes.Black, x - 25, y + 15);
+                    // Draw status text below the indicators using a compact font
+                    using (var textFont = new Font("Segoe UI", 8F))
+                    {
+                        var textSize = g.MeasureString(statuses[i], textFont);
+                        g.DrawString(statuses[i], textFont, textBrush, x - (textSize.Width / 2), y + circleRadius + 6);
+                    }
                 }
             }
         }
