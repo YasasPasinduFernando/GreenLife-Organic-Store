@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -73,11 +74,24 @@ namespace GreenLife_Organic_Store.Forms
             };
             pnlHeader.Controls.Add(lblTitle);
 
+            // Cart icon + count
+            IconPictureBox iconCart = new IconPictureBox
+            {
+                IconChar = IconChar.ShoppingCart,
+                IconColor = Color.White,
+                Location = new Point(560, 15),
+                Size = new Size(28, 28),
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Hand
+            };
+            iconCart.Click += (s, e) => ShowCart();
+            pnlHeader.Controls.Add(iconCart);
+
             _lblCartCount = new Label
             {
                 Text = "Cart: 0",
                 Location = new Point(600, 15),
-                Size = new Size(150, 30),
+                Size = new Size(120, 30),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand
@@ -85,13 +99,17 @@ namespace GreenLife_Organic_Store.Forms
             _lblCartCount.Click += (s, e) => ShowCart();
             pnlHeader.Controls.Add(_lblCartCount);
 
-            Button btnProfile = new Button
+            IconButton btnProfile = new IconButton
             {
                 Text = "Profile",
-                Location = new Point(780, 15),
-                Size = new Size(100, 30),
+                Location = new Point(760, 15),
+                Size = new Size(110, 30),
                 BackColor = Color.LightBlue,
-                Font = new Font("Segoe UI", 10F),
+                ForeColor = Color.Black,
+                IconChar = IconChar.User,
+                IconColor = Color.Black,
+                IconSize = 18,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
                 Cursor = Cursors.Hand
             };
             btnProfile.Click += (s, e) => ShowProfile();
@@ -121,11 +139,22 @@ namespace GreenLife_Organic_Store.Forms
 
             Label lblSearch = new Label { Text = "Search:", Location = new Point(10, 10), Size = new Size(60, 20) };
             TextBox txtSearch = new TextBox { Name = "txtSearch", Location = new Point(80, 10), Size = new Size(200, 25) };
-            Button btnSearch = new Button { Text = "Search", Location = new Point(290, 10), Size = new Size(70, 25), BackColor = Color.LightGreen };
+            IconButton btnSearch = new IconButton
+            {
+                Text = "Search",
+                Location = new Point(290, 10),
+                Size = new Size(90, 25),
+                BackColor = Color.LightGreen,
+                ForeColor = Color.Black,
+                IconChar = IconChar.Search,
+                IconColor = Color.Black,
+                IconSize = 16,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                Cursor = Cursors.Hand
+            };
             btnSearch.Click += (s, e) => SearchProducts(txtSearch.Text);
             pnlFilter.Controls.Add(lblSearch);
             pnlFilter.Controls.Add(txtSearch);
-            btnSearch.Font = new Font("Segoe UI", 9F);
             pnlFilter.Controls.Add(btnSearch);
 
             Label lblCategory = new Label { Text = "Category:", Location = new Point(360, 10), Size = new Size(70, 20) };
