@@ -50,13 +50,34 @@ namespace GreenLife_Organic_Store.Forms
                 Size = new Size(160, 20),
                 Visible = false
             };
-            // Place under the register button if possible
+            // Place below the action buttons area and span both buttons to avoid overlap
             try
             {
-                progressBarRegister.Location = new Point(buttonRegister.Left, buttonRegister.Bottom + 8);
+                var parent = buttonRegister.Parent ?? (Control)this;
+
+                // If there is a cancel button, span between leftmost and rightmost buttons
+                int left = buttonRegister.Left;
+                int right = buttonRegister.Right;
+                if (buttonCancel != null && buttonCancel.Parent == parent)
+                {
+                    left = Math.Min(left, buttonCancel.Left);
+                    right = Math.Max(right, buttonCancel.Right);
+                }
+
+                int top = Math.Max(buttonRegister.Bottom, (buttonCancel != null ? buttonCancel.Bottom : 0)) + 8;
+
+                progressBarRegister.Width = Math.Max(160, right - left);
+                progressBarRegister.Location = new Point(left, top);
+                progressBarRegister.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+
+                parent.Controls.Add(progressBarRegister);
+                progressBarRegister.BringToFront();
             }
-            catch { progressBarRegister.Location = new Point(20, 420); }
-            this.Controls.Add(progressBarRegister);
+            catch
+            {
+                progressBarRegister.Location = new Point(20, 420);
+                this.Controls.Add(progressBarRegister);
+            }
 
             buttonCancel.BackColor = Color.FromArgb(200, 200, 200);
             buttonCancel.ForeColor = Color.Black;
@@ -220,6 +241,8 @@ namespace GreenLife_Organic_Store.Forms
                         progressBarRegister.Visible = true;
 
                         emailSent = await Task.Run(() => GreenLife_Organic_Store.Utilities.EmailService.SendWelcomeEmail(newUser.Email, newUser.Name));
+                        // Give UI a small delay so the progress bar is visible briefly on fast networks
+                        await Task.Delay(300);
                     }
                     catch (Exception emailEx)
                     {
