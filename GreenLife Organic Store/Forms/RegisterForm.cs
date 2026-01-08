@@ -1,10 +1,12 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using System.Threading.Tasks;
 
 namespace GreenLife_Organic_Store.Forms
 {
     public partial class RegisterForm : Form
     {
+        private ProgressBar progressBarRegister;
         public RegisterForm()
         {
             InitializeComponent();
@@ -40,6 +42,22 @@ namespace GreenLife_Organic_Store.Forms
             buttonRegister.FlatAppearance.BorderSize = 0;
             buttonRegister.Cursor = Cursors.Hand;
 
+            // Progress bar for email sending (hidden by default)
+            progressBarRegister = new ProgressBar
+            {
+                Style = ProgressBarStyle.Marquee,
+                MarqueeAnimationSpeed = 30,
+                Size = new Size(160, 20),
+                Visible = false
+            };
+            // Place under the register button if possible
+            try
+            {
+                progressBarRegister.Location = new Point(buttonRegister.Left, buttonRegister.Bottom + 8);
+            }
+            catch { progressBarRegister.Location = new Point(20, 420); }
+            this.Controls.Add(progressBarRegister);
+
             buttonCancel.BackColor = Color.FromArgb(200, 200, 200);
             buttonCancel.ForeColor = Color.Black;
             buttonCancel.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
@@ -62,11 +80,11 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
-        private void buttonRegister_Click(object sender, EventArgs e)
+        private async void buttonRegister_Click(object sender, EventArgs e)
         {
             if (ValidateInput())
             {
-                PerformRegistration();
+                await PerformRegistration();
             }
         }
 
@@ -173,7 +191,7 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
-        private void PerformRegistration()
+        private async Task PerformRegistration()
         {
             try
             {
@@ -193,16 +211,24 @@ namespace GreenLife_Organic_Store.Forms
 
                 if (newUserId > 0)
                 {
-                    // Send welcome email (best-effort)
+                    // Send welcome email (best-effort) on background thread and show progress
                     bool emailSent = false;
                     try
                     {
                         Console.WriteLine($"[RegisterForm] Sending welcome email to {newUser.Email}");
-                        emailSent = GreenLife_Organic_Store.Utilities.EmailService.SendWelcomeEmail(newUser.Email, newUser.Name);
+                        buttonRegister.Enabled = false;
+                        progressBarRegister.Visible = true;
+
+                        emailSent = await Task.Run(() => GreenLife_Organic_Store.Utilities.EmailService.SendWelcomeEmail(newUser.Email, newUser.Name));
                     }
                     catch (Exception emailEx)
                     {
                         Console.WriteLine($"[RegisterForm] Welcome email failed: {emailEx.Message}");
+                    }
+                    finally
+                    {
+                        progressBarRegister.Visible = false;
+                        buttonRegister.Enabled = true;
                     }
 
                     string message = $"Registration successful! Your account has been created.";

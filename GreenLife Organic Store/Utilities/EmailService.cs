@@ -7,9 +7,7 @@ using GreenLife_Organic_Store.Models;
 namespace GreenLife_Organic_Store.Utilities
 {
     /// <summary>
-    /// Email service for sending emails.
-    /// Currently runs in MOCK MODE for testing (doesn't require Gmail).
-    /// Set USE_MOCK_MODE = false and add real password when ready to send real emails.
+    /// Email service for sending emails via Gmail SMTP.
     /// </summary>
     public static class EmailService
     {
@@ -17,12 +15,12 @@ namespace GreenLife_Organic_Store.Utilities
         private const string SMTP_SERVER = "smtp.gmail.com";
         private const int SMTP_PORT = 587;
         private const string SENDER_EMAIL = "greenlifeorganicstore@gmail.com";
-        private const string SENDER_PASSWORD = "your-16-char-gmail-app-password-here"; // TODO: Replace with real Gmail app password
+        private const string SENDER_PASSWORD = "nede eilq sypk nhrx"; // Gmail App Password
         private const string SENDER_NAME = "GreenLife Organic Store";
         
-        // ? MOCK MODE: Set to TRUE for testing WITHOUT Gmail (Recommended for now)
-        //    Set to FALSE when you have a valid 16-character Gmail app password
-        private const bool USE_MOCK_MODE = true;
+        // Set to TRUE for mock mode (testing without Gmail)
+        // Set to FALSE for real Gmail SMTP
+        private const bool USE_MOCK_MODE = false;
 
         public static bool SendEmail(string toEmail, string subject, string body, bool isHtml = true)
         {
@@ -43,9 +41,37 @@ namespace GreenLife_Organic_Store.Utilities
         {
             try
             {
-                Console.WriteLine($"[EmailService-MOCK] ? Email simulated to: {toEmail}");
-                Console.WriteLine($"[EmailService-MOCK] Subject: {subject}");
                 LogEmailSuccess(toEmail, subject);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogEmailError($"Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Special method to handle password reset emails in mock mode
+        /// Shows the reset code to the user via MessageBox
+        /// </summary>
+        public static bool SendPasswordResetEmailMock(string toEmail, string userName, string resetCode)
+        {
+            try
+            {
+                // In MOCK MODE, show the reset code in a messagebox so user can see it
+                System.Windows.Forms.MessageBox.Show(
+                    $"Password Reset Code\n\n" +
+                    $"Email: {toEmail}\n\n" +
+                    $"Your Code:\n\n" +
+                    $"{resetCode}\n\n" +
+                    $"(Expires in 15 minutes)",
+                    "Reset Code",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Information
+                );
+                
+                LogEmailSuccess(toEmail, "Password Reset Request");
                 return true;
             }
             catch (Exception ex)
@@ -62,8 +88,6 @@ namespace GreenLife_Organic_Store.Utilities
         {
             try
             {
-                Console.WriteLine($"[EmailService] Sending via Gmail SMTP to {toEmail}...");
-
                 using var smtp = new SmtpClient(SMTP_SERVER, SMTP_PORT)
                 {
                     EnableSsl = true,
@@ -86,24 +110,25 @@ namespace GreenLife_Organic_Store.Utilities
             }
             catch (SmtpException smtpEx)
             {
-                LogEmailError($"SMTP Error ({smtpEx.StatusCode}): {smtpEx.Message}");
+                LogEmailError($"Failed to send email: {smtpEx.Message}");
                 return false;
             }
             catch (Exception ex)
             {
-                LogEmailError($"Error: {ex.GetType().Name} - {ex.Message}");
+                LogEmailError($"Error: {ex.Message}");
                 return false;
             }
         }
 
         private static void LogEmailSuccess(string toEmail, string subject)
         {
-            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] ? Email to {toEmail} - {subject}");
+            // Minimal logging - no timestamps or extra formatting
         }
 
         private static void LogEmailError(string message)
         {
-            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] ? Email Error: {message}");
+            // Log errors only
+            Console.WriteLine($"? {message}");
         }
 
         public static bool SendOrderConfirmation(string customerEmail, string customerName, string orderNumber, decimal totalAmount, List<OrderItem> items)
@@ -127,9 +152,17 @@ namespace GreenLife_Organic_Store.Utilities
 
         public static bool SendPasswordResetEmail(string userEmail, string userName, string resetCode)
         {
-            string subject = "Password Reset Request - GreenLife Organic Store";
-            string body = $"<html><body><div style='font-family:Arial,sans-serif'><h2>Password Reset</h2><p>Dear {userName},</p><p>Your password reset code: <strong>{resetCode}</strong></p><p>This code expires in 15 minutes.</p></div></body></html>";
-            return SendEmail(userEmail, subject, body, true);
+            if (USE_MOCK_MODE)
+            {
+                // In mock mode, show the code to the user
+                return SendPasswordResetEmailMock(userEmail, userName, resetCode);
+            }
+            else
+            {
+                string subject = "Password Reset Request - GreenLife Organic Store";
+                string body = $"<html><body><div style='font-family:Arial,sans-serif'><h2>Password Reset</h2><p>Dear {userName},</p><p>Your password reset code: <strong>{resetCode}</strong></p><p>This code expires in 15 minutes.</p></div></body></html>";
+                return SendEmail(userEmail, subject, body, true);
+            }
         }
 
         public static bool SendWelcomeEmail(string userEmail, string userName)
@@ -148,24 +181,11 @@ namespace GreenLife_Organic_Store.Utilities
 
         public static void TestConnection()
         {
-            Console.WriteLine("\n=== EMAIL SERVICE TEST ===");
-            if (USE_MOCK_MODE)
-            {
-                Console.WriteLine("? MOCK MODE ENABLED - Emails are simulated");
-                Console.WriteLine("? All email functions will appear to work");
-                Console.WriteLine("? No real emails will be sent");
-                Console.WriteLine("\nTo enable real Gmail emails:");
-                Console.WriteLine("1. Set USE_MOCK_MODE = false");
-                Console.WriteLine("2. Replace SENDER_PASSWORD with valid 16-char Gmail app password");
-                Console.WriteLine("3. Get app password from: https://myaccount.google.com/apppasswords");
-            }
-            else
-            {
-                Console.WriteLine("REAL MODE - Using Gmail SMTP");
-                Console.WriteLine($"Server: {SMTP_SERVER}:{SMTP_PORT}");
-                Console.WriteLine($"Email: {SENDER_EMAIL}");
-            }
-            Console.WriteLine("=== TEST COMPLETE ===\n");
+            Console.WriteLine("\n=== EMAIL SERVICE ===");
+            Console.WriteLine("? Email service initialized");
+            Console.WriteLine($"Server: {SMTP_SERVER}:{SMTP_PORT}");
+            Console.WriteLine($"Sender: {SENDER_EMAIL}");
+            Console.WriteLine("=== READY ===\n");
         }
     }
 }

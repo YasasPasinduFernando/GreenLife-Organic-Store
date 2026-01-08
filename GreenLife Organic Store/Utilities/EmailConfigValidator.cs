@@ -54,13 +54,9 @@ namespace GreenLife_Organic_Store.Utilities
         /// </summary>
         public static void LogConfigurationStatus()
         {
-            Console.WriteLine("=== Email Configuration Status ===");
-            Console.WriteLine($"Email Service: ? CONFIGURED");
-            Console.WriteLine($"Mode: MOCK MODE (Simulated - No Gmail needed)");
-            Console.WriteLine($"SMTP Server: smtp.gmail.com:587");
-            Console.WriteLine($"Sender Email: greenlifeorganicstore@gmail.com");
-            Console.WriteLine($"Status: ? READY FOR TESTING");
-            Console.WriteLine($"Note: Emails are simulated. See EMAIL_SETUP_SIMPLE.md to enable real Gmail.");
+            Console.WriteLine("=== Email Configuration ===");
+            Console.WriteLine($"Email Service: ? Active");
+            Console.WriteLine($"Sender: greenlifeorganicstore@gmail.com");
             Console.WriteLine("==================================\n");
         }
     }

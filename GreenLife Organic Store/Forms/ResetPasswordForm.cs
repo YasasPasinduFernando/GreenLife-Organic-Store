@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using FontAwesome.Sharp;
 using GreenLife_Organic_Store.Database;
 
 namespace GreenLife_Organic_Store.Forms
@@ -11,7 +12,7 @@ namespace GreenLife_Organic_Store.Forms
         private TextBox textBoxCode;
         private TextBox textBoxNewPassword;
         private TextBox textBoxConfirmPassword;
-        private Button buttonResetPassword;
+        private IconButton buttonResetPassword;
 
         public ResetPasswordForm(string email)
         {
@@ -43,7 +44,23 @@ namespace GreenLife_Organic_Store.Forms
             textBoxConfirmPassword = new TextBox { Location = new System.Drawing.Point(20, 185), Size = new System.Drawing.Size(360, 25), UseSystemPasswordChar = true };
             this.Controls.Add(textBoxConfirmPassword);
 
-            buttonResetPassword = new Button { Text = "Reset Password", Location = new System.Drawing.Point(20, 225), Size = new System.Drawing.Size(150, 30) };
+            buttonResetPassword = new IconButton
+            {
+                Text = "Reset Password",
+                Location = new System.Drawing.Point(20, 225),
+                Size = new System.Drawing.Size(150, 36),
+                BackColor = System.Drawing.Color.FromArgb(34, 139, 34),
+                ForeColor = System.Drawing.Color.White,
+                Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                IconChar = IconChar.Key,
+                IconColor = System.Drawing.Color.White,
+                IconSize = 18,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                Padding = new Padding(8, 0, 0, 0),
+                Cursor = Cursors.Hand
+            };
+            buttonResetPassword.FlatAppearance.BorderSize = 0;
             buttonResetPassword.Click += ButtonResetPassword_Click;
             this.Controls.Add(buttonResetPassword);
         }

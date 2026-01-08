@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Forms;
+using FontAwesome.Sharp;
+using System.Threading.Tasks;
 using GreenLife_Organic_Store.Database;
 
 namespace GreenLife_Organic_Store.Forms
@@ -9,6 +11,9 @@ namespace GreenLife_Organic_Store.Forms
         private TextBox textBoxEmail;
         private Button buttonSendCode;
         private Label labelStatus;
+        private ProgressBar progressBar;
+        private Label labelProgress;
+        private IconPictureBox iconEmailStatus;
 
         public ForgotPasswordForm()
         {
@@ -18,9 +23,11 @@ namespace GreenLife_Organic_Store.Forms
         private void InitializeComponent()
         {
             this.Text = "Forgot Password";
-            this.Size = new System.Drawing.Size(480, 280);
+            this.Size = new System.Drawing.Size(480, 320);
             this.StartPosition = FormStartPosition.CenterParent;
             this.BackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
 
             // Title
             var lblTitle = new Label 
@@ -69,19 +76,49 @@ namespace GreenLife_Organic_Store.Forms
             buttonSendCode.Click += ButtonSendCode_Click;
             this.Controls.Add(buttonSendCode);
 
-            // Configuration status
+            // Progress bar (hidden by default) - marquee style while sending
+            progressBar = new ProgressBar
+            {
+                Style = ProgressBarStyle.Marquee,
+                MarqueeAnimationSpeed = 30,
+                Location = new System.Drawing.Point(190, 120),
+                Size = new System.Drawing.Size(270, 25),
+                Visible = false
+            };
+            this.Controls.Add(progressBar);
+
+            // Progress / status label shown while sending
+            labelProgress = new Label
+            {
+                Text = string.Empty,
+                Location = new System.Drawing.Point(190, 145),
+                AutoSize = true,
+                Font = new System.Drawing.Font("Segoe UI", 9F),
+                ForeColor = System.Drawing.Color.Black,
+                Visible = false
+            };
+            this.Controls.Add(labelProgress);
+
+            // Configuration status (icon + label)
             bool isConfigured = GreenLife_Organic_Store.Utilities.EmailConfigValidator.IsEmailConfigured();
-            
+
+            iconEmailStatus = new IconPictureBox
+            {
+                IconChar = isConfigured ? IconChar.CheckCircle : IconChar.ExclamationTriangle,
+                IconColor = isConfigured ? System.Drawing.Color.FromArgb(34, 139, 34) : System.Drawing.Color.DarkOrange,
+                Location = new System.Drawing.Point(20, 170),
+                Size = new System.Drawing.Size(20, 20),
+                BackColor = System.Drawing.Color.Transparent
+            };
+            this.Controls.Add(iconEmailStatus);
+
             labelStatus = new Label 
             { 
-                Text = isConfigured ? 
-                    "? Email is configured and ready" : 
-                    "??  Warning: Email not properly configured. Check console for details.",
-                Location = new System.Drawing.Point(20, 160), 
-                Size = new System.Drawing.Size(440, 50),
-                AutoSize = false,
+                Text = isConfigured ? "Email service is configured" : "Email service may not be configured",
+                Location = new System.Drawing.Point(48, 168), 
+                AutoSize = true,
                 Font = new System.Drawing.Font("Segoe UI", 9F),
-                ForeColor = isConfigured ? System.Drawing.Color.Green : System.Drawing.Color.DarkOrange,
+                ForeColor = isConfigured ? System.Drawing.Color.FromArgb(34, 139, 34) : System.Drawing.Color.DarkOrange,
                 BackColor = System.Drawing.Color.Transparent
             };
             this.Controls.Add(labelStatus);
@@ -89,7 +126,7 @@ namespace GreenLife_Organic_Store.Forms
             // Help link
             var lblHelp = new Label 
             { 
-                Text = "Need help? See EMAIL_CONFIG.md for setup instructions.", 
+                Text = "A reset code will be sent to your registered email.", 
                 Location = new System.Drawing.Point(20, 230),
                 AutoSize = true,
                 Font = new System.Drawing.Font("Segoe UI", 8F),
@@ -101,7 +138,7 @@ namespace GreenLife_Organic_Store.Forms
             GreenLife_Organic_Store.Utilities.EmailConfigValidator.LogConfigurationStatus();
         }
 
-        private void ButtonSendCode_Click(object? sender, EventArgs e)
+        private async void ButtonSendCode_Click(object? sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(textBoxEmail.Text))
             {
@@ -111,19 +148,26 @@ namespace GreenLife_Organic_Store.Forms
 
             try
             {
+                // Disable UI and show progress
                 buttonSendCode.Enabled = false;
                 buttonSendCode.Text = "Sending...";
+                progressBar.Visible = true;
+                labelProgress.Visible = true;
+                labelProgress.Text = "Sending reset code...";
 
                 string email = textBoxEmail.Text.Trim();
-                Console.WriteLine($"[ForgotPasswordForm] Attempting to reset password for email: {email}");
 
                 // Verify user exists in database
                 var user = UserRepository.GetUserByEmail(email);
                 if (user == null)
                 {
-                    Console.WriteLine($"[ForgotPasswordForm] User not found for email: {email}");
-                    MessageBox.Show($"No account found for email: {email}\n\nPlease check the email address and try again, or register a new account.", 
-                        "Email Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(
+                        $"? No account found for this email.\n\n" +
+                        $"Email: {email}\n\n" +
+                        $"Please check the email address or create a new account.", 
+                        "Account Not Found", 
+                        MessageBoxButtons.OK, 
+                        MessageBoxIcon.Warning);
                     buttonSendCode.Enabled = true;
                     buttonSendCode.Text = "Send Reset Code";
                     return;
@@ -131,13 +175,19 @@ namespace GreenLife_Organic_Store.Forms
 
                 Console.WriteLine($"[ForgotPasswordForm] User found: {user.Name}. Sending reset code...");
 
-                bool success = UserRepository.RequestPasswordReset(email);
+                // Send reset code on background thread so UI stays responsive
+                bool success = await Task.Run(() => UserRepository.RequestPasswordReset(email));
 
                 if (success)
                 {
-                    Console.WriteLine($"[ForgotPasswordForm] Reset code sent successfully to {email}");
-                    MessageBox.Show($"A password reset code has been sent to {email}.\n\nCheck your email for the 6-digit code (expires in 15 minutes).", 
-                        "Code Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        $"? Password reset code sent successfully!\n\n" +
+                        $"Email: {email}\n\n" +
+                        $"Check your inbox for the reset code.\n" +
+                        $"(Code expires in 15 minutes)", 
+                        "Code Sent", 
+                        MessageBoxButtons.OK, 
+                        MessageBoxIcon.Information);
                     var resetForm = new ResetPasswordForm(email);
                     this.Hide();
                     resetForm.ShowDialog();
@@ -145,19 +195,34 @@ namespace GreenLife_Organic_Store.Forms
                 }
                 else
                 {
-                    Console.WriteLine($"[ForgotPasswordForm] Failed to send reset code for email: {email}");
-                    MessageBox.Show($"Failed to send reset code to your email.\n\nPlease check that email is properly configured.\n\nCheck the console output for more details.", 
-                        "Email Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(
+                        $"? Failed to send reset code.\n\n" +
+                        $"Please check:\n" +
+                        $"• Your email address is correct\n" +
+                        $"• Your internet connection is stable\n\n" +
+                        $"Try again later or contact support.",
+                        "Email Error", 
+                        MessageBoxButtons.OK, 
+                        MessageBoxIcon.Error);
                     buttonSendCode.Enabled = true;
                     buttonSendCode.Text = "Send Reset Code";
+                    progressBar.Visible = false;
+                    labelProgress.Visible = false;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ForgotPasswordForm] Exception: {ex}");
-                MessageBox.Show($"Error: {ex.Message}\n\nPlease try again or contact support.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    $"? An error occurred.\n\n" +
+                    $"Error: {ex.Message}\n\n" +
+                    $"Please try again or contact support.",
+                    "Error", 
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error);
                 buttonSendCode.Enabled = true;
                 buttonSendCode.Text = "Send Reset Code";
+                progressBar.Visible = false;
+                labelProgress.Visible = false;
             }
         }
     }
