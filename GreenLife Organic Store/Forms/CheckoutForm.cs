@@ -1,6 +1,7 @@
 using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Database;
 using FontAwesome.Sharp;
+using System.Text.RegularExpressions;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -9,11 +10,13 @@ namespace GreenLife_Organic_Store.Forms
         private User? _currentUser;
         private List<CartItem> _cartItems = new();
         private decimal _totalAmount;
+        private ProgressBar progressBarEmail;
 
         public CheckoutForm()
         {
             this.Text = "Checkout & Place Order";
-            this.Size = new Size(700, 600);
+            // Slightly taller than original to fit progress bar comfortably
+            this.Size = new Size(700, 740);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -147,8 +150,9 @@ namespace GreenLife_Organic_Store.Forms
             // Cancel button
             IconButton btnCancel = new IconButton
             {
+                Name = "btnCancel",
                 Text = "Cancel",
-                Location = new Point(200, 510),
+                Location = new Point(200, 560),
                 Size = new Size(120, 40),
                 BackColor = Color.LightGray,
                 ForeColor = Color.Black,
@@ -166,8 +170,9 @@ namespace GreenLife_Organic_Store.Forms
             // Place Order button
             IconButton btnPlaceOrder = new IconButton
             {
+                Name = "btnPlaceOrder",
                 Text = "Place Order",
-                Location = new Point(380, 510),
+                Location = new Point(380, 560),
                 Size = new Size(140, 40),
                 BackColor = Color.Green,
                 ForeColor = Color.White,
@@ -182,6 +187,19 @@ namespace GreenLife_Organic_Store.Forms
             btnPlaceOrder.FlatAppearance.BorderSize = 0;
             btnPlaceOrder.Click += BtnPlaceOrder_Click;
             this.Controls.Add(btnPlaceOrder);
+
+            // Progress bar for email sending — full width with margins
+            progressBarEmail = new ProgressBar
+            {
+                Style = ProgressBarStyle.Marquee,
+                MarqueeAnimationSpeed = 25,
+                Visible = false,
+                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
+            };
+            int pbWidth = Math.Max(200, this.ClientSize.Width - 40); // 20px margin each side
+            progressBarEmail.Size = new Size(pbWidth, 18);
+            progressBarEmail.Location = new Point(20, btnPlaceOrder.Bottom + 12);
+            this.Controls.Add(progressBarEmail);
         }
 
         private void LoadCustomerInfo()
@@ -242,7 +260,7 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
-        private void BtnPlaceOrder_Click(object sender, EventArgs e)
+        private async void BtnPlaceOrder_Click(object sender, EventArgs e)
         {
             // Validation
             TextBox txtName = (TextBox)this.Controls["txtName"];
@@ -260,6 +278,16 @@ namespace GreenLife_Organic_Store.Forms
             if (string.IsNullOrWhiteSpace(txtPhone.Text))
             {
                 MessageBox.Show("Please enter your phone number.", "Required Field", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPhone.Focus();
+                return;
+            }
+
+            // Basic phone validation: allow common separators but require 7-15 digits total
+            var digitsOnly = Regex.Replace(txtPhone.Text ?? string.Empty, "\\D", "");
+            if (digitsOnly.Length < 7 || digitsOnly.Length > 15)
+            {
+                MessageBox.Show("Please enter a valid phone number (7-15 digits). You can include spaces, dashes or parentheses.", "Invalid Phone", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPhone.Focus();
                 return;
             }
 
@@ -342,32 +370,50 @@ namespace GreenLife_Organic_Store.Forms
                 if (orderId > 0)
                 {
                     ShoppingCart.Clear();
-                    // Clear DB cart for logged-in user
+                    // Clear DB cart for the customer associated with this order if available.
+                    // Use order.CustomerID (may be a newly created user or an existing user found by email)
                     try
                     {
-                        if (_currentUser != null && _currentUser.ID > 0)
+                        if (order.CustomerID > 0)
                         {
-                            GreenLife_Organic_Store.Database.CartRepository.ClearCart(_currentUser.ID);
+                            GreenLife_Organic_Store.Database.CartRepository.ClearCart(order.CustomerID);
                         }
                     }
                     catch
                     {
                         // non-fatal
                     }
-                    // Send confirmation email (best-effort)
+                    // Send confirmation email (best-effort) but show progress to user
                     try
                     {
-                        GreenLife_Organic_Store.Utilities.EmailService.SendOrderConfirmation(
-                            order.CustomerEmail,
-                            order.CustomerName,
-                            order.OrderNumber,
-                            order.TotalAmount,
-                            order.Items
-                        );
+                        progressBarEmail.Visible = true;
+                        // run send on background and await completion briefly so user sees progress
+                        bool emailSent = await Task.Run(() =>
+                        {
+                            try
+                            {
+                                return GreenLife_Organic_Store.Utilities.EmailService.SendOrderConfirmation(
+                                    order.CustomerEmail,
+                                    order.CustomerName,
+                                    order.OrderNumber,
+                                    order.TotalAmount,
+                                    order.Items
+                                );
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"[Checkout] Order confirmation email failed: {ex.Message}");
+                                return false;
+                            }
+                        });
+                        // keep progress visible briefly
+                        await Task.Delay(300);
+                        progressBarEmail.Visible = false;
+                        // ignore emailSent result (best-effort)
                     }
                     catch
                     {
-                        // ignore
+                        try { progressBarEmail.Visible = false; } catch { }
                     }
 
                     MessageBox.Show(

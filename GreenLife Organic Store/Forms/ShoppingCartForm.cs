@@ -7,6 +7,7 @@ namespace GreenLife_Organic_Store.Forms
     public partial class ShoppingCartForm : Form
     {
         private List<CartItem> _cartItems = new();
+        private User? _currentUser;
         private DataGridView _dgvCart = null!;
 
         public ShoppingCartForm()
@@ -18,6 +19,12 @@ namespace GreenLife_Organic_Store.Forms
             this.MaximizeBox = false;
             this.BackColor = Color.FromArgb(245, 245, 245);
             this.Load += ShoppingCartForm_Load;
+        }
+
+        // Allow creating the cart form with an optional logged-in user so we can continue checkout as that user
+        public ShoppingCartForm(User? currentUser) : this()
+        {
+            _currentUser = currentUser;
         }
 
         private void ShoppingCartForm_Load(object sender, EventArgs e)
@@ -407,7 +414,7 @@ namespace GreenLife_Organic_Store.Forms
                 return;
             }
 
-            CheckoutForm checkoutForm = new CheckoutForm();
+            CheckoutForm checkoutForm = new CheckoutForm(_currentUser);
             if (checkoutForm.ShowDialog() == DialogResult.OK)
             {
                 this.Close();

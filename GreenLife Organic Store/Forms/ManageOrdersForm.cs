@@ -364,15 +364,25 @@ namespace GreenLife_Organic_Store.Forms
                         var newStatus = Enum.Parse<OrderStatus>(cmbNewStatus.SelectedItem.ToString());
                         if (OrderRepository.UpdateOrderStatus(order.ID, newStatus))
                         {
-                            // Send status update email (best-effort)
+                            // Send status update email (best-effort) on background thread
                             try
                             {
-                                GreenLife_Organic_Store.Utilities.EmailService.SendOrderStatusUpdate(
-                                    order.CustomerEmail,
-                                    order.CustomerName,
-                                    order.OrderNumber,
-                                    newStatus.ToString()
-                                );
+                                _ = Task.Run(() =>
+                                {
+                                    try
+                                    {
+                                        GreenLife_Organic_Store.Utilities.EmailService.SendOrderStatusUpdate(
+                                            order.CustomerEmail,
+                                            order.CustomerName,
+                                            order.OrderNumber,
+                                            newStatus.ToString()
+                                        );
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine($"[ManageOrders] Status update email failed: {ex.Message}");
+                                    }
+                                });
                             }
                             catch
                             {

@@ -907,7 +907,7 @@ namespace GreenLife_Organic_Store.Forms
 
         private void ShowCart()
         {
-            ShoppingCartForm cartForm = new ShoppingCartForm();
+            ShoppingCartForm cartForm = new ShoppingCartForm(_currentCustomer);
             cartForm.ShowDialog();
             UpdateCartCount();
         }
