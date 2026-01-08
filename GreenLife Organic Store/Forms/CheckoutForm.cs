@@ -60,21 +60,21 @@ namespace GreenLife_Organic_Store.Forms
 
             // Full Name
             Label lblName = new Label { Text = "Full Name:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtName = new TextBox { Name = "txtName", Location = new Point(120, yPosition), Size = new Size(300, 25) };
+            TextBox txtName = new TextBox { Name = "txtName", Location = new Point(120, yPosition), Size = new Size(540, 25) };
             this.Controls.Add(lblName);
             this.Controls.Add(txtName);
             yPosition += 30;
 
             // Phone
             Label lblPhone = new Label { Text = "Phone:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtPhone = new TextBox { Name = "txtPhone", Location = new Point(120, yPosition), Size = new Size(300, 25) };
+            TextBox txtPhone = new TextBox { Name = "txtPhone", Location = new Point(120, yPosition), Size = new Size(540, 25) };
             this.Controls.Add(lblPhone);
             this.Controls.Add(txtPhone);
             yPosition += 30;
 
             // Email
             Label lblEmail = new Label { Text = "Email:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtEmail = new TextBox { Name = "txtEmail", Location = new Point(120, yPosition), Size = new Size(300, 25) };
+            TextBox txtEmail = new TextBox { Name = "txtEmail", Location = new Point(120, yPosition), Size = new Size(540, 25) };
             this.Controls.Add(lblEmail);
             this.Controls.Add(txtEmail);
             yPosition += 30;
@@ -85,7 +85,7 @@ namespace GreenLife_Organic_Store.Forms
             {
                 Name = "txtAddress",
                 Location = new Point(120, yPosition),
-                Size = new Size(300, 80),
+                Size = new Size(540, 80),
                 Multiline = true
             };
             this.Controls.Add(lblAddress);
