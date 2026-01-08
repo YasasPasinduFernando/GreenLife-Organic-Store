@@ -1,6 +1,8 @@
 using MySql.Data.MySqlClient;
 using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Utilities;
+using System.Collections.Generic;
+using System;
 
 namespace GreenLife_Organic_Store.Database
 {
@@ -9,6 +11,9 @@ namespace GreenLife_Organic_Store.Database
     /// </summary>
     public class UserRepository
     {
+        // Password Reset Token storage (in-memory for simplicity)
+        private static Dictionary<string, (string Code, DateTime Expiry)> _resetCodes = new();
+
         /// <summary>
         /// Authenticates a user with email and password
         /// </summary>
@@ -60,10 +65,11 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
-                    string query = "SELECT * FROM Users WHERE Email = @Email";
+                    // Case-insensitive lookup and ignore surrounding whitespace
+                    string query = "SELECT * FROM Users WHERE LOWER(Email) = LOWER(@Email)";
                     using (var cmd = new MySqlCommand(query, connection))
                     {
-                        cmd.Parameters.AddWithValue("@Email", email);
+                        cmd.Parameters.AddWithValue("@Email", (object?)email?.Trim() ?? string.Empty);
                         using (var reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
@@ -196,6 +202,79 @@ namespace GreenLife_Organic_Store.Database
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// Generates and sends password reset code
+        /// </summary>
+        public static bool RequestPasswordReset(string email)
+        {
+            try
+            {
+                var user = GetUserByEmail(email);
+                if (user == null) return false;
+
+                // Generate 6-digit code
+                string resetCode = new Random().Next(100000, 999999).ToString();
+
+                // Store with 15 minute expiry
+                _resetCodes[email] = (resetCode, DateTime.Now.AddMinutes(15));
+
+                // Send email
+                return EmailService.SendPasswordResetEmail(user.Email, user.Name, resetCode);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error requesting password reset: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Verifies reset code and updates password
+        /// </summary>
+        public static bool ResetPassword(string email, string code, string newPassword)
+        {
+            try
+            {
+                // Check if code exists and not expired
+                if (!_resetCodes.ContainsKey(email)) return false;
+                var (storedCode, expiry) = _resetCodes[email];
+
+                if (DateTime.Now > expiry)
+                {
+                    _resetCodes.Remove(email);
+                    return false; // Expired
+                }
+
+                if (storedCode != code)
+                    return false; // Wrong code
+
+                // Update password
+                using (var connection = DatabaseConnection.GetConnection())
+                {
+                    connection.Open();
+                    string query = "UPDATE Users SET Password = @Password WHERE Email = @Email";
+
+                    using (var cmd = new MySqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        cmd.Parameters.AddWithValue("@Password", PasswordHasher.HashPassword(newPassword));
+
+                        bool success = cmd.ExecuteNonQuery() > 0;
+
+                        if (success)
+                        {
+                            _resetCodes.Remove(email); // Remove used code
+                        }
+
+                        return success;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error resetting password: {ex.Message}", ex);
+            }
         }
 
         /// <summary>

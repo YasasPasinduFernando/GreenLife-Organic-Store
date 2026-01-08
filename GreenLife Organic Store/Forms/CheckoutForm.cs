@@ -354,6 +354,22 @@ namespace GreenLife_Organic_Store.Forms
                     {
                         // non-fatal
                     }
+                    // Send confirmation email (best-effort)
+                    try
+                    {
+                        GreenLife_Organic_Store.Utilities.EmailService.SendOrderConfirmation(
+                            order.CustomerEmail,
+                            order.CustomerName,
+                            order.OrderNumber,
+                            order.TotalAmount,
+                            order.Items
+                        );
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+
                     MessageBox.Show(
                         $"Order placed successfully!\nOrder Number: {order.OrderNumber}\n\nTotal: Rs. {_totalAmount:N2}",
                         "Order Confirmed",

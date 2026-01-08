@@ -165,6 +165,15 @@ namespace GreenLife_Organic_Store.Forms
             this.Show();
         }
 
+        private void linkLabelForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // Open forgot password form
+            var forgot = new ForgotPasswordForm();
+            this.Hide();
+            forgot.ShowDialog();
+            this.Show();
+        }
+
         private void LoginForm_Load(object sender, EventArgs e)
         {
             // Set default selection

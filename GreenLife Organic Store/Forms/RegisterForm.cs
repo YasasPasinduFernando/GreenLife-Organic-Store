@@ -193,8 +193,33 @@ namespace GreenLife_Organic_Store.Forms
 
                 if (newUserId > 0)
                 {
-                    MessageBox.Show($"Registration successful! Your account has been created.\nYou can now login with your email and password.", 
-                        "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Send welcome email (best-effort)
+                    bool emailSent = false;
+                    try
+                    {
+                        Console.WriteLine($"[RegisterForm] Sending welcome email to {newUser.Email}");
+                        emailSent = GreenLife_Organic_Store.Utilities.EmailService.SendWelcomeEmail(newUser.Email, newUser.Name);
+                    }
+                    catch (Exception emailEx)
+                    {
+                        Console.WriteLine($"[RegisterForm] Welcome email failed: {emailEx.Message}");
+                    }
+
+                    string message = $"Registration successful! Your account has been created.";
+                    if (!emailSent)
+                    {
+                        message += $"\n\n??  Welcome email could not be sent.\nThis may be due to email not being configured.";
+                        message += $"\n\nYou can still login and use your account.";
+                        message += $"\nCheck EMAIL_CONFIG.md for email setup instructions.";
+                    }
+                    else
+                    {
+                        message += $"\n\n? A welcome email has been sent to {newUser.Email}";
+                    }
+
+                    message += $"\n\nYou can now login with your email and password.";
+
+                    MessageBox.Show(message, "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
                 else

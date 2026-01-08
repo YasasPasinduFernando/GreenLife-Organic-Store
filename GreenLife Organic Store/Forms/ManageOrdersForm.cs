@@ -364,6 +364,21 @@ namespace GreenLife_Organic_Store.Forms
                         var newStatus = Enum.Parse<OrderStatus>(cmbNewStatus.SelectedItem.ToString());
                         if (OrderRepository.UpdateOrderStatus(order.ID, newStatus))
                         {
+                            // Send status update email (best-effort)
+                            try
+                            {
+                                GreenLife_Organic_Store.Utilities.EmailService.SendOrderStatusUpdate(
+                                    order.CustomerEmail,
+                                    order.CustomerName,
+                                    order.OrderNumber,
+                                    newStatus.ToString()
+                                );
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
+
                             MessageBox.Show("Order status updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             LoadOrders();
                         }
