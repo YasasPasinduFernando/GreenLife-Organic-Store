@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 using FontAwesome.Sharp;
 using System.IO;
 using System;
@@ -156,10 +157,14 @@ namespace GreenLife_Organic_Store.Forms
                     Image? thumb = null;
                     try
                     {
-                        if (!string.IsNullOrWhiteSpace(cat.ImagePath) && File.Exists(cat.ImagePath))
+                        if (!string.IsNullOrWhiteSpace(cat.ImagePath))
                         {
-                            using var img = Image.FromFile(cat.ImagePath);
-                            thumb = new Bitmap(img, new Size(60, 60));
+                            var full = ImageStore.GetFullPath(cat.ImagePath);
+                            if (File.Exists(full))
+                            {
+                                using var img = Image.FromFile(full);
+                                thumb = new Bitmap(img, new Size(60, 60));
+                            }
                         }
                     }
                     catch { }
@@ -202,17 +207,10 @@ namespace GreenLife_Organic_Store.Forms
                 {
                     try
                     {
-                        var imagesDir = Path.Combine(Application.StartupPath, "images");
-                        Directory.CreateDirectory(imagesDir);
-                        var destFileName = Path.Combine(imagesDir, Path.GetFileName(ofd.FileName));
-                        if (File.Exists(destFileName))
-                        {
-                            var unique = Guid.NewGuid().ToString().Split('-')[0];
-                            destFileName = Path.Combine(imagesDir, Path.GetFileNameWithoutExtension(ofd.FileName) + "_" + unique + Path.GetExtension(ofd.FileName));
-                        }
-                        File.Copy(ofd.FileName, destFileName);
-                        picPreview.ImageLocation = destFileName;
-                        picPreview.Tag = destFileName;
+                        var relative = ImageStore.SaveImageFile(ofd.FileName);
+                        var full = ImageStore.GetFullPath(relative);
+                        picPreview.ImageLocation = full;
+                        picPreview.Tag = relative;
                     }
                     catch (Exception ex)
                     {
@@ -312,8 +310,12 @@ namespace GreenLife_Organic_Store.Forms
                     // Image selection for edit
                     Label lblImage = new Label { Text = "Image:", Location = new Point(10, 130), Size = new Size(120, 20) };
                     PictureBox picPreview = new PictureBox { Name = "picPreview", Location = new Point(150, 130), Size = new Size(80, 80), BorderStyle = BorderStyle.FixedSingle, SizeMode = PictureBoxSizeMode.Zoom };
-                    if (!string.IsNullOrWhiteSpace(cat.ImagePath) && File.Exists(cat.ImagePath))
-                        picPreview.ImageLocation = cat.ImagePath;
+                    if (!string.IsNullOrWhiteSpace(cat.ImagePath))
+                    {
+                        var full = ImageStore.GetFullPath(cat.ImagePath);
+                        if (File.Exists(full))
+                            picPreview.ImageLocation = full;
+                    }
                     Button btnChoose = new Button { Text = "Choose Image...", Location = new Point(240, 150), Size = new Size(120, 30) };
                     btnChoose.Click += (s, e) =>
                     {
@@ -323,17 +325,10 @@ namespace GreenLife_Organic_Store.Forms
                         {
                             try
                             {
-                                var imagesDir = Path.Combine(Application.StartupPath, "images");
-                                Directory.CreateDirectory(imagesDir);
-                                var destFileName = Path.Combine(imagesDir, Path.GetFileName(ofd.FileName));
-                                if (File.Exists(destFileName))
-                                {
-                                    var unique = Guid.NewGuid().ToString().Split('-')[0];
-                                    destFileName = Path.Combine(imagesDir, Path.GetFileNameWithoutExtension(ofd.FileName) + "_" + unique + Path.GetExtension(ofd.FileName));
-                                }
-                                File.Copy(ofd.FileName, destFileName);
-                                picPreview.ImageLocation = destFileName;
-                                picPreview.Tag = destFileName;
+                        var relative = ImageStore.SaveImageFile(ofd.FileName);
+                        var full = ImageStore.GetFullPath(relative);
+                        picPreview.ImageLocation = full;
+                        picPreview.Tag = relative;
                             }
                             catch (Exception ex)
                             {
