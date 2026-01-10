@@ -29,8 +29,7 @@ namespace GreenLife_Organic_Store
             // Ensure images directory exists for storing uploaded product/category images
             try
             {
-                var imagesDir = Path.Combine(Application.StartupPath, "images");
-                Directory.CreateDirectory(imagesDir);
+                ImageStore.EnsureImagesDirectoryExists();
             }
             catch
             {

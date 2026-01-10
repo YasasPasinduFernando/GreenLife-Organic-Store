@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 using System.IO;
 using System;
 
@@ -226,15 +227,37 @@ namespace GreenLife_Organic_Store.Forms
             try
             {
                 var pic = (PictureBox)this.Controls["picPreview"];
-                if (!string.IsNullOrWhiteSpace(_existingProduct.ImagePath) && File.Exists(_existingProduct.ImagePath))
+                if (!string.IsNullOrWhiteSpace(_existingProduct.ImagePath))
                 {
-                    pic.ImageLocation = _existingProduct.ImagePath;
-                    pic.Tag = _existingProduct.ImagePath;
+                    var full = ImageStore.GetFullPath(_existingProduct.ImagePath);
+                    if (File.Exists(full))
+                    {
+                        pic.ImageLocation = full;
+
+                        // If the stored path is under the app base directory, convert to a normalized relative path for DB
+                        try
+                        {
+                            var rel = Path.GetRelativePath(AppContext.BaseDirectory, full).Replace(Path.DirectorySeparatorChar, '/');
+                            // Ensure folder name uses the Images folder name defined in ImageStore
+                            if (rel.StartsWith("images/", StringComparison.OrdinalIgnoreCase))
+                                rel = "Images/" + rel.Substring("images/".Length);
+                            pic.Tag = rel;
+                        }
+                        catch
+                        {
+                            pic.Tag = _existingProduct.ImagePath;
+                        }
+                    }
+                    else
+                    {
+                        pic.Image = null;
+                        pic.Tag = _existingProduct.ImagePath; // keep path in tag even if missing file so save logic can preserve value
+                    }
                 }
                 else
                 {
                     pic.Image = null;
-                    pic.Tag = _existingProduct.ImagePath; // keep path in tag even if missing file so save logic can preserve value
+                    pic.Tag = null;
                 }
             }
             catch
@@ -328,22 +351,14 @@ namespace GreenLife_Organic_Store.Forms
             ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                try
-                {
-                    var imagesDir = Path.Combine(Application.StartupPath, "images");
-                    Directory.CreateDirectory(imagesDir);
-                    var destFileName = Path.Combine(imagesDir, Path.GetFileName(ofd.FileName));
-                    // If file exists, create a unique name
-                    if (File.Exists(destFileName))
+                    try
                     {
-                        var unique = Guid.NewGuid().ToString().Split('-')[0];
-                        destFileName = Path.Combine(imagesDir, Path.GetFileNameWithoutExtension(ofd.FileName) + "_" + unique + Path.GetExtension(ofd.FileName));
+                        var relative = ImageStore.SaveImageFile(ofd.FileName);
+                        var full = ImageStore.GetFullPath(relative);
+                        var pic = (PictureBox)this.Controls["picPreview"];
+                        pic.ImageLocation = full;
+                        pic.Tag = relative; // store relative path in Tag so it can be saved to DB
                     }
-                    File.Copy(ofd.FileName, destFileName);
-                    var pic = (PictureBox)this.Controls["picPreview"];
-                    pic.ImageLocation = destFileName;
-                    pic.Tag = destFileName; // store path in Tag so it can be saved to DB
-                }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Failed to add image: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
