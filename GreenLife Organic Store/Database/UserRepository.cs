@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using Microsoft.Data.Sqlite;
 using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Utilities;
 using System.Collections.Generic;
@@ -27,15 +27,15 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
-                    string query = "SELECT * FROM Users WHERE Email = @Email AND IsActive = TRUE";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    string query = "SELECT * FROM Users WHERE Email = @Email AND IsActive = 1";
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@Email", email);
                         using (var reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                string storedHash = reader["Password"].ToString() ?? string.Empty;
+                                string storedHash = reader["Password"]?.ToString() ?? string.Empty;
                                 if (PasswordHasher.VerifyPassword(password, storedHash))
                                 {
                                     return MapReaderToUser(reader);
@@ -67,7 +67,7 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     // Case-insensitive lookup and ignore surrounding whitespace
                     string query = "SELECT * FROM Users WHERE LOWER(Email) = LOWER(@Email)";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@Email", (object?)email?.Trim() ?? string.Empty);
                         using (var reader = cmd.ExecuteReader())
@@ -101,7 +101,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM Users WHERE ID = @ID";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", id);
                         using (var reader = cmd.ExecuteReader())
@@ -135,7 +135,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM Users ORDER BY CreatedDate DESC";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -173,11 +173,10 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
-                    string query = @"INSERT INTO Users (Email, Name, Phone, Age, Address, Sex, UserType, Password) 
-                                     VALUES (@Email, @Name, @Phone, @Age, @Address, @Sex, @UserType, @Password);
-                                     SELECT LAST_INSERT_ID();";
-                    
-                    using (var cmd = new MySqlCommand(query, connection))
+                    string query = @"INSERT INTO Users (Email, Name, Phone, Age, Address, Sex, UserType, Password, CreatedDate, UpdatedDate, IsActive) 
+                                     VALUES (@Email, @Name, @Phone, @Age, @Address, @Sex, @UserType, @Password, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);";
+
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@Email", user.Email);
                         cmd.Parameters.AddWithValue("@Name", user.Name);
@@ -187,11 +186,13 @@ namespace GreenLife_Organic_Store.Database
                         cmd.Parameters.AddWithValue("@Sex", user.Sex.ToString());
                         cmd.Parameters.AddWithValue("@UserType", user.UserType.ToString());
                         cmd.Parameters.AddWithValue("@Password", PasswordHasher.HashPassword(user.Password));
+                        cmd.ExecuteNonQuery();
 
-                        var result = cmd.ExecuteScalar();
-                        if (result != null && int.TryParse(result.ToString(), out int id))
+                        using var idCmd = new SqliteCommand("SELECT last_insert_rowid();", connection);
+                        var result = idCmd.ExecuteScalar();
+                        if (result != null && long.TryParse(result.ToString(), out long lid))
                         {
-                            return id;
+                            return (int)lid;
                         }
                     }
                 }
@@ -255,7 +256,7 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = "UPDATE Users SET Password = @Password WHERE Email = @Email";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@Email", email);
                         cmd.Parameters.AddWithValue("@Password", PasswordHasher.HashPassword(newPassword));
@@ -296,8 +297,8 @@ namespace GreenLife_Organic_Store.Database
                                      Address = @Address, 
                                      Sex = @Sex
                                      WHERE ID = @ID";
-                    
-                    using (var cmd = new MySqlCommand(query, connection))
+
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", user.ID);
                         cmd.Parameters.AddWithValue("@Name", user.Name);
@@ -330,8 +331,8 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "UPDATE Users SET Password = @Password WHERE ID = @ID";
-                    
-                    using (var cmd = new MySqlCommand(query, connection))
+
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", userId);
                         cmd.Parameters.AddWithValue("@Password", PasswordHasher.HashPassword(newPassword));
@@ -359,8 +360,8 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "DELETE FROM Users WHERE ID = @ID";
-                    
-                    using (var cmd = new MySqlCommand(query, connection))
+
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", userId);
                         return cmd.ExecuteNonQuery() > 0;
@@ -376,22 +377,22 @@ namespace GreenLife_Organic_Store.Database
         /// <summary>
         /// Maps a database reader to a User object
         /// </summary>
-        private static User MapReaderToUser(MySqlDataReader reader)
+        private static User MapReaderToUser(SqliteDataReader reader)
         {
             return new User
             {
-                ID = (int)reader["ID"],
-                Email = reader["Email"].ToString() ?? string.Empty,
-                Name = reader["Name"].ToString() ?? string.Empty,
-                Phone = reader["Phone"] != DBNull.Value ? reader["Phone"].ToString() : null,
-                Age = reader["Age"] != DBNull.Value ? (int)reader["Age"] : null,
-                Address = reader["Address"] != DBNull.Value ? reader["Address"].ToString() : null,
-                Sex = Enum.Parse<Gender>(reader["Sex"].ToString() ?? "Male"),
-                UserType = Enum.Parse<UserType>(reader["UserType"].ToString() ?? "Customer"),
-                Password = reader["Password"].ToString() ?? string.Empty,
-                CreatedDate = (DateTime)reader["CreatedDate"],
-                UpdatedDate = (DateTime)reader["UpdatedDate"],
-                IsActive = (bool)reader["IsActive"]
+                ID = Convert.ToInt32(reader["ID"]),
+                Email = reader["Email"]?.ToString() ?? string.Empty,
+                Name = reader["Name"]?.ToString() ?? string.Empty,
+                Phone = reader["Phone"] != DBNull.Value ? reader["Phone"]?.ToString() : null,
+                Age = reader["Age"] != DBNull.Value ? (int?)Convert.ToInt32(reader["Age"]) : null,
+                Address = reader["Address"] != DBNull.Value ? reader["Address"]?.ToString() : null,
+                Sex = Enum.Parse<Gender>(reader["Sex"]?.ToString() ?? "Male"),
+                UserType = Enum.Parse<UserType>(reader["UserType"]?.ToString() ?? "Customer"),
+                Password = reader["Password"]?.ToString() ?? string.Empty,
+                CreatedDate = reader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["CreatedDate"]) : DateTime.MinValue,
+                UpdatedDate = reader["UpdatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["UpdatedDate"]) : DateTime.MinValue,
+                IsActive = reader["IsActive"] != DBNull.Value ? Convert.ToInt32(reader["IsActive"]) == 1 : true
             };
         }
     }

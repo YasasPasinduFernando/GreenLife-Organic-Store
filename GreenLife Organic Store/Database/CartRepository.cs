@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using Microsoft.Data.Sqlite;
 using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Database
@@ -17,8 +17,8 @@ namespace GreenLife_Organic_Store.Database
                     conn.Open();
 
                     // Try update existing (increment quantity)
-                    const string updateSql = "UPDATE CartItems SET Quantity = Quantity + @Quantity, UpdatedDate = NOW() WHERE UserID = @UserID AND ProductID = @ProductID";
-                    using (var cmd = new MySqlCommand(updateSql, conn))
+                    const string updateSql = "UPDATE CartItems SET Quantity = Quantity + @Quantity, UpdatedDate = CURRENT_TIMESTAMP WHERE UserID = @UserID AND ProductID = @ProductID";
+                    using (var cmd = new SqliteCommand(updateSql, conn))
                     {
                         cmd.Parameters.AddWithValue("@Quantity", quantity);
                         cmd.Parameters.AddWithValue("@UserID", userId);
@@ -28,8 +28,8 @@ namespace GreenLife_Organic_Store.Database
                     }
 
                     // Insert new
-                    const string insertSql = "INSERT INTO CartItems (UserID, ProductID, Quantity) VALUES (@UserID, @ProductID, @Quantity)";
-                    using (var cmd = new MySqlCommand(insertSql, conn))
+                    const string insertSql = "INSERT INTO CartItems (UserID, ProductID, Quantity, CreatedDate) VALUES (@UserID, @ProductID, @Quantity, CURRENT_TIMESTAMP)";
+                    using (var cmd = new SqliteCommand(insertSql, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserID", userId);
                         cmd.Parameters.AddWithValue("@ProductID", productId);
@@ -51,8 +51,8 @@ namespace GreenLife_Organic_Store.Database
                 using (var conn = DatabaseConnection.GetConnection())
                 {
                     conn.Open();
-                    const string sql = "SELECT IFNULL(SUM(Quantity),0) FROM CartItems WHERE UserID = @UserID";
-                    using (var cmd = new MySqlCommand(sql, conn))
+                    const string sql = "SELECT COALESCE(SUM(Quantity),0) FROM CartItems WHERE UserID = @UserID";
+                    using (var cmd = new SqliteCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserID", userId);
                         var result = cmd.ExecuteScalar();
@@ -77,11 +77,11 @@ namespace GreenLife_Organic_Store.Database
             var result = new Dictionary<int, int>();
             try
             {
-                using (var conn = DatabaseConnection.GetConnection())
+                    using (var conn = DatabaseConnection.GetConnection())
                 {
                     conn.Open();
                     const string sql = "SELECT ProductID, Quantity FROM CartItems WHERE UserID = @UserID";
-                    using (var cmd = new MySqlCommand(sql, conn))
+                    using (var cmd = new SqliteCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserID", userId);
                         using (var reader = cmd.ExecuteReader())
@@ -108,11 +108,11 @@ namespace GreenLife_Organic_Store.Database
         {
             try
             {
-                using (var conn = DatabaseConnection.GetConnection())
+                    using (var conn = DatabaseConnection.GetConnection())
                 {
                     conn.Open();
                     const string sql = "DELETE FROM CartItems WHERE UserID = @UserID";
-                    using (var cmd = new MySqlCommand(sql, conn))
+                    using (var cmd = new SqliteCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserID", userId);
                         cmd.ExecuteNonQuery();

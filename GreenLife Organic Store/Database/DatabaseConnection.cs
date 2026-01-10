@@ -1,26 +1,37 @@
-using MySql.Data.MySqlClient;
+using Microsoft.Data.Sqlite;
+using System.IO;
 
 namespace GreenLife_Organic_Store.Database
 {
     /// <summary>
-    /// Manages MySQL database connections for the GreenLife application
+    /// Manages SQLite database connections for the GreenLife application
     /// </summary>
     public class DatabaseConnection
     {
-        // Connection string for local development
-        // Server: localhost
-        // Port: 3306 (default MySQL port)
-        // Username: yasas
-        // Password: yasas
-        private static readonly string ConnectionString = "Server=localhost;Port=3306;Database=greenlife;Uid=yasas;Pwd=yasas;";
+        private static readonly string DbFileName = "greenlife.db";
+
+        private static string GetDatabaseFilePath()
+        {
+            // Database file stored in the application's executable directory under "Database"
+            var baseDir = AppContext.BaseDirectory;
+            var dbDir = Path.Combine(baseDir, "Database");
+            if (!Directory.Exists(dbDir)) Directory.CreateDirectory(dbDir);
+            return Path.Combine(dbDir, DbFileName);
+        }
+
+        private static string GetConnectionString()
+        {
+            var dbPath = GetDatabaseFilePath();
+            return new SqliteConnectionStringBuilder { DataSource = dbPath }.ToString();
+        }
 
         /// <summary>
         /// Gets a new database connection
         /// </summary>
-        /// <returns>A new MySqlConnection object</returns>
-        public static MySqlConnection GetConnection()
+        /// <returns>A new SqliteConnection object</returns>
+        public static SqliteConnection GetConnection()
         {
-            return new MySqlConnection(ConnectionString);
+            return new SqliteConnection(GetConnectionString());
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using Microsoft.Data.Sqlite;
 using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Database
@@ -22,9 +22,9 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = @"SELECT p.*, c.CategoryName FROM Products p
                                      LEFT JOIN Categories c ON p.CategoryID = c.ID
-                                     WHERE p.IsActive = TRUE
+                                     WHERE p.IsActive = 1
                                      ORDER BY p.CreatedDate DESC";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -59,7 +59,7 @@ namespace GreenLife_Organic_Store.Database
                     string query = @"SELECT p.*, c.CategoryName FROM Products p
                                      LEFT JOIN Categories c ON p.CategoryID = c.ID
                                      WHERE p.ID = @ID";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", id);
                         using (var reader = cmd.ExecuteReader())
@@ -95,9 +95,9 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = @"SELECT p.*, c.CategoryName FROM Products p
                                      LEFT JOIN Categories c ON p.CategoryID = c.ID
-                                     WHERE p.CategoryID = @CategoryID AND p.IsActive = TRUE
+                                     WHERE p.CategoryID = @CategoryID AND p.IsActive = 1
                                      ORDER BY p.ProductName";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@CategoryID", categoryId);
                         using (var reader = cmd.ExecuteReader())
@@ -156,9 +156,9 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = @"SELECT p.*, c.CategoryName FROM Products p
                                      LEFT JOIN Categories c ON p.CategoryID = c.ID
-                                     WHERE p.IsFeatured = TRUE AND p.IsActive = TRUE
+                                     WHERE p.IsFeatured = 1 AND p.IsActive = 1
                                      ORDER BY p.CreatedDate DESC";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -192,9 +192,9 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = @"SELECT p.*, c.CategoryName FROM Products p
                                      LEFT JOIN Categories c ON p.CategoryID = c.ID
-                                     WHERE p.Stock <= 10 AND p.IsActive = TRUE
+                                     WHERE p.Stock <= 10 AND p.IsActive = 1
                                      ORDER BY p.Stock ASC";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -230,7 +230,8 @@ namespace GreenLife_Organic_Store.Database
                                      VALUES (@ProductName, @CategoryID, @Description, @Price, @DiscountPrice, @Stock, @Supplier, @ImagePath, @IsFeatured);
                                      SELECT LAST_INSERT_ID();";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(@"INSERT INTO Products (ProductName, CategoryID, Description, Price, DiscountPrice, Stock, Supplier, ImagePath, IsFeatured, CreatedDate, UpdatedDate, IsActive)
+                                     VALUES (@ProductName, @CategoryID, @Description, @Price, @DiscountPrice, @Stock, @Supplier, @ImagePath, @IsFeatured, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);", connection))
                     {
                         cmd.Parameters.AddWithValue("@ProductName", product.ProductName);
                         cmd.Parameters.AddWithValue("@CategoryID", product.CategoryID);
@@ -240,12 +241,14 @@ namespace GreenLife_Organic_Store.Database
                         cmd.Parameters.AddWithValue("@Stock", product.Stock);
                         cmd.Parameters.AddWithValue("@Supplier", (object?)product.Supplier ?? DBNull.Value);
                         cmd.Parameters.AddWithValue("@ImagePath", (object?)product.ImagePath ?? DBNull.Value);
-                        cmd.Parameters.AddWithValue("@IsFeatured", product.IsFeatured);
+                        cmd.Parameters.AddWithValue("@IsFeatured", product.IsFeatured ? 1 : 0);
 
-                        var result = cmd.ExecuteScalar();
-                        if (result != null && int.TryParse(result.ToString(), out int id))
+                        cmd.ExecuteNonQuery();
+                        using var idCmd = new SqliteCommand("SELECT last_insert_rowid();", connection);
+                        var result = idCmd.ExecuteScalar();
+                        if (result != null && long.TryParse(result.ToString(), out long lid))
                         {
-                            return id;
+                            return (int)lid;
                         }
                     }
                 }
@@ -283,7 +286,7 @@ namespace GreenLife_Organic_Store.Database
                                      IsActive = @IsActive
                                      WHERE ID = @ID";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", product.ID);
                         cmd.Parameters.AddWithValue("@ProductName", product.ProductName);
@@ -294,7 +297,7 @@ namespace GreenLife_Organic_Store.Database
                         cmd.Parameters.AddWithValue("@Stock", product.Stock);
                         cmd.Parameters.AddWithValue("@Supplier", (object?)product.Supplier ?? DBNull.Value);
                         cmd.Parameters.AddWithValue("@ImagePath", (object?)product.ImagePath ?? DBNull.Value);
-                        cmd.Parameters.AddWithValue("@IsFeatured", product.IsFeatured);
+                        cmd.Parameters.AddWithValue("@IsFeatured", product.IsFeatured ? 1 : 0);
                         cmd.Parameters.AddWithValue("@IsActive", product.IsActive);
 
                         return cmd.ExecuteNonQuery() > 0;
@@ -321,7 +324,7 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = "DELETE FROM Products WHERE ID = @ID";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", productId);
                         return cmd.ExecuteNonQuery() > 0;
@@ -349,7 +352,7 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = "UPDATE Products SET Stock = Stock - @Quantity WHERE ID = @ID AND Stock >= @Quantity";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", productId);
                         cmd.Parameters.AddWithValue("@Quantity", quantity);
@@ -366,24 +369,24 @@ namespace GreenLife_Organic_Store.Database
         /// <summary>
         /// Maps a database reader to a Product object
         /// </summary>
-        private static Product MapReaderToProduct(MySqlDataReader reader)
+        private static Product MapReaderToProduct(SqliteDataReader reader)
         {
             return new Product
             {
-                ID = (int)reader["ID"],
-                ProductName = reader["ProductName"].ToString() ?? string.Empty,
-                CategoryID = (int)reader["CategoryID"],
-                CategoryName = reader["CategoryName"] != DBNull.Value ? reader["CategoryName"].ToString() ?? string.Empty : string.Empty,
-                Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
-                Price = (decimal)reader["Price"],
-                DiscountPrice = reader["DiscountPrice"] != DBNull.Value ? (decimal)reader["DiscountPrice"] : null,
-                Stock = (int)reader["Stock"],
-                Supplier = reader["Supplier"] != DBNull.Value ? reader["Supplier"].ToString() : null,
-                ImagePath = reader["ImagePath"] != DBNull.Value ? reader["ImagePath"].ToString() : null,
-                IsFeatured = (bool)reader["IsFeatured"],
-                CreatedDate = (DateTime)reader["CreatedDate"],
-                UpdatedDate = (DateTime)reader["UpdatedDate"],
-                IsActive = (bool)reader["IsActive"]
+                ID = Convert.ToInt32(reader["ID"]),
+                ProductName = reader["ProductName"]?.ToString() ?? string.Empty,
+                CategoryID = reader["CategoryID"] != DBNull.Value ? Convert.ToInt32(reader["CategoryID"]) : 0,
+                CategoryName = reader["CategoryName"] != DBNull.Value ? reader["CategoryName"]?.ToString() ?? string.Empty : string.Empty,
+                Description = reader["Description"] != DBNull.Value ? reader["Description"]?.ToString() : null,
+                Price = reader["Price"] != DBNull.Value ? Convert.ToDecimal(reader["Price"]) : 0m,
+                DiscountPrice = reader["DiscountPrice"] != DBNull.Value ? (decimal?)Convert.ToDecimal(reader["DiscountPrice"]) : null,
+                Stock = reader["Stock"] != DBNull.Value ? Convert.ToInt32(reader["Stock"]) : 0,
+                Supplier = reader["Supplier"] != DBNull.Value ? reader["Supplier"]?.ToString() : null,
+                ImagePath = reader["ImagePath"] != DBNull.Value ? reader["ImagePath"]?.ToString() : null,
+                IsFeatured = reader["IsFeatured"] != DBNull.Value ? Convert.ToInt32(reader["IsFeatured"]) == 1 : false,
+                CreatedDate = reader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["CreatedDate"]) : DateTime.MinValue,
+                UpdatedDate = reader["UpdatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["UpdatedDate"]) : DateTime.MinValue,
+                IsActive = reader["IsActive"] != DBNull.Value ? Convert.ToInt32(reader["IsActive"]) == 1 : true
             };
         }
     }

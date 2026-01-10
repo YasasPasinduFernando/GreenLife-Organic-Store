@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using Microsoft.Data.Sqlite;
 using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Database
@@ -20,8 +20,8 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
-                    string query = "SELECT * FROM Categories WHERE IsActive = TRUE ORDER BY CategoryName";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    string query = "SELECT * FROM Categories WHERE IsActive = 1 ORDER BY CategoryName";
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -54,7 +54,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM Categories WHERE ID = @ID";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", id);
                         using (var reader = cmd.ExecuteReader())
@@ -88,7 +88,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM Categories WHERE CategoryName = @CategoryName";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@CategoryName", categoryName);
                         using (var reader = cmd.ExecuteReader())
@@ -127,20 +127,20 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
-                    string query = @"INSERT INTO Categories (CategoryName, Description, ImagePath) 
-                                     VALUES (@CategoryName, @Description, @ImagePath);
-                                     SELECT LAST_INSERT_ID();";
+                    string query = @"INSERT INTO Categories (CategoryName, Description, ImagePath, CreatedDate, IsActive) 
+                                     VALUES (@CategoryName, @Description, @ImagePath, CURRENT_TIMESTAMP, 1);";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@CategoryName", category.CategoryName);
                         cmd.Parameters.AddWithValue("@Description", (object?)category.Description ?? DBNull.Value);
                         cmd.Parameters.AddWithValue("@ImagePath", (object?)category.ImagePath ?? DBNull.Value);
-
-                        var result = cmd.ExecuteScalar();
-                        if (result != null && int.TryParse(result.ToString(), out int id))
+                        cmd.ExecuteNonQuery();
+                        using var idCmd = new SqliteCommand("SELECT last_insert_rowid();", connection);
+                        var result = idCmd.ExecuteScalar();
+                        if (result != null && long.TryParse(result.ToString(), out long lid))
                         {
-                            return id;
+                            return (int)lid;
                         }
                     }
                 }
@@ -172,7 +172,7 @@ namespace GreenLife_Organic_Store.Database
                                      IsActive = @IsActive
                                      WHERE ID = @ID";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", category.ID);
                         cmd.Parameters.AddWithValue("@CategoryName", category.CategoryName);
@@ -204,7 +204,7 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = "DELETE FROM Categories WHERE ID = @ID";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", categoryId);
                         return cmd.ExecuteNonQuery() > 0;
@@ -220,16 +220,16 @@ namespace GreenLife_Organic_Store.Database
         /// <summary>
         /// Maps a database reader to a Category object
         /// </summary>
-        private static Category MapReaderToCategory(MySqlDataReader reader)
+        private static Category MapReaderToCategory(SqliteDataReader reader)
         {
             return new Category
             {
-                ID = (int)reader["ID"],
-                CategoryName = reader["CategoryName"].ToString() ?? string.Empty,
-                Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
-                ImagePath = reader["ImagePath"] != DBNull.Value ? reader["ImagePath"].ToString() : null,
-                CreatedDate = (DateTime)reader["CreatedDate"],
-                IsActive = (bool)reader["IsActive"]
+                ID = Convert.ToInt32(reader["ID"]),
+                CategoryName = reader["CategoryName"]?.ToString() ?? string.Empty,
+                Description = reader["Description"] != DBNull.Value ? reader["Description"]?.ToString() : null,
+                ImagePath = reader["ImagePath"] != DBNull.Value ? reader["ImagePath"]?.ToString() : null,
+                CreatedDate = reader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["CreatedDate"]) : DateTime.MinValue,
+                IsActive = reader["IsActive"] != DBNull.Value ? Convert.ToInt32(reader["IsActive"]) == 1 : true
             };
         }
     }

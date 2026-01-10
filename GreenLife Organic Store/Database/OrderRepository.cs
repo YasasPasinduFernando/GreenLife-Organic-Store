@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using Microsoft.Data.Sqlite;
 using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Database
@@ -21,7 +21,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM Orders ORDER BY OrderDate DESC";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -46,8 +46,8 @@ namespace GreenLife_Organic_Store.Database
         /// <returns>True if delete succeeded</returns>
         public static bool DeleteOrder(int orderId)
         {
-            MySqlConnection? connection = null;
-            MySqlTransaction? transaction = null;
+            SqliteConnection? connection = null;
+            SqliteTransaction? transaction = null;
 
             try
             {
@@ -58,14 +58,14 @@ namespace GreenLife_Organic_Store.Database
                 // Read items so we can restore stock
                 var items = new List<(int ProductID, int Quantity)>();
                 string selectItems = "SELECT ProductID, Quantity FROM OrderItems WHERE OrderID = @OrderID";
-                using (var cmd = new MySqlCommand(selectItems, connection, transaction))
+                using (var cmd = new SqliteCommand(selectItems, connection, transaction))
                 {
                     cmd.Parameters.AddWithValue("@OrderID", orderId);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            items.Add(((int)reader["ProductID"], (int)reader["Quantity"]));
+                            items.Add((Convert.ToInt32(reader["ProductID"]), Convert.ToInt32(reader["Quantity"])));
                         }
                     }
                 }
@@ -74,7 +74,7 @@ namespace GreenLife_Organic_Store.Database
                 string stockUpdate = "UPDATE Products SET Stock = Stock + @Quantity WHERE ID = @ProductID";
                 foreach (var it in items)
                 {
-                    using (var cmd = new MySqlCommand(stockUpdate, connection, transaction))
+                    using (var cmd = new SqliteCommand(stockUpdate, connection, transaction))
                     {
                         cmd.Parameters.AddWithValue("@Quantity", it.Quantity);
                         cmd.Parameters.AddWithValue("@ProductID", it.ProductID);
@@ -84,16 +84,15 @@ namespace GreenLife_Organic_Store.Database
 
                 // Delete order items
                 string deleteItems = "DELETE FROM OrderItems WHERE OrderID = @OrderID";
-                using (var cmd = new MySqlCommand(deleteItems, connection, transaction))
+                using (var cmd = new SqliteCommand(deleteItems, connection, transaction))
                 {
-                    cmd.Parameters.AddWithValue("@ORDERID", orderId);
                     cmd.Parameters.AddWithValue("@OrderID", orderId);
                     cmd.ExecuteNonQuery();
                 }
 
                 // Delete order
                 string deleteOrder = "DELETE FROM Orders WHERE ID = @ID";
-                using (var cmd = new MySqlCommand(deleteOrder, connection, transaction))
+                using (var cmd = new SqliteCommand(deleteOrder, connection, transaction))
                 {
                     cmd.Parameters.AddWithValue("@ID", orderId);
                     int affected = cmd.ExecuteNonQuery();
@@ -126,7 +125,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM Orders WHERE ID = @ID";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", id);
                         Order? order = null;
@@ -169,7 +168,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM Orders WHERE CustomerID = @CustomerID ORDER BY OrderDate DESC";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@CustomerID", customerId);
                         using (var reader = cmd.ExecuteReader())
@@ -211,7 +210,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM Orders WHERE Status = @Status ORDER BY OrderDate DESC";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@Status", status.ToString());
                         using (var reader = cmd.ExecuteReader())
@@ -246,8 +245,8 @@ namespace GreenLife_Organic_Store.Database
         /// <returns>The ID of the created order</returns>
         public static int CreateOrder(Order order)
         {
-            MySqlConnection? connection = null;
-            MySqlTransaction? transaction = null;
+            SqliteConnection? connection = null;
+            SqliteTransaction? transaction = null;
 
             try
             {
@@ -263,12 +262,11 @@ namespace GreenLife_Organic_Store.Database
                 transaction = connection.BeginTransaction();
 
                 // Insert order
-                string orderQuery = @"INSERT INTO Orders (OrderNumber, CustomerID, CustomerName, CustomerPhone, CustomerEmail, OrderDate, TotalAmount, Status, ShippingAddress, Notes) 
-                                      VALUES (@OrderNumber, @CustomerID, @CustomerName, @CustomerPhone, @CustomerEmail, @OrderDate, @TotalAmount, @Status, @ShippingAddress, @Notes);
-                                      SELECT LAST_INSERT_ID();";
+                string orderQuery = @"INSERT INTO Orders (OrderNumber, CustomerID, CustomerName, CustomerPhone, CustomerEmail, OrderDate, TotalAmount, Status, ShippingAddress, Notes, CreatedDate, UpdatedDate) 
+                                      VALUES (@OrderNumber, @CustomerID, @CustomerName, @CustomerPhone, @CustomerEmail, @OrderDate, @TotalAmount, @Status, @ShippingAddress, @Notes, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);";
 
                 int orderId = 0;
-                using (var cmd = new MySqlCommand(orderQuery, connection, transaction))
+                using (var cmd = new SqliteCommand(orderQuery, connection, transaction))
                 {
                     cmd.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
                     cmd.Parameters.AddWithValue("@CustomerID", order.CustomerID);
@@ -281,20 +279,25 @@ namespace GreenLife_Organic_Store.Database
                     cmd.Parameters.AddWithValue("@ShippingAddress", order.ShippingAddress);
                     cmd.Parameters.AddWithValue("@Notes", (object?)order.Notes ?? DBNull.Value);
 
-                    var result = cmd.ExecuteScalar();
-                    if (result != null && int.TryParse(result.ToString(), out int id))
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (var idCmd = new SqliteCommand("SELECT last_insert_rowid();", connection, transaction))
+                {
+                    var result = idCmd.ExecuteScalar();
+                    if (result != null && long.TryParse(result.ToString(), out long lid))
                     {
-                        orderId = id;
+                        orderId = (int)lid;
                     }
                 }
 
                 // Insert order items
-                string itemQuery = @"INSERT INTO OrderItems (OrderID, ProductID, ProductName, Quantity, UnitPrice, Subtotal) 
-                                     VALUES (@OrderID, @ProductID, @ProductName, @Quantity, @UnitPrice, @Subtotal);";
+                string itemQuery = @"INSERT INTO OrderItems (OrderID, ProductID, ProductName, Quantity, UnitPrice, Subtotal, CreatedDate) 
+                                     VALUES (@OrderID, @ProductID, @ProductName, @Quantity, @UnitPrice, @Subtotal, CURRENT_TIMESTAMP);";
 
                 foreach (var item in order.Items)
                 {
-                    using (var cmd = new MySqlCommand(itemQuery, connection, transaction))
+                    using (var cmd = new SqliteCommand(itemQuery, connection, transaction))
                     {
                         cmd.Parameters.AddWithValue("@OrderID", orderId);
                         cmd.Parameters.AddWithValue("@ProductID", item.ProductID);
@@ -307,7 +310,7 @@ namespace GreenLife_Organic_Store.Database
 
                     // Reduce product stock
                     string stockQuery = "UPDATE Products SET Stock = Stock - @Quantity WHERE ID = @ProductID";
-                    using (var cmd = new MySqlCommand(stockQuery, connection, transaction))
+                    using (var cmd = new SqliteCommand(stockQuery, connection, transaction))
                     {
                         cmd.Parameters.AddWithValue("@Quantity", item.Quantity);
                         cmd.Parameters.AddWithValue("@ProductID", item.ProductID);
@@ -345,7 +348,7 @@ namespace GreenLife_Organic_Store.Database
                     connection.Open();
                     string query = "UPDATE Orders SET Status = @Status, UpdatedDate = CURRENT_TIMESTAMP WHERE ID = @ID";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", orderId);
                         cmd.Parameters.AddWithValue("@Status", newStatus.ToString());
@@ -380,7 +383,7 @@ namespace GreenLife_Organic_Store.Database
                                      Notes = @Notes
                                      WHERE ID = @ID";
 
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ID", order.ID);
                         cmd.Parameters.AddWithValue("@CustomerName", order.CustomerName);
@@ -415,7 +418,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM Orders WHERE OrderDate BETWEEN @FromDate AND @ToDate ORDER BY OrderDate DESC";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@FromDate", fromDate);
                         cmd.Parameters.AddWithValue("@ToDate", toDate);
@@ -447,11 +450,11 @@ namespace GreenLife_Organic_Store.Database
         /// <summary>
         /// Gets order items for a specific order
         /// </summary>
-        private static List<OrderItem> GetOrderItems(int orderId, MySqlConnection connection)
+        private static List<OrderItem> GetOrderItems(int orderId, SqliteConnection connection)
         {
             var items = new List<OrderItem>();
             string query = "SELECT * FROM OrderItems WHERE OrderID = @OrderID";
-            using (var cmd = new MySqlCommand(query, connection))
+            using (var cmd = new SqliteCommand(query, connection))
             {
                 cmd.Parameters.AddWithValue("@OrderID", orderId);
                 using (var reader = cmd.ExecuteReader())
@@ -460,14 +463,14 @@ namespace GreenLife_Organic_Store.Database
                     {
                         items.Add(new OrderItem
                         {
-                            ID = (int)reader["ID"],
-                            OrderID = (int)reader["OrderID"],
-                            ProductID = (int)reader["ProductID"],
-                            ProductName = reader["ProductName"].ToString() ?? string.Empty,
-                            Quantity = (int)reader["Quantity"],
-                            UnitPrice = (decimal)reader["UnitPrice"],
-                            Subtotal = (decimal)reader["Subtotal"],
-                            CreatedDate = (DateTime)reader["CreatedDate"]
+                            ID = Convert.ToInt32(reader["ID"]),
+                            OrderID = Convert.ToInt32(reader["OrderID"]),
+                            ProductID = Convert.ToInt32(reader["ProductID"]),
+                            ProductName = reader["ProductName"]?.ToString() ?? string.Empty,
+                            Quantity = Convert.ToInt32(reader["Quantity"]),
+                            UnitPrice = Convert.ToDecimal(reader["UnitPrice"]),
+                            Subtotal = Convert.ToDecimal(reader["Subtotal"]),
+                            CreatedDate = reader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["CreatedDate"]) : DateTime.MinValue
                         });
                     }
                 }
@@ -478,23 +481,23 @@ namespace GreenLife_Organic_Store.Database
         /// <summary>
         /// Maps a database reader to an Order object
         /// </summary>
-        private static Order MapReaderToOrder(MySqlDataReader reader)
+        private static Order MapReaderToOrder(SqliteDataReader reader)
         {
             return new Order
             {
-                ID = (int)reader["ID"],
-                OrderNumber = reader["OrderNumber"].ToString() ?? string.Empty,
-                CustomerID = (int)reader["CustomerID"],
-                CustomerName = reader["CustomerName"].ToString() ?? string.Empty,
-                CustomerPhone = reader["CustomerPhone"].ToString() ?? string.Empty,
-                CustomerEmail = reader["CustomerEmail"].ToString() ?? string.Empty,
-                OrderDate = (DateTime)reader["OrderDate"],
-                TotalAmount = (decimal)reader["TotalAmount"],
-                Status = Enum.Parse<OrderStatus>(reader["Status"].ToString() ?? "Pending"),
-                ShippingAddress = reader["ShippingAddress"].ToString() ?? string.Empty,
-                Notes = reader["Notes"] != DBNull.Value ? reader["Notes"].ToString() : null,
-                CreatedDate = (DateTime)reader["CreatedDate"],
-                UpdatedDate = (DateTime)reader["UpdatedDate"]
+                ID = Convert.ToInt32(reader["ID"]),
+                OrderNumber = reader["OrderNumber"]?.ToString() ?? string.Empty,
+                CustomerID = Convert.ToInt32(reader["CustomerID"]),
+                CustomerName = reader["CustomerName"]?.ToString() ?? string.Empty,
+                CustomerPhone = reader["CustomerPhone"]?.ToString() ?? string.Empty,
+                CustomerEmail = reader["CustomerEmail"]?.ToString() ?? string.Empty,
+                OrderDate = reader["OrderDate"] != DBNull.Value ? Convert.ToDateTime(reader["OrderDate"]) : DateTime.MinValue,
+                TotalAmount = reader["TotalAmount"] != DBNull.Value ? Convert.ToDecimal(reader["TotalAmount"]) : 0m,
+                Status = Enum.Parse<OrderStatus>(reader["Status"]?.ToString() ?? "Pending"),
+                ShippingAddress = reader["ShippingAddress"]?.ToString() ?? string.Empty,
+                Notes = reader["Notes"] != DBNull.Value ? reader["Notes"]?.ToString() : null,
+                CreatedDate = reader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["CreatedDate"]) : DateTime.MinValue,
+                UpdatedDate = reader["UpdatedDate"] != DBNull.Value ? Convert.ToDateTime(reader["UpdatedDate"]) : DateTime.MinValue
             };
         }
     }

@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using MySql.Data.MySqlClient;
+using Microsoft.Data.Sqlite;
 using GreenLife_Organic_Store.Utilities;
 
 namespace GreenLife_Organic_Store.Database.Migrations
@@ -19,7 +19,7 @@ namespace GreenLife_Organic_Store.Database.Migrations
             using var conn = DatabaseConnection.GetConnection();
             conn.Open();
 
-            using var selectCmd = new MySqlCommand("SELECT ID, ImagePath FROM Products", conn);
+            using var selectCmd = new SqliteCommand("SELECT ID, ImagePath FROM Products", conn);
             using var reader = selectCmd.ExecuteReader();
             var items = new System.Collections.Generic.List<(int Id, string? ImagePath)>();
             while (reader.Read())
@@ -77,7 +77,7 @@ namespace GreenLife_Organic_Store.Database.Migrations
 
                     if (!string.IsNullOrWhiteSpace(newRelative))
                     {
-                        using var update = new MySqlCommand("UPDATE Products SET ImagePath = @ImagePath WHERE ID = @ID", conn);
+                        using var update = new SqliteCommand("UPDATE Products SET ImagePath = @ImagePath WHERE ID = @ID", conn);
                         update.Parameters.AddWithValue("@ImagePath", newRelative);
                         update.Parameters.AddWithValue("@ID", item.Id);
                         var affected = update.ExecuteNonQuery();
