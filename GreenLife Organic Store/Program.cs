@@ -27,6 +27,16 @@ namespace GreenLife_Organic_Store
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
+            // Create and apply application icon
+            try
+            {
+                ApplyApplicationIcon();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Startup] Warning: Could not apply application icon: {ex.Message}");
+            }
+            
             // Initialize database on first run - ensure tables exist
             try
             {
@@ -72,5 +82,51 @@ namespace GreenLife_Organic_Store
             LoginForm loginForm = new LoginForm();
             Application.Run(loginForm);
         }
+
+        /// <summary>
+        /// Creates and applies a green leaf application icon
+        /// </summary>
+        private static Icon CreateApplicationIcon()
+        {
+            int iconSize = 32;
+            Bitmap bitmap = new Bitmap(iconSize, iconSize);
+            
+            using (Graphics g = Graphics.FromImage(bitmap))
+            {
+                g.Clear(Color.White);
+                
+                // Draw a green leaf shape
+                Color leafGreen = Color.FromArgb(34, 139, 34); // Forest Green
+                using (Brush leafBrush = new SolidBrush(leafGreen))
+                using (Pen leafPen = new Pen(leafGreen, 2))
+                {
+                    // Main leaf body (ellipse)
+                    g.FillEllipse(leafBrush, 6, 4, 20, 24);
+                    
+                    // Leaf vein (line down the middle)
+                    g.DrawLine(leafPen, 16, 4, 16, 28);
+                    
+                    // Small vein branches
+                    g.DrawLine(new Pen(leafGreen, 1), 12, 10, 8, 8);
+                    g.DrawLine(new Pen(leafGreen, 1), 20, 10, 24, 8);
+                    g.DrawLine(new Pen(leafGreen, 1), 10, 18, 5, 17);
+                    g.DrawLine(new Pen(leafGreen, 1), 22, 18, 27, 17);
+                }
+            }
+            
+            IntPtr hIcon = bitmap.GetHicon();
+            Icon icon = Icon.FromHandle(hIcon);
+            bitmap.Dispose();
+            return icon;
+        }
+
+        private static void ApplyApplicationIcon()
+        {
+            Icon appIcon = CreateApplicationIcon();
+            // Store it in a static field to keep it alive
+            s_applicationIcon = appIcon;
+        }
+
+        private static Icon? s_applicationIcon;
     }
 }
