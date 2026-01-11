@@ -9,6 +9,7 @@
   <UseWindowsForms>true</UseWindowsForms>
   <UseWPF>false</UseWPF>
   <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+  <ApplicationIcon>favicon.ico</ApplicationIcon>
 </PropertyGroup>
 
   <ItemGroup>
@@ -37,6 +38,9 @@
     <None Include="Images\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="favicon.ico" />
   </ItemGroup>
 
 </Project>
