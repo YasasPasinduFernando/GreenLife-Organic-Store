@@ -11,6 +11,9 @@ namespace GreenLife_Organic_Store.Forms
         {
             InitializeComponent();
             ApplyStyles();
+
+            // Make sure Load event is hooked (in case designer didn't)
+            this.Load += LoginForm_Load;
         }
 
         private void ApplyStyles()
@@ -48,11 +51,57 @@ namespace GreenLife_Organic_Store.Forms
             linkLabelRegister.ActiveLinkColor = Color.FromArgb(0, 100, 0);
         }
 
-        private void buttonLogin_Click(object sender, EventArgs e)
+        // ✅ Async Load - prevents "open but can't click" freeze
+        private async void LoginForm_Load(object? sender, EventArgs e)
         {
-            if (ValidateInput())
+            // Default selection
+            radioButtonCustomer.Checked = true;
+
+            // Let UI render first
+            await Task.Delay(50);
+
+            bool ok;
+            try
             {
-                PerformLogin();
+                ok = await Task.Run(() => DatabaseConnection.TestConnection());
+            }
+            catch
+            {
+                ok = false;
+            }
+
+            if (!ok)
+            {
+                MessageBox.Show(
+                    "Warning: Unable to connect to the database.\n\n" +
+                    "• If you are using MySQL: make sure MySQL/XAMPP is running.\n" +
+                    "• If you are using SQLite: make sure the .db file path is correct.\n\n" +
+                    "The app will still open, but login may not work until the DB is available.",
+                    "Database Connection Warning",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+            }
+        }
+
+        // ✅ Keep this event in designer, but now it calls async login safely
+        private async void buttonLogin_Click(object sender, EventArgs e)
+        {
+            if (!ValidateInput())
+                return;
+
+            // Prevent double click + show busy cursor
+            buttonLogin.Enabled = false;
+            UseWaitCursor = true;
+
+            try
+            {
+                await PerformLoginAsync();
+            }
+            finally
+            {
+                UseWaitCursor = false;
+                buttonLogin.Enabled = true;
             }
         }
 
@@ -95,54 +144,50 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
-        private void PerformLogin()
+        // ✅ Async login - prevents freeze when DB/auth is slow
+        private async Task PerformLoginAsync()
         {
             try
             {
                 string email = textBoxEmail.Text.Trim();
                 string password = textBoxPassword.Text;
 
-                _currentUser = UserRepository.AuthenticateUser(email, password);
+                _currentUser = await Task.Run(() => UserRepository.AuthenticateUser(email, password));
 
-                if (_currentUser != null)
-                {
-                    // Verify user type matches selected radio button
-                    string selectedUserType = radioButtonAdmin.Checked ? "Admin" : "Customer";
-
-                    if (_currentUser.UserType.ToString() != selectedUserType)
-                    {
-                        MessageBox.Show("The selected user type does not match your account. Please select the correct user type.",
-                            "User Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-
-                    // Login successful
-                    MessageBox.Show($"Welcome, {_currentUser.Name}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Open appropriate dashboard
-                    if (_currentUser.UserType == UserType.Admin)
-                    {
-                        AdminDashboard adminDash = new AdminDashboard(_currentUser);
-                        this.Hide();
-                        adminDash.ShowDialog();
-                        this.Show();
-                        ClearForm();
-                    }
-                    else
-                    {
-                        CustomerDashboard customerDash = new CustomerDashboard(_currentUser);
-                        this.Hide();
-                        customerDash.ShowDialog();
-                        this.Show();
-                        ClearForm();
-                    }
-                }
-                else
+                if (_currentUser == null)
                 {
                     MessageBox.Show("Invalid email or password. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     textBoxPassword.Clear();
                     textBoxPassword.Focus();
+                    return;
                 }
+
+                // Verify user type matches selected radio button
+                string selectedUserType = radioButtonAdmin.Checked ? "Admin" : "Customer";
+
+                if (_currentUser.UserType.ToString() != selectedUserType)
+                {
+                    MessageBox.Show(
+                        "The selected user type does not match your account. Please select the correct user type.",
+                        "User Type Mismatch",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                    return;
+                }
+
+                // Login successful
+                MessageBox.Show($"Welcome, {_currentUser.Name}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Open appropriate dashboard
+                Form dash = _currentUser.UserType == UserType.Admin
+                    ? new AdminDashboard(_currentUser)
+                    : new CustomerDashboard(_currentUser);
+
+                this.Hide();
+                dash.ShowDialog();
+                this.Show();
+                ClearForm();
             }
             catch (Exception ex)
             {
@@ -167,34 +212,14 @@ namespace GreenLife_Organic_Store.Forms
 
         private void linkLabelForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Open forgot password form
             var forgot = new ForgotPasswordForm();
             this.Hide();
             forgot.ShowDialog();
             this.Show();
         }
 
-        private void LoginForm_Load(object sender, EventArgs e)
-        {
-            // Set default selection
-            radioButtonCustomer.Checked = true;
-
-            // Test database connection on form load
-            if (!DatabaseConnection.TestConnection())
-            {
-                MessageBox.Show("Warning: Unable to connect to the database. Please ensure MySQL is running and the database is configured correctly.",
-                    "Database Connection Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void labelTitle_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void radioButtonAdmin_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
+        // Keep these (empty handlers ok)
+        private void labelTitle_Click(object sender, EventArgs e) { }
+        private void radioButtonAdmin_CheckedChanged(object sender, EventArgs e) { }
     }
 }
