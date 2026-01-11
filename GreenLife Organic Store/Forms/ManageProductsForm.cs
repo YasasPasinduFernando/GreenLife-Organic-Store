@@ -185,10 +185,15 @@ namespace GreenLife_Organic_Store.Forms
                     Image? thumb = null;
                     try
                     {
-                        if (!string.IsNullOrWhiteSpace(product.ImagePath) && File.Exists(product.ImagePath))
+                        if (!string.IsNullOrWhiteSpace(product.ImagePath))
                         {
-                            using var img = Image.FromFile(product.ImagePath);
-                            thumb = new Bitmap(img, new Size(60, 60));
+                            // Use ImageStore to get the full path
+                            var fullPath = ImageStore.GetFullPath(product.ImagePath);
+                            if (File.Exists(fullPath))
+                            {
+                                using var img = Image.FromFile(fullPath);
+                                thumb = new Bitmap(img, new Size(60, 60));
+                            }
                         }
                     }
                     catch { }
@@ -217,7 +222,24 @@ namespace GreenLife_Organic_Store.Forms
 
             foreach (var product in results)
             {
+                Image? thumb = null;
+                try
+                {
+                    if (!string.IsNullOrWhiteSpace(product.ImagePath))
+                    {
+                        // Use ImageStore to get the full path
+                        var fullPath = ImageStore.GetFullPath(product.ImagePath);
+                        if (File.Exists(fullPath))
+                        {
+                            using var img = Image.FromFile(fullPath);
+                            thumb = new Bitmap(img, new Size(60, 60));
+                        }
+                    }
+                }
+                catch { }
+
                 _dgvProducts.Rows.Add(
+                    thumb,
                     product.ID,
                     product.ProductName,
                     product.CategoryName,

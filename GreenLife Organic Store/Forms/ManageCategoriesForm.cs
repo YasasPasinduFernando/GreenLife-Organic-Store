@@ -157,15 +157,15 @@ namespace GreenLife_Organic_Store.Forms
                     Image? thumb = null;
                     try
                     {
-                        if (!string.IsNullOrWhiteSpace(cat.ImagePath))
+                    if (!string.IsNullOrWhiteSpace(cat.ImagePath))
+                    {
+                        var full = ImageStore.GetFullPath(cat.ImagePath);
+                        if (File.Exists(full))
                         {
-                            var full = ImageStore.GetFullPath(cat.ImagePath);
-                            if (File.Exists(full))
-                            {
-                                using var img = Image.FromFile(full);
-                                thumb = new Bitmap(img, new Size(60, 60));
-                            }
+                            using var img = Image.FromFile(full);
+                            thumb = new Bitmap(img, new Size(60, 60));
                         }
+                    }
                     }
                     catch { }
 
