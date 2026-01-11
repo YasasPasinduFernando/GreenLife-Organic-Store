@@ -21,4 +21,11 @@
     <Compile Remove="App.xaml.cs" />
   </ItemGroup>
 
+  <!-- Ensure the SQLite database file in the project is copied to the output folder on build -->
+  <ItemGroup>
+    <None Include="Database\greenlife.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

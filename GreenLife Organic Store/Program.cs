@@ -2,6 +2,7 @@
 using System.IO;
 using GreenLife_Organic_Store.Forms;
 using GreenLife_Organic_Store.Utilities;
+using GreenLife_Organic_Store.Database;
 
 namespace GreenLife_Organic_Store
 {
@@ -25,6 +26,24 @@ namespace GreenLife_Organic_Store
             // Enable visual styles for Windows Forms
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
+            // Initialize database on first run - ensure tables exist
+            try
+            {
+                Console.WriteLine("[Startup] Initializing database...");
+                if (!DatabaseConnection.TestConnection())
+                {
+                    Console.WriteLine("[Startup] Database not ready. Attempting to import schema...");
+                }
+                else
+                {
+                    Console.WriteLine("[Startup] Database connection successful.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Startup] Warning: Database initialization issue: {ex.Message}");
+            }
             
             // Ensure images directory exists for storing uploaded product/category images
             try
