@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 using FontAwesome.Sharp;
 using System.IO;
 using System.Linq;
@@ -627,7 +628,13 @@ namespace GreenLife_Organic_Store.Forms
 
             if (category != null && !string.IsNullOrWhiteSpace(category.ImagePath))
             {
-                try { if (File.Exists(category.ImagePath)) pic.ImageLocation = category.ImagePath; } catch { }
+                try 
+                { 
+                    var fullPath = ImageStore.GetFullPath(category.ImagePath);
+                    if (File.Exists(fullPath)) 
+                        pic.ImageLocation = fullPath; 
+                } 
+                catch { }
                 imageControl = pic;
             }
             else
@@ -724,8 +731,9 @@ namespace GreenLife_Organic_Store.Forms
             {
                 try
                 {
-                    if (File.Exists(product.ImagePath))
-                        pic.ImageLocation = product.ImagePath;
+                    var fullPath = ImageStore.GetFullPath(product.ImagePath);
+                    if (File.Exists(fullPath))
+                        pic.ImageLocation = fullPath;
                 }
                 catch { }
             }
