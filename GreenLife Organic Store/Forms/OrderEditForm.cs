@@ -29,6 +29,8 @@ namespace GreenLife_Organic_Store.Forms
             EditedOrder = order;
             _allowStatusEdit = allowStatusEdit;
 
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
             this.Text = $"Edit Order - {order.OrderNumber}";
             this.Size = new Size(600, 500);
             this.StartPosition = FormStartPosition.CenterParent;

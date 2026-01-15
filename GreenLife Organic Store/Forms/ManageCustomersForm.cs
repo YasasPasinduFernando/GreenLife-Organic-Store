@@ -13,6 +13,8 @@ namespace GreenLife_Organic_Store.Forms
 
         public ManageCustomersForm()
         {
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
             this.Text = "Manage Customers";
             this.Size = new Size(900, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
