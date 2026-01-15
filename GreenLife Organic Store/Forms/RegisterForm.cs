@@ -257,13 +257,13 @@ namespace GreenLife_Organic_Store.Forms
                     string message = $"Registration successful! Your account has been created.";
                     if (!emailSent)
                     {
-                        message += $"\n\n??  Welcome email could not be sent.\nThis may be due to email not being configured.";
+                        message += $"\n\nNote: Welcome email could not be sent.\nThis may be due to email not being configured.";
                         message += $"\n\nYou can still login and use your account.";
                         message += $"\nCheck EMAIL_CONFIG.md for email setup instructions.";
                     }
                     else
                     {
-                        message += $"\n\n? A welcome email has been sent to {newUser.Email}";
+                        message += $"\n\nInfo: A welcome email has been sent to {newUser.Email}";
                     }
 
                     message += $"\n\nYou can now login with your email and password.";
