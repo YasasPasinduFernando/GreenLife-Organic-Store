@@ -17,6 +17,9 @@ namespace GreenLife_Organic_Store
         [STAThread]
         static void Main()
         {
+            // Ensure proper DPI scaling across resolutions.
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+
             // Log application startup
             Console.WriteLine("\n========================================");
             Console.WriteLine("GreenLife Organic Store - Starting Up");
