@@ -25,6 +25,8 @@ namespace GreenLife_Organic_Store.Forms
         public CustomerDashboard(User customer)
         {
             InitializeComponent();
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
             _currentCustomer = customer;
         }
 
@@ -47,12 +49,11 @@ namespace GreenLife_Organic_Store.Forms
             // Fixed size window centered on screen
             this.Size = new Size(1280, 860);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle; // non-resizable
-            this.MaximizeBox = false; // disable maximize
+            this.FormBorderStyle = FormBorderStyle.Sizable; // allow resize up to full screen
+            this.MaximizeBox = true; // allow maximize
             this.MinimizeBox = true;
             // Prevent user from resizing by locking min/max to the same size
             this.MinimumSize = this.Size;
-            this.MaximumSize = this.Size;
             this.BackColor = Color.FromArgb(245, 245, 245);
 
             InitializeUI();

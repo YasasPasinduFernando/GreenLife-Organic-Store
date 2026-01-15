@@ -14,6 +14,8 @@ namespace GreenLife_Organic_Store.Forms
 
         public AdminRegistrationsForm()
         {
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
             this.Text = "Admin Registrations - Logs";
             this.Size = new Size(800, 500);
             this.StartPosition = FormStartPosition.CenterParent;

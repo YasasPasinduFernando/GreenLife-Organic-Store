@@ -12,6 +12,8 @@ namespace GreenLife_Organic_Store.Forms
         public AdminDashboardEcommerce(User admin)
         {
             _currentAdmin = admin;
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
             this.Text = "Admin Dashboard - GreenLife Organic Store";
             this.Size = new Size(1000, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
