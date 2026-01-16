@@ -18,6 +18,8 @@ namespace GreenLife_Organic_Store.Forms
             this.Size = new Size(1000, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(245, 245, 245);
+            this.AutoScroll = true;
+            this.AutoScrollMargin = new Size(20, 20);
             // Prevent maximizing the window
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;

@@ -55,6 +55,8 @@ namespace GreenLife_Organic_Store.Forms
             // Prevent user from resizing by locking min/max to the same size
             this.MinimumSize = this.Size;
             this.BackColor = Color.FromArgb(245, 245, 245);
+            this.AutoScroll = true;
+            this.AutoScrollMargin = new Size(20, 20);
 
             InitializeUI();
             LoadData();
