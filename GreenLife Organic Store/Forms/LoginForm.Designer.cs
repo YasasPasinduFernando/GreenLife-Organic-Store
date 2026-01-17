@@ -11,6 +11,7 @@ namespace GreenLife_Organic_Store.Forms
         private TextBox textBoxEmail;
         private Label labelPassword;
         private TextBox textBoxPassword;
+        private IconButton buttonShowPassword;
         private Label labelUserType;
         private RadioButton radioButtonAdmin;
         private RadioButton radioButtonCustomer;
@@ -38,6 +39,7 @@ namespace GreenLife_Organic_Store.Forms
             textBoxEmail = new TextBox();
             labelPassword = new Label();
             textBoxPassword = new TextBox();
+            buttonShowPassword = new IconButton();
             linkLabelForgot = new LinkLabel();
             labelUserType = new Label();
             radioButtonAdmin = new RadioButton();
@@ -59,6 +61,7 @@ namespace GreenLife_Organic_Store.Forms
             panelContainer.Controls.Add(textBoxEmail);
             panelContainer.Controls.Add(labelPassword);
             panelContainer.Controls.Add(textBoxPassword);
+            panelContainer.Controls.Add(buttonShowPassword);
             panelContainer.Controls.Add(labelUserType);
             panelContainer.Controls.Add(radioButtonAdmin);
             panelContainer.Controls.Add(radioButtonCustomer);
@@ -134,9 +137,27 @@ namespace GreenLife_Organic_Store.Forms
             textBoxPassword.Location = new Point(44, 176);
             textBoxPassword.Margin = new Padding(3, 2, 3, 2);
             textBoxPassword.Name = "textBoxPassword";
-            textBoxPassword.Size = new Size(350, 27);
+            textBoxPassword.Size = new Size(310, 27);
             textBoxPassword.TabIndex = 4;
             textBoxPassword.UseSystemPasswordChar = true;
+            // 
+            // buttonShowPassword
+            // 
+            buttonShowPassword.BackColor = Color.White;
+            buttonShowPassword.Cursor = Cursors.Hand;
+            buttonShowPassword.FlatAppearance.BorderSize = 0;
+            buttonShowPassword.FlatStyle = FlatStyle.Flat;
+            buttonShowPassword.IconChar = IconChar.Eye;
+            buttonShowPassword.IconColor = Color.FromArgb(127, 140, 141);
+            buttonShowPassword.IconFont = IconFont.Auto;
+            buttonShowPassword.IconSize = 20;
+            buttonShowPassword.Location = new Point(362, 175);
+            buttonShowPassword.Margin = new Padding(3, 2, 3, 2);
+            buttonShowPassword.Name = "buttonShowPassword";
+            buttonShowPassword.Size = new Size(32, 29);
+            buttonShowPassword.TabIndex = 5;
+            buttonShowPassword.UseVisualStyleBackColor = false;
+            buttonShowPassword.Click += buttonShowPassword_Click;
             // 
             // linkLabelForgot
             // 
@@ -146,7 +167,7 @@ namespace GreenLife_Organic_Store.Forms
             linkLabelForgot.Location = new Point(280, 210);
             linkLabelForgot.Name = "linkLabelForgot";
             linkLabelForgot.Size = new Size(114, 15);
-            linkLabelForgot.TabIndex = 5;
+            linkLabelForgot.TabIndex = 6;
             linkLabelForgot.TabStop = true;
             linkLabelForgot.Text = "Forgot password?";
             linkLabelForgot.LinkClicked += linkLabelForgot_LinkClicked;
@@ -158,7 +179,7 @@ namespace GreenLife_Organic_Store.Forms
             labelUserType.Location = new Point(44, 240);
             labelUserType.Name = "labelUserType";
             labelUserType.Size = new Size(72, 19);
-            labelUserType.TabIndex = 6;
+            labelUserType.TabIndex = 7;
             labelUserType.Text = "User Type:";
             // 
             // radioButtonAdmin
@@ -169,7 +190,7 @@ namespace GreenLife_Organic_Store.Forms
             radioButtonAdmin.Margin = new Padding(3, 2, 3, 2);
             radioButtonAdmin.Name = "radioButtonAdmin";
             radioButtonAdmin.Size = new Size(67, 23);
-            radioButtonAdmin.TabIndex = 7;
+            radioButtonAdmin.TabIndex = 8;
             radioButtonAdmin.Text = "Admin";
             radioButtonAdmin.UseVisualStyleBackColor = true;
             radioButtonAdmin.CheckedChanged += radioButtonAdmin_CheckedChanged;
@@ -183,7 +204,7 @@ namespace GreenLife_Organic_Store.Forms
             radioButtonCustomer.Margin = new Padding(3, 2, 3, 2);
             radioButtonCustomer.Name = "radioButtonCustomer";
             radioButtonCustomer.Size = new Size(87, 23);
-            radioButtonCustomer.TabIndex = 8;
+            radioButtonCustomer.TabIndex = 9;
             radioButtonCustomer.TabStop = true;
             radioButtonCustomer.Text = "Customer";
             radioButtonCustomer.UseVisualStyleBackColor = true;
@@ -204,7 +225,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonLogin.Margin = new Padding(3, 2, 3, 2);
             buttonLogin.Name = "buttonLogin";
             buttonLogin.Size = new Size(350, 42);
-            buttonLogin.TabIndex = 9;
+            buttonLogin.TabIndex = 10;
             buttonLogin.Text = "Login";
             buttonLogin.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonLogin.UseVisualStyleBackColor = false;
@@ -217,7 +238,7 @@ namespace GreenLife_Organic_Store.Forms
             labelRegisterPrompt.Location = new Point(85, 410);
             labelRegisterPrompt.Name = "labelRegisterPrompt";
             labelRegisterPrompt.Size = new Size(164, 17);
-            labelRegisterPrompt.TabIndex = 10;
+            labelRegisterPrompt.TabIndex = 11;
             labelRegisterPrompt.Text = "Don't have an account yet?";
             // 
             // linkLabelRegister
@@ -228,7 +249,7 @@ namespace GreenLife_Organic_Store.Forms
             linkLabelRegister.Location = new Point(246, 410);
             linkLabelRegister.Name = "linkLabelRegister";
             linkLabelRegister.Size = new Size(86, 17);
-            linkLabelRegister.TabIndex = 11;
+            linkLabelRegister.TabIndex = 12;
             linkLabelRegister.TabStop = true;
             linkLabelRegister.Text = "Register here";
             linkLabelRegister.LinkClicked += linkLabelRegister_LinkClicked;

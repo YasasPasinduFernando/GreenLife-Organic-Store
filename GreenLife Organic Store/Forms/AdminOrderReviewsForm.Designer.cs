@@ -4,8 +4,8 @@ namespace GreenLife_Organic_Store.Forms
     {
         private System.ComponentModel.IContainer components = null;
         private DataGridView dgvReviews;
-        private Button btnRefresh;
-        private Button btnClose;
+        private FontAwesome.Sharp.IconButton btnRefresh;
+        private FontAwesome.Sharp.IconButton btnClose;
         private Label lblItems;
         private FlowLayoutPanel flpItems;
 
@@ -21,8 +21,8 @@ namespace GreenLife_Organic_Store.Forms
         private void InitializeComponent()
         {
             dgvReviews = new DataGridView();
-            btnRefresh = new Button();
-            btnClose = new Button();
+            btnRefresh = new FontAwesome.Sharp.IconButton();
+            btnClose = new FontAwesome.Sharp.IconButton();
             lblItems = new Label();
             flpItems = new FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)dgvReviews).BeginInit();
@@ -106,22 +106,30 @@ namespace GreenLife_Organic_Store.Forms
             // 
             // btnRefresh
             // 
+            btnRefresh.IconChar = FontAwesome.Sharp.IconChar.SyncAlt;
+            btnRefresh.IconColor = Color.FromArgb(52, 152, 219);
+            btnRefresh.IconSize = 20;
             btnRefresh.Location = new Point(12, 485);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(110, 30);
             btnRefresh.TabIndex = 3;
             btnRefresh.Text = "Refresh";
+            btnRefresh.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnRefresh.UseVisualStyleBackColor = true;
             btnRefresh.Click += btnRefresh_Click;
             // 
             // btnClose
             // 
             btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnClose.IconChar = FontAwesome.Sharp.IconChar.TimesCircle;
+            btnClose.IconColor = Color.FromArgb(220, 53, 69);
+            btnClose.IconSize = 20;
             btnClose.Location = new Point(662, 485);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(110, 30);
             btnClose.TabIndex = 4;
             btnClose.Text = "Close";
+            btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
             // 

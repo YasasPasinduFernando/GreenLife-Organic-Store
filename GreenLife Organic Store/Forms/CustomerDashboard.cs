@@ -960,6 +960,7 @@ namespace GreenLife_Organic_Store.Forms
         private void ShowProfile()
         {
             var menuForm = new ProfileMenuForm(_currentCustomer);
+            menuForm.LogoutRequested += Logout;
             menuForm.ShowDialog();
         }
 

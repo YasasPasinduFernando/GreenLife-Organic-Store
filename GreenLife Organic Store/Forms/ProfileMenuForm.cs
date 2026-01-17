@@ -6,6 +6,7 @@ namespace GreenLife_Organic_Store.Forms
     public partial class ProfileMenuForm : Form
     {
         private User _currentCustomer;
+        public event Action? LogoutRequested;
 
         public ProfileMenuForm(User currentCustomer)
         {
@@ -41,6 +42,12 @@ namespace GreenLife_Organic_Store.Forms
         {
             ChangePasswordForm changePassForm = new ChangePasswordForm(_currentCustomer.ID);
             changePassForm.ShowDialog();
+            Close();
+        }
+
+        private void buttonLogout_Click(object sender, EventArgs e)
+        {
+            LogoutRequested?.Invoke();
             Close();
         }
     }
