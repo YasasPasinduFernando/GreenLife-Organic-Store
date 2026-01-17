@@ -1,6 +1,7 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Utilities;
+using System.Drawing;
 using System.IO;
 
 namespace GreenLife_Organic_Store.Forms
@@ -10,11 +11,30 @@ namespace GreenLife_Organic_Store.Forms
         public AdminOrderReviewsForm()
         {
             InitializeComponent();
+            ApplyIcons();
         }
 
         private void AdminOrderReviewsForm_Load(object sender, EventArgs e)
         {
             LoadReviews();
+        }
+
+        private void ApplyIcons()
+        {
+            try
+            {
+                var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "favicon.ico");
+                if (File.Exists(iconPath))
+                {
+                    Icon = new Icon(iconPath);
+                }
+            }
+            catch
+            {
+                // Ignore icon load errors.
+            }
+
+            // Button icons are handled by FontAwesome.Sharp in the designer.
         }
 
         private void LoadReviews()

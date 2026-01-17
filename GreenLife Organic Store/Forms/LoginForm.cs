@@ -1,3 +1,4 @@
+using FontAwesome.Sharp;
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
 
@@ -6,6 +7,7 @@ namespace GreenLife_Organic_Store.Forms
     public partial class LoginForm : Form
     {
         private User? _currentUser;
+        private bool _passwordVisible;
 
         public LoginForm()
         {
@@ -221,5 +223,12 @@ namespace GreenLife_Organic_Store.Forms
         // Keep these (empty handlers ok)
         private void labelTitle_Click(object sender, EventArgs e) { }
         private void radioButtonAdmin_CheckedChanged(object sender, EventArgs e) { }
+
+        private void buttonShowPassword_Click(object sender, EventArgs e)
+        {
+            _passwordVisible = !_passwordVisible;
+            textBoxPassword.UseSystemPasswordChar = !_passwordVisible;
+            buttonShowPassword.IconChar = _passwordVisible ? IconChar.EyeSlash : IconChar.Eye;
+        }
     }
 }

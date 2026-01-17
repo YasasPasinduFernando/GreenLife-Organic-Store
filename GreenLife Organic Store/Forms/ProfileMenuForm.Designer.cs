@@ -9,6 +9,7 @@ namespace GreenLife_Organic_Store.Forms
         private IconButton buttonMyOrders;
         private IconButton buttonReviewOrders;
         private IconButton buttonChangePassword;
+        private IconButton buttonLogout;
 
         protected override void Dispose(bool disposing)
         {
@@ -25,6 +26,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonMyOrders = new IconButton();
             buttonReviewOrders = new IconButton();
             buttonChangePassword = new IconButton();
+            buttonLogout = new IconButton();
             SuspendLayout();
             // 
             // buttonEditProfile
@@ -107,12 +109,33 @@ namespace GreenLife_Organic_Store.Forms
             buttonChangePassword.UseVisualStyleBackColor = false;
             buttonChangePassword.Click += buttonChangePassword_Click;
             // 
+            // buttonLogout
+            // 
+            buttonLogout.BackColor = Color.FromArgb(220, 53, 69);
+            buttonLogout.Cursor = Cursors.Hand;
+            buttonLogout.FlatAppearance.BorderSize = 0;
+            buttonLogout.FlatStyle = FlatStyle.Flat;
+            buttonLogout.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            buttonLogout.ForeColor = Color.White;
+            buttonLogout.IconChar = IconChar.SignOutAlt;
+            buttonLogout.IconColor = Color.White;
+            buttonLogout.IconSize = 22;
+            buttonLogout.Location = new Point(30, 265);
+            buttonLogout.Name = "buttonLogout";
+            buttonLogout.Size = new Size(240, 50);
+            buttonLogout.TabIndex = 4;
+            buttonLogout.Text = "Logout";
+            buttonLogout.TextImageRelation = TextImageRelation.ImageBeforeText;
+            buttonLogout.UseVisualStyleBackColor = false;
+            buttonLogout.Click += buttonLogout_Click;
+            // 
             // ProfileMenuForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.White;
-            ClientSize = new Size(300, 285);
+            ClientSize = new Size(300, 345);
+            Controls.Add(buttonLogout);
             Controls.Add(buttonChangePassword);
             Controls.Add(buttonReviewOrders);
             Controls.Add(buttonMyOrders);
