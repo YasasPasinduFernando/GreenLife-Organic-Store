@@ -101,7 +101,7 @@ namespace GreenLife_Organic_Store.Forms
                 var panel = new Panel
                 {
                     Width = 110,
-                    Height = 90,
+                    Height = 120,
                     Margin = new Padding(6),
                     BackColor = Color.White
                 };
@@ -110,7 +110,7 @@ namespace GreenLife_Organic_Store.Forms
                 {
                     Width = 70,
                     Height = 70,
-                    Location = new Point(6, 6),
+                    Location = new Point(20, 6),
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle
                 };
@@ -134,11 +134,11 @@ namespace GreenLife_Organic_Store.Forms
                 var lbl = new Label
                 {
                     Text = item.ProductName,
-                    Location = new Point(80, 6),
-                    Size = new Size(24, 70),
+                    Location = new Point(6, 82),
+                    Size = new Size(98, 32),
                     AutoEllipsis = true,
                     Font = new Font("Segoe UI", 7F),
-                    TextAlign = ContentAlignment.TopLeft
+                    TextAlign = ContentAlignment.TopCenter
                 };
 
                 panel.Controls.Add(pic);
