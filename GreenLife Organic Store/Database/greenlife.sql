@@ -224,6 +224,30 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `orderreviews`
+--
+
+DROP TABLE IF EXISTS `orderreviews`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orderreviews` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `OrderID` int NOT NULL,
+  `CustomerID` int NOT NULL,
+  `Rating` int NOT NULL,
+  `Comment` text COLLATE utf8mb4_unicode_ci,
+  `CreatedDate` datetime DEFAULT CURRENT_TIMESTAMP,
+  `UpdatedDate` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ux_order_customer` (`OrderID`,`CustomerID`),
+  KEY `idx_order` (`OrderID`),
+  KEY `idx_customer` (`CustomerID`),
+  CONSTRAINT `orderreviews_ibfk_1` FOREIGN KEY (`OrderID`) REFERENCES `orders` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `orderreviews_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `users` (`ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `users`
 --
 

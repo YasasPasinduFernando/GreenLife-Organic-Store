@@ -1,5 +1,5 @@
-using MySql.Data.MySqlClient;
 using GreenLife_Organic_Store.Models;
+using Microsoft.Data.Sqlite;
 
 namespace GreenLife_Organic_Store.Database
 {
@@ -14,7 +14,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM OrderReviews WHERE CustomerID = @CustomerID";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@CustomerID", customerId);
                         using (var reader = cmd.ExecuteReader())
@@ -44,7 +44,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT * FROM OrderReviews WHERE OrderID = @OrderID AND CustomerID = @CustomerID";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@OrderID", orderId);
                         cmd.Parameters.AddWithValue("@CustomerID", customerId);
@@ -76,7 +76,7 @@ namespace GreenLife_Organic_Store.Database
 
                     string existsQuery = "SELECT ID FROM OrderReviews WHERE OrderID = @OrderID AND CustomerID = @CustomerID";
                     int? existingId = null;
-                    using (var cmd = new MySqlCommand(existsQuery, connection))
+                    using (var cmd = new SqliteCommand(existsQuery, connection))
                     {
                         cmd.Parameters.AddWithValue("@OrderID", review.OrderID);
                         cmd.Parameters.AddWithValue("@CustomerID", review.CustomerID);
@@ -92,7 +92,7 @@ namespace GreenLife_Organic_Store.Database
                         string updateQuery = @"UPDATE OrderReviews 
                                                SET Rating = @Rating, Comment = @Comment, UpdatedDate = CURRENT_TIMESTAMP
                                                WHERE ID = @ID";
-                        using (var cmd = new MySqlCommand(updateQuery, connection))
+                        using (var cmd = new SqliteCommand(updateQuery, connection))
                         {
                             cmd.Parameters.AddWithValue("@ID", existingId.Value);
                             cmd.Parameters.AddWithValue("@Rating", review.Rating);
@@ -104,7 +104,7 @@ namespace GreenLife_Organic_Store.Database
                     {
                         string insertQuery = @"INSERT INTO OrderReviews (OrderID, CustomerID, Rating, Comment) 
                                                VALUES (@OrderID, @CustomerID, @Rating, @Comment)";
-                        using (var cmd = new MySqlCommand(insertQuery, connection))
+                        using (var cmd = new SqliteCommand(insertQuery, connection))
                         {
                             cmd.Parameters.AddWithValue("@OrderID", review.OrderID);
                             cmd.Parameters.AddWithValue("@CustomerID", review.CustomerID);
@@ -121,17 +121,17 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        private static OrderReview MapReaderToReview(MySqlDataReader reader)
+        private static OrderReview MapReaderToReview(SqliteDataReader reader)
         {
             return new OrderReview
             {
-                ID = (int)reader["ID"],
-                OrderID = (int)reader["OrderID"],
-                CustomerID = (int)reader["CustomerID"],
+                ID = Convert.ToInt32(reader["ID"]),
+                OrderID = Convert.ToInt32(reader["OrderID"]),
+                CustomerID = Convert.ToInt32(reader["CustomerID"]),
                 Rating = Convert.ToInt32(reader["Rating"]),
                 Comment = reader["Comment"]?.ToString() ?? string.Empty,
-                CreatedDate = (DateTime)reader["CreatedDate"],
-                UpdatedDate = (DateTime)reader["UpdatedDate"]
+                CreatedDate = Convert.ToDateTime(reader["CreatedDate"]),
+                UpdatedDate = Convert.ToDateTime(reader["UpdatedDate"])
             };
         }
     }
