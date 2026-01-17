@@ -1,5 +1,7 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
+using System.IO;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -78,6 +80,70 @@ namespace GreenLife_Organic_Store.Forms
                 numRating.Value = 5;
                 txtComment.Text = string.Empty;
                 lblReviewStatus.Text = "Not reviewed";
+            }
+
+            LoadOrderItemsImages(_selectedOrderId.Value);
+        }
+
+        private void LoadOrderItemsImages(int orderId)
+        {
+            flpItems.Controls.Clear();
+
+            var order = _deliveredOrders.FirstOrDefault(o => o.ID == orderId);
+            if (order == null)
+            {
+                return;
+            }
+
+            foreach (var item in order.Items)
+            {
+                var product = ProductRepository.GetProductById(item.ProductID);
+                var panel = new Panel
+                {
+                    Width = 110,
+                    Height = 90,
+                    Margin = new Padding(6),
+                    BackColor = Color.White
+                };
+
+                var pic = new PictureBox
+                {
+                    Width = 70,
+                    Height = 70,
+                    Location = new Point(6, 6),
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+
+                if (product != null && !string.IsNullOrWhiteSpace(product.ImagePath))
+                {
+                    try
+                    {
+                        var fullPath = ImageStore.GetFullPath(product.ImagePath);
+                        if (File.Exists(fullPath))
+                        {
+                            pic.ImageLocation = fullPath;
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore image load errors.
+                    }
+                }
+
+                var lbl = new Label
+                {
+                    Text = item.ProductName,
+                    Location = new Point(80, 6),
+                    Size = new Size(24, 70),
+                    AutoEllipsis = true,
+                    Font = new Font("Segoe UI", 7F),
+                    TextAlign = ContentAlignment.TopLeft
+                };
+
+                panel.Controls.Add(pic);
+                panel.Controls.Add(lbl);
+                flpItems.Controls.Add(panel);
             }
         }
 
