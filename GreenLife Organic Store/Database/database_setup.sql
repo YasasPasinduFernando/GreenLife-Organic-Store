@@ -111,6 +111,22 @@ CREATE TABLE IF NOT EXISTS OrderItems (
     INDEX idx_product (ProductID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- OrderReviews Table (order-level reviews by customers)
+CREATE TABLE IF NOT EXISTS OrderReviews (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    OrderID INT NOT NULL,
+    CustomerID INT NOT NULL,
+    Rating INT NOT NULL,
+    Comment TEXT,
+    CreatedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedDate DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (OrderID) REFERENCES Orders(ID) ON DELETE CASCADE,
+    FOREIGN KEY (CustomerID) REFERENCES Users(ID) ON DELETE CASCADE,
+    UNIQUE KEY ux_order_customer (OrderID, CustomerID),
+    INDEX idx_order (OrderID),
+    INDEX idx_customer (CustomerID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Insert a default admin user (password: admin123 - SHA256 hashed)
 -- Note: In production, change this password immediately
 INSERT IGNORE INTO Users (Email, Name, Phone, Age, Address, Sex, UserType, Password)
