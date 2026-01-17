@@ -11,6 +11,8 @@ namespace GreenLife_Organic_Store.Forms
         private Button btnClose;
         private Label lblRating;
         private Label lblComment;
+        private FlowLayoutPanel flpItems;
+        private Label lblItems;
 
         protected override void Dispose(bool disposing)
         {
@@ -31,6 +33,8 @@ namespace GreenLife_Organic_Store.Forms
             btnClose = new Button();
             lblRating = new Label();
             lblComment = new Label();
+            flpItems = new FlowLayoutPanel();
+            lblItems = new Label();
             ((System.ComponentModel.ISupportInitialize)dgvOrders).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numRating).BeginInit();
             SuspendLayout();
@@ -100,59 +104,78 @@ namespace GreenLife_Organic_Store.Forms
             lblReviewStatus.TabIndex = 1;
             lblReviewStatus.Text = "Not reviewed";
             // 
+            // lblItems
+            // 
+            lblItems.AutoSize = true;
+            lblItems.Location = new Point(12, 315);
+            lblItems.Name = "lblItems";
+            lblItems.Size = new Size(70, 15);
+            lblItems.TabIndex = 2;
+            lblItems.Text = "Order Items";
+            // 
+            // flpItems
+            // 
+            flpItems.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            flpItems.AutoScroll = true;
+            flpItems.Location = new Point(12, 335);
+            flpItems.Name = "flpItems";
+            flpItems.Padding = new Padding(4);
+            flpItems.Size = new Size(760, 100);
+            flpItems.TabIndex = 3;
+            // 
             // lblRating
             // 
             lblRating.AutoSize = true;
-            lblRating.Location = new Point(12, 315);
+            lblRating.Location = new Point(12, 445);
             lblRating.Name = "lblRating";
             lblRating.Size = new Size(43, 15);
-            lblRating.TabIndex = 2;
+            lblRating.TabIndex = 4;
             lblRating.Text = "Rating";
             // 
             // numRating
             // 
-            numRating.Location = new Point(70, 312);
+            numRating.Location = new Point(70, 442);
             numRating.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numRating.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numRating.Name = "numRating";
             numRating.Size = new Size(60, 23);
-            numRating.TabIndex = 3;
+            numRating.TabIndex = 5;
             numRating.Value = new decimal(new int[] { 5, 0, 0, 0 });
             // 
             // lblComment
             // 
             lblComment.AutoSize = true;
-            lblComment.Location = new Point(12, 350);
+            lblComment.Location = new Point(12, 480);
             lblComment.Name = "lblComment";
             lblComment.Size = new Size(62, 15);
-            lblComment.TabIndex = 4;
+            lblComment.TabIndex = 6;
             lblComment.Text = "Comment";
             // 
             // txtComment
             // 
             txtComment.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtComment.Location = new Point(12, 370);
+            txtComment.Location = new Point(12, 500);
             txtComment.Multiline = true;
             txtComment.Name = "txtComment";
-            txtComment.Size = new Size(760, 80);
-            txtComment.TabIndex = 5;
+            txtComment.Size = new Size(760, 90);
+            txtComment.TabIndex = 7;
             // 
             // btnSaveReview
             // 
-            btnSaveReview.Location = new Point(12, 460);
+            btnSaveReview.Location = new Point(12, 600);
             btnSaveReview.Name = "btnSaveReview";
             btnSaveReview.Size = new Size(120, 30);
-            btnSaveReview.TabIndex = 6;
+            btnSaveReview.TabIndex = 8;
             btnSaveReview.Text = "Save Review";
             btnSaveReview.UseVisualStyleBackColor = true;
             btnSaveReview.Click += btnSaveReview_Click;
             // 
             // btnClose
             // 
-            btnClose.Location = new Point(652, 460);
+            btnClose.Location = new Point(652, 600);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(120, 30);
-            btnClose.TabIndex = 7;
+            btnClose.TabIndex = 9;
             btnClose.Text = "Close";
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
@@ -161,13 +184,15 @@ namespace GreenLife_Organic_Store.Forms
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(784, 511);
+            ClientSize = new Size(784, 651);
             Controls.Add(btnClose);
             Controls.Add(btnSaveReview);
             Controls.Add(txtComment);
             Controls.Add(lblComment);
             Controls.Add(numRating);
             Controls.Add(lblRating);
+            Controls.Add(flpItems);
+            Controls.Add(lblItems);
             Controls.Add(lblReviewStatus);
             Controls.Add(dgvOrders);
             FormBorderStyle = FormBorderStyle.FixedDialog;
