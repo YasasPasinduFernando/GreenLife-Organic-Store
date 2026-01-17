@@ -148,14 +148,15 @@ namespace GreenLife_Organic_Store.Forms
             buttonShowPassword.FlatAppearance.BorderSize = 0;
             buttonShowPassword.FlatStyle = FlatStyle.Flat;
             buttonShowPassword.IconChar = IconChar.Eye;
-            buttonShowPassword.IconColor = Color.FromArgb(127, 140, 141);
+            buttonShowPassword.IconColor = Color.FromArgb(52, 73, 94);
             buttonShowPassword.IconFont = IconFont.Auto;
-            buttonShowPassword.IconSize = 20;
-            buttonShowPassword.Location = new Point(362, 175);
+            buttonShowPassword.IconSize = 22;
+            buttonShowPassword.Location = new Point(360, 175);
             buttonShowPassword.Margin = new Padding(3, 2, 3, 2);
             buttonShowPassword.Name = "buttonShowPassword";
-            buttonShowPassword.Size = new Size(32, 29);
+            buttonShowPassword.Size = new Size(34, 29);
             buttonShowPassword.TabIndex = 5;
+            buttonShowPassword.TabStop = false;
             buttonShowPassword.UseVisualStyleBackColor = false;
             buttonShowPassword.Click += buttonShowPassword_Click;
             // 
