@@ -121,6 +121,56 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
+        public static List<OrderReviewSummary> GetAllReviewSummaries()
+        {
+            var results = new List<OrderReviewSummary>();
+            try
+            {
+                using (var connection = DatabaseConnection.GetConnection())
+                {
+                    connection.Open();
+                    string query = @"SELECT r.ID AS ReviewId,
+                                            r.OrderID AS OrderId,
+                                            o.OrderNumber,
+                                            r.CustomerID AS CustomerId,
+                                            o.CustomerName,
+                                            r.Rating,
+                                            r.Comment,
+                                            r.CreatedDate,
+                                            r.UpdatedDate
+                                     FROM OrderReviews r
+                                     INNER JOIN Orders o ON o.ID = r.OrderID
+                                     ORDER BY r.UpdatedDate DESC;";
+
+                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            results.Add(new OrderReviewSummary
+                            {
+                                ReviewId = Convert.ToInt32(reader["ReviewId"]),
+                                OrderId = Convert.ToInt32(reader["OrderId"]),
+                                OrderNumber = reader["OrderNumber"]?.ToString() ?? string.Empty,
+                                CustomerId = Convert.ToInt32(reader["CustomerId"]),
+                                CustomerName = reader["CustomerName"]?.ToString() ?? string.Empty,
+                                Rating = Convert.ToInt32(reader["Rating"]),
+                                Comment = reader["Comment"]?.ToString() ?? string.Empty,
+                                CreatedDate = Convert.ToDateTime(reader["CreatedDate"]),
+                                UpdatedDate = Convert.ToDateTime(reader["UpdatedDate"])
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving review summaries: {ex.Message}", ex);
+            }
+
+            return results;
+        }
+
         private static OrderReview MapReaderToReview(MySqlDataReader reader)
         {
             return new OrderReview
