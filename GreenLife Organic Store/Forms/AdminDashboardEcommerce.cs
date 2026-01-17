@@ -110,6 +110,7 @@ namespace GreenLife_Organic_Store.Forms
             CreateMenuButton(pnlMenu, "Manage Customers", 660, 15, () => OpenManageCustomers(), IconChar.UserFriends, Color.FromArgb(26, 188, 156));
             CreateMenuButton(pnlMenu, "Sales Reports", 15, 80, () => OpenSalesReports(), IconChar.ChartLine, Color.FromArgb(52, 73, 94));
             CreateMenuButton(pnlMenu, "Admin Registrations", 230, 80, () => OpenAdminRegistrations(), IconChar.UserShield, Color.FromArgb(230, 126, 34));
+            CreateMenuButton(pnlMenu, "Order Reviews", 445, 80, () => OpenOrderReviews(), IconChar.Star, Color.FromArgb(39, 174, 96));
 
             this.Controls.Add(pnlMenu);
 
@@ -468,6 +469,19 @@ namespace GreenLife_Organic_Store.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Error opening Admin Registrations: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OpenOrderReviews()
+        {
+            try
+            {
+                AdminOrderReviewsForm form = new AdminOrderReviewsForm();
+                form.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening Order Reviews: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
