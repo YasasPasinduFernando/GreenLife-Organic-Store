@@ -9,7 +9,7 @@ namespace GreenLife_Organic_Store.Database
     {
         // Connection string for local development
         // Server: localhost
-        // Port: 3306 (default MySQL port)
+        // Port: 3307 (default MySQL port)
         // Username: yasas
         // Password: yasas
         private static readonly string ConnectionString = "Server=localhost;Port=3306;Database=greenlife;Uid=yasas;Pwd=yasas;";

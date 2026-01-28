@@ -275,6 +275,10 @@ namespace GreenLife_Organic_Store.Forms
                         MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         ShoppingCart.RemoveItem(cartItem.Product.ID);
+                        if (_currentUser != null && _currentUser.ID > 0)
+                        {
+                            CartRepository.RemoveCartItem(_currentUser.ID, cartItem.Product.ID);
+                        }
                         LoadCartItems();
                     }
                 }
@@ -356,20 +360,31 @@ namespace GreenLife_Organic_Store.Forms
                         MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         ShoppingCart.RemoveItem(cartItem.Product.ID);
+                        if (_currentUser != null && _currentUser.ID > 0)
+                        {
+                            CartRepository.RemoveCartItem(_currentUser.ID, cartItem.Product.ID);
+                        }
                     }
                     else
                     {
                         return;
                     }
                 }
-                else if (newQuantity <= cartItem.Product.Stock)
-                {
-                    ShoppingCart.UpdateQuantity(cartItem.Product.ID, newQuantity);
-                }
                 else
                 {
-                    MessageBox.Show("Cannot exceed available stock!", "Stock Limit", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    // Only enforce stock limit when increasing quantity
+                    bool isIncrease = newQuantity > cartItem.Quantity;
+                    if (isIncrease && newQuantity > cartItem.Product.Stock)
+                    {
+                        MessageBox.Show("Cannot exceed available stock!", "Stock Limit", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    ShoppingCart.UpdateQuantity(cartItem.Product.ID, newQuantity);
+                    if (_currentUser != null && _currentUser.ID > 0)
+                    {
+                        CartRepository.SetCartItemQuantity(_currentUser.ID, cartItem.Product.ID, newQuantity);
+                    }
                 }
 
                 LoadCartItems();
@@ -396,6 +411,10 @@ namespace GreenLife_Organic_Store.Forms
                     MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     ShoppingCart.Clear();
+                    if (_currentUser != null && _currentUser.ID > 0)
+                    {
+                        CartRepository.ClearCart(_currentUser.ID);
+                    }
                     LoadCartItems();
                     MessageBox.Show("Cart cleared successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

@@ -21,6 +21,7 @@ namespace GreenLife_Organic_Store.Forms
         private Panel _pnlCategoriesSection = null!;
         private bool _isFilterPinned = true;
         private bool _isCategoriesPinned = true;
+        private Dictionary<int, decimal> _activeDiscountPercents = new();
 
         public CustomerDashboard(User customer)
         {
@@ -537,8 +538,26 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
+                try
+                {
+                    var discountProductIds = DiscountRepository.GetAllDiscounts()
+                        .Select(d => d.ProductID)
+                        .Distinct()
+                        .ToList();
+
+                    foreach (var productId in discountProductIds)
+                    {
+                        DiscountRepository.SyncActiveDiscountForProduct(productId);
+                    }
+                }
+                catch
+                {
+                    // If discount table isn't ready, just skip syncing.
+                }
+
                 _categories = CategoryRepository.GetAllCategories();
                 _allProducts = ProductRepository.GetAllProducts();
+                _activeDiscountPercents = GetActiveDiscountPercents();
 
                 // Locate the category combobox anywhere in the form (recursively) and populate it
                 ComboBox? cmbCategory = FindControlRecursive<ComboBox>(this, "cmbCategory");
@@ -578,6 +597,30 @@ namespace GreenLife_Organic_Store.Forms
                 Panel pnlProduct = CreateProductCard(product);
                 _flpProducts.Controls.Add(pnlProduct);
             }
+        }
+
+        private Dictionary<int, decimal> GetActiveDiscountPercents()
+        {
+            var map = new Dictionary<int, decimal>();
+            try
+            {
+                var discounts = DiscountRepository.GetAllDiscounts();
+                var now = DateTime.Now;
+                foreach (var discount in discounts)
+                {
+                    if (!discount.IsActive) continue;
+                    if (now < discount.StartDate || now > discount.EndDate) continue;
+                    if (!map.ContainsKey(discount.ProductID))
+                    {
+                        map[discount.ProductID] = discount.DiscountPercent;
+                    }
+                }
+            }
+            catch
+            {
+                // ignore if discount table not ready
+            }
+            return map;
         }
 
         private void DisplayCategories(List<Category> categories)
@@ -740,6 +783,41 @@ namespace GreenLife_Organic_Store.Forms
             }
             pnlImage.Controls.Add(pic);
             pnlCard.Controls.Add(pnlImage);
+
+            // Discount Badge (if product has discount)
+            int discountPercent = 0;
+            if (product.HasDiscount())
+            {
+                discountPercent = product.GetDiscountPercent();
+            }
+            else if (_activeDiscountPercents.TryGetValue(product.ID, out var percent))
+            {
+                discountPercent = (int)Math.Round(percent, 0);
+            }
+
+            if (discountPercent > 0)
+            {
+                Panel pnlDiscount = new Panel
+                {
+                    Size = new Size(50, 24),
+                    Location = new Point(104, 6),
+                    BackColor = Color.Transparent,
+                    Padding = new Padding(0)
+                };
+
+                Label lblDiscount = new Label
+                {
+                    Text = $"-{discountPercent}%",
+                    Dock = DockStyle.Fill,
+                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(231, 76, 60),
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    BackColor = Color.Transparent
+                };
+                pnlDiscount.Controls.Add(lblDiscount);
+                pnlImage.Controls.Add(pnlDiscount);
+                pnlDiscount.BringToFront();
+            }
 
             // Product name
             Label lblName = new Label
