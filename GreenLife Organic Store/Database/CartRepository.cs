@@ -124,5 +124,67 @@ namespace GreenLife_Organic_Store.Database
                 throw new Exception($"Error clearing cart: {ex.Message}", ex);
             }
         }
+
+        public static void SetCartItemQuantity(int userId, int productId, int quantity)
+        {
+            try
+            {
+                using (var conn = DatabaseConnection.GetConnection())
+                {
+                    conn.Open();
+                    if (quantity <= 0)
+                    {
+                        RemoveCartItem(userId, productId);
+                        return;
+                    }
+
+                    const string sql = "UPDATE CartItems SET Quantity = @Quantity, UpdatedDate = CURRENT_TIMESTAMP WHERE UserID = @UserID AND ProductID = @ProductID";
+                    using (var cmd = new SqliteCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Quantity", quantity);
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        cmd.Parameters.AddWithValue("@ProductID", productId);
+                        var affected = cmd.ExecuteNonQuery();
+                        if (affected > 0) return;
+                    }
+
+                    // If no existing row, insert a new one
+                    const string insertSql = "INSERT INTO CartItems (UserID, ProductID, Quantity, CreatedDate) VALUES (@UserID, @ProductID, @Quantity, CURRENT_TIMESTAMP)";
+                    using (var cmd = new SqliteCommand(insertSql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        cmd.Parameters.AddWithValue("@ProductID", productId);
+                        cmd.Parameters.AddWithValue("@Quantity", quantity);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error setting cart item quantity: {ex.Message}", ex);
+            }
+        }
+
+        public static void RemoveCartItem(int userId, int productId)
+        {
+            try
+            {
+                using (var conn = DatabaseConnection.GetConnection())
+                {
+                    conn.Open();
+                    const string sql = "DELETE FROM CartItems WHERE UserID = @UserID AND ProductID = @ProductID";
+                    using (var cmd = new SqliteCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        cmd.Parameters.AddWithValue("@ProductID", productId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error removing cart item: {ex.Message}", ex);
+            }
+        }
     }
 }

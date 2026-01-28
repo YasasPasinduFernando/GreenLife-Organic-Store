@@ -102,8 +102,8 @@ namespace GreenLife_Organic_Store.Database
                     }
                     else
                     {
-                        string insertQuery = @"INSERT INTO OrderReviews (OrderID, CustomerID, Rating, Comment) 
-                                               VALUES (@OrderID, @CustomerID, @Rating, @Comment)";
+                        string insertQuery = @"INSERT INTO OrderReviews (OrderID, CustomerID, Rating, Comment, CreatedDate) 
+                                               VALUES (@OrderID, @CustomerID, @Rating, @Comment, CURRENT_TIMESTAMP)";
                         using (var cmd = new SqliteCommand(insertQuery, connection))
                         {
                             cmd.Parameters.AddWithValue("@OrderID", review.OrderID);

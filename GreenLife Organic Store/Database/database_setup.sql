@@ -127,6 +127,22 @@ CREATE TABLE IF NOT EXISTS OrderReviews (
     INDEX idx_customer (CustomerID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Discounts Table (for tracking named discounts with dates)
+CREATE TABLE IF NOT EXISTS Discounts (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    DiscountName VARCHAR(100) NOT NULL,
+    Description TEXT,
+    DiscountPercent DECIMAL(5,2) NOT NULL,
+    ProductID INT NOT NULL,
+    StartDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    EndDate DATETIME NOT NULL,
+    IsActive BOOLEAN DEFAULT TRUE,
+    CreatedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedDate DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (ProductID) REFERENCES Products(ID) ON DELETE CASCADE,
+    INDEX idx_product_id (ProductID),
+    INDEX idx_active (IsActive)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 -- Insert a default admin user (password: admin123 - SHA256 hashed)
 -- Note: In production, change this password immediately
 INSERT IGNORE INTO Users (Email, Name, Phone, Age, Address, Sex, UserType, Password)

@@ -99,7 +99,7 @@ namespace GreenLife_Organic_Store.Forms
             Panel pnlMenu = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 155,
+                Height = 160,
                 BackColor = Color.White,
                 Padding = new Padding(15, 15, 15, 10)
             };
@@ -111,6 +111,7 @@ namespace GreenLife_Organic_Store.Forms
             CreateMenuButton(pnlMenu, "Sales Reports", 15, 80, () => OpenSalesReports(), IconChar.ChartLine, Color.FromArgb(52, 73, 94));
             CreateMenuButton(pnlMenu, "Admin Registrations", 230, 80, () => OpenAdminRegistrations(), IconChar.UserShield, Color.FromArgb(230, 126, 34));
             CreateMenuButton(pnlMenu, "Order Reviews", 445, 80, () => OpenOrderReviews(), IconChar.Star, Color.FromArgb(39, 174, 96));
+            CreateMenuButton(pnlMenu, "Manage Discounts", 660, 80, () => OpenManageDiscounts(), IconChar.Tag, Color.FromArgb(211, 84, 0));
 
             this.Controls.Add(pnlMenu);
 
@@ -485,6 +486,19 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
+        private void OpenManageDiscounts()
+        {
+            try
+            {
+                DiscountManagementForm form = new DiscountManagementForm();
+                form.ShowDialog();
+                LoadStatistics();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening Manage Discounts: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
         private void LogoutAdmin()
         {
             if (MessageBox.Show("Are you sure you want to logout?", "Confirm Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)

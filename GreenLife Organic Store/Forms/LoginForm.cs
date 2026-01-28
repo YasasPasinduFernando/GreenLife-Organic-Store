@@ -230,5 +230,6 @@ namespace GreenLife_Organic_Store.Forms
             textBoxPassword.UseSystemPasswordChar = !_passwordVisible;
             buttonShowPassword.IconChar = _passwordVisible ? IconChar.EyeSlash : IconChar.Eye;
         }
+
     }
 }

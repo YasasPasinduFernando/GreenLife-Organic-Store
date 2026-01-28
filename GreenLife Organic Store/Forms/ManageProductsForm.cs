@@ -8,7 +8,7 @@ namespace GreenLife_Organic_Store.Forms
     public partial class ManageProductsForm : Form
     {
         private List<Product> _allProducts = new();
-        private DataGridView _dgvProducts;
+        private DataGridView _dgvProducts = null!;
 
         public ManageProductsForm()
         {
@@ -19,7 +19,7 @@ namespace GreenLife_Organic_Store.Forms
             this.Load += ManageProductsForm_Load;
         }
 
-        private void ManageProductsForm_Load(object sender, EventArgs e)
+        private void ManageProductsForm_Load(object? sender, EventArgs e)
         {
             InitializeUI();
             LoadProducts();
@@ -111,6 +111,7 @@ namespace GreenLife_Organic_Store.Forms
             _dgvProducts.Columns.Add("ProductName", "Product Name");
             _dgvProducts.Columns.Add("Category", "Category");
             _dgvProducts.Columns.Add("Price", "Price");
+            _dgvProducts.Columns.Add("DiscountPercent", "Discount %");
             _dgvProducts.Columns.Add("Stock", "Stock");
             _dgvProducts.Columns.Add("Status", "Status");
             _dgvProducts.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) EditSelectedProduct(); };
@@ -185,10 +186,15 @@ namespace GreenLife_Organic_Store.Forms
                     Image? thumb = null;
                     try
                     {
-                        if (!string.IsNullOrWhiteSpace(product.ImagePath) && File.Exists(product.ImagePath))
+                        if (!string.IsNullOrWhiteSpace(product.ImagePath))
                         {
-                            using var img = Image.FromFile(product.ImagePath);
-                            thumb = new Bitmap(img, new Size(60, 60));
+                            // Use ImageStore to get the full path
+                            var fullPath = ImageStore.GetFullPath(product.ImagePath);
+                            if (File.Exists(fullPath))
+                            {
+                                using var img = Image.FromFile(fullPath);
+                                thumb = new Bitmap(img, new Size(60, 60));
+                            }
                         }
                     }
                     catch { }
@@ -199,6 +205,7 @@ namespace GreenLife_Organic_Store.Forms
                         product.ProductName,
                         product.CategoryName,
                         product.GetFormattedPrice(),
+                        product.HasDiscount() ? $"{product.GetDiscountPercent()}%" : "No",
                         product.Stock,
                         product.GetStockStatus()
                     );
@@ -217,11 +224,29 @@ namespace GreenLife_Organic_Store.Forms
 
             foreach (var product in results)
             {
+                Image? thumb = null;
+                try
+                {
+                    if (!string.IsNullOrWhiteSpace(product.ImagePath))
+                    {
+                        // Use ImageStore to get the full path
+                        var fullPath = ImageStore.GetFullPath(product.ImagePath);
+                        if (File.Exists(fullPath))
+                        {
+                            using var img = Image.FromFile(fullPath);
+                            thumb = new Bitmap(img, new Size(60, 60));
+                        }
+                    }
+                }
+                catch { }
+
                 _dgvProducts.Rows.Add(
+                    thumb,
                     product.ID,
                     product.ProductName,
                     product.CategoryName,
                     product.GetFormattedPrice(),
+                    product.HasDiscount() ? $"{product.GetDiscountPercent()}%" : "No",
                     product.Stock,
                     product.GetStockStatus()
                 );
