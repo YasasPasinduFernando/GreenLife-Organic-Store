@@ -8,6 +8,59 @@ namespace GreenLife_Organic_Store.Database
     /// </summary>
     public class DiscountRepository
     {
+        private static void EnsureSchema(SqliteConnection connection)
+        {
+            // Ensure Discounts table exists
+            const string createDiscountsSql = @"CREATE TABLE IF NOT EXISTS Discounts (
+                                                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                    DiscountName TEXT NOT NULL,
+                                                    Description TEXT,
+                                                    DiscountPercent REAL NOT NULL,
+                                                    ProductID INTEGER NOT NULL,
+                                                    StartDate TEXT DEFAULT CURRENT_TIMESTAMP,
+                                                    EndDate TEXT NOT NULL,
+                                                    IsActive INTEGER DEFAULT 1,
+                                                    CreatedDate TEXT DEFAULT CURRENT_TIMESTAMP,
+                                                    UpdatedDate TEXT DEFAULT CURRENT_TIMESTAMP,
+                                                    FOREIGN KEY (ProductID) REFERENCES Products(ID) ON DELETE CASCADE
+                                                );";
+            using (var cmd = new SqliteCommand(createDiscountsSql, connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+
+            using (var cmd = new SqliteCommand("CREATE INDEX IF NOT EXISTS idx_discounts_product_id ON Discounts(ProductID);", connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+            using (var cmd = new SqliteCommand("CREATE INDEX IF NOT EXISTS idx_discounts_active ON Discounts(IsActive);", connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+
+            // Ensure Products.DiscountPrice column exists
+            bool hasDiscountPrice = false;
+            using (var cmd = new SqliteCommand("PRAGMA table_info(Products);", connection))
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var name = reader["name"]?.ToString();
+                    if (string.Equals(name, "DiscountPrice", StringComparison.OrdinalIgnoreCase))
+                    {
+                        hasDiscountPrice = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasDiscountPrice)
+            {
+                using (var cmd = new SqliteCommand("ALTER TABLE Products ADD COLUMN DiscountPrice REAL;", connection))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
         /// <summary>
         /// Gets all discounts
         /// </summary>
@@ -20,6 +73,7 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
+                    EnsureSchema(connection);
                     string query = @"SELECT d.*, p.ProductName FROM Discounts d
                                      LEFT JOIN Products p ON d.ProductID = p.ID
                                      ORDER BY d.CreatedDate DESC";
@@ -55,6 +109,7 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
+                    EnsureSchema(connection);
                     string query = @"SELECT d.*, p.ProductName FROM Discounts d
                                      LEFT JOIN Products p ON d.ProductID = p.ID
                                      WHERE d.ID = @ID";
@@ -92,6 +147,7 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
+                    EnsureSchema(connection);
                     string query = @"SELECT d.*, p.ProductName FROM Discounts d
                                      LEFT JOIN Products p ON d.ProductID = p.ID
                                      WHERE d.ProductID = @ProductID
@@ -129,6 +185,7 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
+                    EnsureSchema(connection);
                     string query = @"SELECT d.*, p.ProductName FROM Discounts d
                                      LEFT JOIN Products p ON d.ProductID = p.ID
                                      WHERE d.ProductID = @ProductID 
@@ -169,6 +226,7 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
+                    EnsureSchema(connection);
                     string query = @"INSERT INTO Discounts (DiscountName, Description, DiscountPercent, ProductID, StartDate, EndDate, IsActive) 
                                      VALUES (@DiscountName, @Description, @DiscountPercent, @ProductID, @StartDate, @EndDate, @IsActive);
                                      SELECT last_insert_rowid();";
@@ -211,6 +269,7 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
+                    EnsureSchema(connection);
                     string query = @"UPDATE Discounts SET 
                                      DiscountName = @DiscountName,
                                      Description = @Description,
@@ -254,6 +313,7 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
+                    EnsureSchema(connection);
                     string query = "DELETE FROM Discounts WHERE ID = @ID";
 
                     using (var cmd = new SqliteCommand(query, connection))
@@ -277,6 +337,11 @@ namespace GreenLife_Organic_Store.Database
         {
             try
             {
+                using (var connection = DatabaseConnection.GetConnection())
+                {
+                    connection.Open();
+                    EnsureSchema(connection);
+                }
                 var activeDiscount = GetActiveDiscountForProduct(productId);
                 if (activeDiscount != null)
                 {

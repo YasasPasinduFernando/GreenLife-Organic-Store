@@ -178,11 +178,41 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
+                var activeDiscountPercents = new Dictionary<int, int>();
+                try
+                {
+                    var discounts = DiscountRepository.GetAllDiscounts();
+                    var now = DateTime.Now;
+                    foreach (var discount in discounts)
+                    {
+                        if (!discount.IsActive) continue;
+                        if (now < discount.StartDate || now > discount.EndDate) continue;
+                        if (!activeDiscountPercents.ContainsKey(discount.ProductID))
+                        {
+                            activeDiscountPercents[discount.ProductID] = (int)Math.Round(discount.DiscountPercent, 0);
+                        }
+                    }
+                }
+                catch
+                {
+                    // ignore discount loading errors here
+                }
+
                 _allProducts = ProductRepository.GetAllProducts();
                 _dgvProducts.Rows.Clear();
 
                 foreach (var product in _allProducts)
                 {
+                    int discountPercent = 0;
+                    if (product.HasDiscount())
+                    {
+                        discountPercent = product.GetDiscountPercent();
+                    }
+                    else if (activeDiscountPercents.TryGetValue(product.ID, out int pct))
+                    {
+                        discountPercent = pct;
+                    }
+
                     Image? thumb = null;
                     try
                     {
@@ -205,7 +235,7 @@ namespace GreenLife_Organic_Store.Forms
                         product.ProductName,
                         product.CategoryName,
                         product.GetFormattedPrice(),
-                        product.HasDiscount() ? $"{product.GetDiscountPercent()}%" : "No",
+                        discountPercent > 0 ? $"{discountPercent}%" : "No",
                         product.Stock,
                         product.GetStockStatus()
                     );
