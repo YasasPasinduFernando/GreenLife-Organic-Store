@@ -189,18 +189,21 @@ namespace GreenLife_Organic_Store.Database
                     string query = @"SELECT d.*, p.ProductName FROM Discounts d
                                      LEFT JOIN Products p ON d.ProductID = p.ID
                                      WHERE d.ProductID = @ProductID 
-                                     AND d.IsActive = 1 
-                                     AND CURRENT_TIMESTAMP >= d.StartDate 
-                                     AND CURRENT_TIMESTAMP <= d.EndDate
-                                     LIMIT 1";
+                                     AND d.IsActive = 1
+                                     ORDER BY d.StartDate DESC";
                     using (var cmd = new SqliteCommand(query, connection))
                     {
                         cmd.Parameters.AddWithValue("@ProductID", productId);
                         using (var reader = cmd.ExecuteReader())
                         {
-                            if (reader.Read())
+                            var now = DateTime.Now;
+                            while (reader.Read())
                             {
-                                return MapReaderToDiscount(reader);
+                                var discount = MapReaderToDiscount(reader);
+                                if (now >= discount.StartDate && now <= discount.EndDate)
+                                {
+                                    return discount;
+                                }
                             }
                         }
                     }
