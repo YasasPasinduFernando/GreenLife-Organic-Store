@@ -322,7 +322,7 @@ namespace GreenLife_Organic_Store.Database
 
                     // Check new stock level for low stock alert
                     string stockCheck = "SELECT ProductName, Stock FROM Products WHERE ID = @ProductID";
-                    using (var cmd = new MySqlCommand(stockCheck, connection, transaction))
+                    using (var cmd = new SqliteCommand(stockCheck, connection, transaction))
                     {
                         cmd.Parameters.AddWithValue("@ProductID", item.ProductID);
                         using (var reader = cmd.ExecuteReader())

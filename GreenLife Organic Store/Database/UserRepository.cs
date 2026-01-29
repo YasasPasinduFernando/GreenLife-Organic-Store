@@ -164,7 +164,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     connection.Open();
                     string query = "SELECT Email FROM Users WHERE UserType = 'Admin' AND IsActive = TRUE AND Email IS NOT NULL";
-                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var cmd = new SqliteCommand(query, connection))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())

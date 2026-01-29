@@ -252,7 +252,7 @@ namespace GreenLife_Organic_Store.Database
                             if (product.Stock <= 10)
                             {
                                 var admins = UserRepository.GetAdminEmails();
-                                _ = EmailService.SendLowStockAlertsToAdminsAsync(admins, new[] { (product.ProductName, product.Stock) });
+                                _ = EmailService.SendLowStockAlertsToAdminsAsync(admins, new[] { ((product.ProductName ?? string.Empty), product.Stock) });
                             }
                             return (int)lid;
                         }
@@ -310,7 +310,7 @@ namespace GreenLife_Organic_Store.Database
                         if (updated && product.Stock <= 10)
                         {
                             var admins = UserRepository.GetAdminEmails();
-                            _ = EmailService.SendLowStockAlertsToAdminsAsync(admins, new[] { (product.ProductName, product.Stock) });
+                            _ = EmailService.SendLowStockAlertsToAdminsAsync(admins, new[] { ((product.ProductName ?? string.Empty), product.Stock) });
                         }
                         return updated;
                     }

@@ -438,7 +438,7 @@ namespace GreenLife_Organic_Store.Forms
                         if (lowStockProducts.Count > 0)
                         {
                             var adminEmails = UserRepository.GetAdminEmails();
-                            var items = lowStockProducts.Select(p => (p.ProductName, p.Stock));
+                            var items = lowStockProducts.Select(p => (p.ProductName ?? string.Empty, p.Stock));
                             _ = GreenLife_Organic_Store.Utilities.EmailService.SendLowStockAlertsToAdminsAsync(adminEmails, items);
                         }
                     }
