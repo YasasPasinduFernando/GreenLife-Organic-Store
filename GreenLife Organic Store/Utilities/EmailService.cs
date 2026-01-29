@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Utilities
@@ -184,6 +185,39 @@ namespace GreenLife_Organic_Store.Utilities
             return SendEmail(customerEmail, subject, body, true);
         }
 
+        public static Task SendOrderPlacedAlertToAdminsAsync(IEnumerable<string> adminEmails, string orderNumber, string customerName, decimal totalAmount)
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    var emails = adminEmails?.Where(e => !string.IsNullOrWhiteSpace(e)).Distinct().ToList() ?? new List<string>();
+                    if (emails.Count == 0) return;
+
+                    string subject = $"New Order Placed: {orderNumber}";
+                    string body = $@"<html><body style='font-family:Segoe UI, Arial, sans-serif;color:#333;'>
+  <div style='max-width:700px;margin:0 auto;padding:20px;background:#fff;border:1px solid #e9e9e9;'>
+    <h2 style='color:#228b22;margin-bottom:0;'>New Order Placed</h2>
+    <p style='color:#666;margin-top:6px;'>Order Number: <strong>{System.Net.WebUtility.HtmlEncode(orderNumber)}</strong></p>
+    <p style='color:#666;'>Customer: <strong>{System.Net.WebUtility.HtmlEncode(customerName)}</strong></p>
+    <p style='color:#666;'>Total Amount: <strong>Rs. {totalAmount:N2}</strong></p>
+    <hr style='border:none;border-top:1px solid #eee;margin:18px 0;' />
+    <p style='font-size:12px;color:#999;margin:0;'>GreenLife Order Notifications</p>
+  </div>
+</body></html>";
+
+                    foreach (var email in emails)
+                    {
+                        SendEmail(email, subject, body, true);
+                    }
+                }
+                catch
+                {
+                    // swallow async alert errors
+                }
+            });
+        }
+
         public static bool SendOrderStatusUpdate(string customerEmail, string customerName, string orderNumber, string newStatus)
         {
             string subject = $"GreenLife - Order {orderNumber} status updated";
@@ -266,6 +300,30 @@ namespace GreenLife_Organic_Store.Utilities
 </body></html>";
 
             return SendEmail(adminEmail, subject, body, true);
+        }
+
+        public static Task SendLowStockAlertsToAdminsAsync(IEnumerable<string> adminEmails, IEnumerable<(string ProductName, int Stock)> items)
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    var emails = adminEmails?.Where(e => !string.IsNullOrWhiteSpace(e)).Distinct().ToList() ?? new List<string>();
+                    if (emails.Count == 0) return;
+
+                    foreach (var email in emails)
+                    {
+                        foreach (var item in items)
+                        {
+                            SendLowStockAlert(email, item.ProductName, item.Stock);
+                        }
+                    }
+                }
+                catch
+                {
+                    // swallow async alert errors
+                }
+            });
         }
 
         public static void TestConnection()

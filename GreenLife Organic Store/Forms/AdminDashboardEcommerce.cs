@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
@@ -368,6 +369,13 @@ namespace GreenLife_Organic_Store.Forms
 
                 if (_controls.TryGetValue("lblLowStock", out var ctrl4) && ctrl4 is Label lbl4)
                     lbl4.Text = lowStockProducts.Count.ToString();
+
+                if (lowStockProducts.Count > 0)
+                {
+                    var adminEmails = UserRepository.GetAdminEmails();
+                    var items = lowStockProducts.Select(p => (p.ProductName, p.Stock));
+                    _ = EmailService.SendLowStockAlertsToAdminsAsync(adminEmails, items);
+                }
 
                 // Load recent orders
                 if (_controls.TryGetValue("dgvRecent", out var ctrl5) && ctrl5 is DataGridView dgvRecent)

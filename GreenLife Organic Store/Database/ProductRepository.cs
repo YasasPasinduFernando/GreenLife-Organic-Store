@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 
 namespace GreenLife_Organic_Store.Database
 {
@@ -248,6 +249,11 @@ namespace GreenLife_Organic_Store.Database
                         var result = idCmd.ExecuteScalar();
                         if (result != null && long.TryParse(result.ToString(), out long lid))
                         {
+                            if (product.Stock <= 10)
+                            {
+                                var admins = UserRepository.GetAdminEmails();
+                                _ = EmailService.SendLowStockAlertsToAdminsAsync(admins, new[] { (product.ProductName, product.Stock) });
+                            }
                             return (int)lid;
                         }
                     }
@@ -300,7 +306,13 @@ namespace GreenLife_Organic_Store.Database
                         cmd.Parameters.AddWithValue("@IsFeatured", product.IsFeatured ? 1 : 0);
                         cmd.Parameters.AddWithValue("@IsActive", product.IsActive);
 
-                        return cmd.ExecuteNonQuery() > 0;
+                        var updated = cmd.ExecuteNonQuery() > 0;
+                        if (updated && product.Stock <= 10)
+                        {
+                            var admins = UserRepository.GetAdminEmails();
+                            _ = EmailService.SendLowStockAlertsToAdminsAsync(admins, new[] { (product.ProductName, product.Stock) });
+                        }
+                        return updated;
                     }
                 }
             }
