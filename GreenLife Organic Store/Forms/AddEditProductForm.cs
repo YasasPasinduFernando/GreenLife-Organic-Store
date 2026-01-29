@@ -234,14 +234,22 @@ namespace GreenLife_Organic_Store.Forms
                     {
                         pic.ImageLocation = full;
 
-                        // If the stored path is under the app base directory, convert to a normalized relative path for DB
+                        // Normalize to "Images/filename" when the file is inside the Images directory
                         try
                         {
-                            var rel = Path.GetRelativePath(AppContext.BaseDirectory, full).Replace(Path.DirectorySeparatorChar, '/');
-                            // Ensure folder name uses the Images folder name defined in ImageStore
-                            if (rel.StartsWith("images/", StringComparison.OrdinalIgnoreCase))
-                                rel = "Images/" + rel.Substring("images/".Length);
-                            pic.Tag = rel;
+                            var imagesDir = ImageStore.GetImagesDirectory();
+                            var fullNormalized = Path.GetFullPath(full);
+                            var imagesDirNormalized = Path.GetFullPath(imagesDir);
+                            if (fullNormalized.StartsWith(imagesDirNormalized, StringComparison.OrdinalIgnoreCase))
+                            {
+                                var relFromImages = Path.GetRelativePath(imagesDirNormalized, fullNormalized)
+                                    .Replace(Path.DirectorySeparatorChar, '/');
+                                pic.Tag = "Images/" + relFromImages;
+                            }
+                            else
+                            {
+                                pic.Tag = _existingProduct.ImagePath;
+                            }
                         }
                         catch
                         {
@@ -304,6 +312,28 @@ namespace GreenLife_Organic_Store.Forms
                     return;
                 }
 
+                var rawImagePath = ((PictureBox)this.Controls["picPreview"]).Tag as string;
+                if (!string.IsNullOrWhiteSpace(rawImagePath))
+                {
+                    try
+                    {
+                        var fullPath = ImageStore.GetFullPath(rawImagePath);
+                        var imagesDir = ImageStore.GetImagesDirectory();
+                        var fullNormalized = Path.GetFullPath(fullPath);
+                        var imagesDirNormalized = Path.GetFullPath(imagesDir);
+                        if (fullNormalized.StartsWith(imagesDirNormalized, StringComparison.OrdinalIgnoreCase))
+                        {
+                            var relFromImages = Path.GetRelativePath(imagesDirNormalized, fullNormalized)
+                                .Replace(Path.DirectorySeparatorChar, '/');
+                            rawImagePath = "Images/" + relFromImages;
+                        }
+                    }
+                    catch
+                    {
+                        // keep rawImagePath if normalization fails
+                    }
+                }
+
                 var product = new Product
                 {
                     ProductName = txtName.Text,
@@ -313,7 +343,7 @@ namespace GreenLife_Organic_Store.Forms
                     DiscountPrice = numDiscount.Value > 0 ? numDiscount.Value : null,
                     Stock = (int)numStock.Value,
                     Supplier = string.IsNullOrWhiteSpace(txtSupplier.Text) ? null : txtSupplier.Text,
-                ImagePath = ((PictureBox)this.Controls["picPreview"]).Tag as string,
+                    ImagePath = rawImagePath,
                     IsFeatured = chkFeatured.Checked,
                     IsActive = chkActive.Checked
                 };
