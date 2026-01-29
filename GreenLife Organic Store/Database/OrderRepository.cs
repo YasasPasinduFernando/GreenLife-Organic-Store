@@ -1,5 +1,6 @@
 using MySql.Data.MySqlClient;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 
 namespace GreenLife_Organic_Store.Database
 {
@@ -292,6 +293,8 @@ namespace GreenLife_Organic_Store.Database
                 string itemQuery = @"INSERT INTO OrderItems (OrderID, ProductID, ProductName, Quantity, UnitPrice, Subtotal) 
                                      VALUES (@OrderID, @ProductID, @ProductName, @Quantity, @UnitPrice, @Subtotal);";
 
+                var lowStockItems = new List<(string ProductName, int Stock)>();
+
                 foreach (var item in order.Items)
                 {
                     using (var cmd = new MySqlCommand(itemQuery, connection, transaction))
@@ -313,9 +316,34 @@ namespace GreenLife_Organic_Store.Database
                         cmd.Parameters.AddWithValue("@ProductID", item.ProductID);
                         cmd.ExecuteNonQuery();
                     }
+
+                    // Check new stock level for low stock alert
+                    string stockCheck = "SELECT ProductName, Stock FROM Products WHERE ID = @ProductID";
+                    using (var cmd = new MySqlCommand(stockCheck, connection, transaction))
+                    {
+                        cmd.Parameters.AddWithValue("@ProductID", item.ProductID);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                var name = reader["ProductName"]?.ToString() ?? string.Empty;
+                                int stock = Convert.ToInt32(reader["Stock"]);
+                                if (stock <= 10)
+                                {
+                                    lowStockItems.Add((name, stock));
+                                }
+                            }
+                        }
+                    }
                 }
 
                 transaction.Commit();
+
+                if (lowStockItems.Count > 0)
+                {
+                    var adminEmails = UserRepository.GetAdminEmails();
+                    _ = EmailService.SendLowStockAlertsToAdminsAsync(adminEmails, lowStockItems);
+                }
                 return orderId;
             }
             catch (Exception ex)

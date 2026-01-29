@@ -1,4 +1,4 @@
-using GreenLife_Organic_Store.Models;
+ï»¿using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Database;
 using FontAwesome.Sharp;
 using System.Text.RegularExpressions;
@@ -188,7 +188,7 @@ namespace GreenLife_Organic_Store.Forms
             btnPlaceOrder.Click += BtnPlaceOrder_Click;
             this.Controls.Add(btnPlaceOrder);
 
-            // Progress bar for email sending — full width with margins
+            // Progress bar for email sending ï¿½ full width with margins
             progressBarEmail = new ProgressBar
             {
                 Style = ProgressBarStyle.Marquee,
@@ -414,6 +414,37 @@ namespace GreenLife_Organic_Store.Forms
                     catch
                     {
                         try { progressBarEmail.Visible = false; } catch { }
+                    }
+                    // Notify all admins (best-effort, async)
+                    try
+                    {
+                        var adminEmails = UserRepository.GetAdminEmails();
+                        _ = GreenLife_Organic_Store.Utilities.EmailService.SendOrderPlacedAlertToAdminsAsync(
+                            adminEmails,
+                            order.OrderNumber,
+                            order.CustomerName,
+                            order.TotalAmount
+                        );
+                    }
+                    catch
+                    {
+                        // ignore admin email failures
+                    }
+
+                    // Low stock alerts after checkout (best-effort)
+                    try
+                    {
+                        var lowStockProducts = ProductRepository.GetLowStockProducts();
+                        if (lowStockProducts.Count > 0)
+                        {
+                            var adminEmails = UserRepository.GetAdminEmails();
+                            var items = lowStockProducts.Select(p => (p.ProductName, p.Stock));
+                            _ = GreenLife_Organic_Store.Utilities.EmailService.SendLowStockAlertsToAdminsAsync(adminEmails, items);
+                        }
+                    }
+                    catch
+                    {
+                        // ignore low stock email failures
                     }
 
                     MessageBox.Show(

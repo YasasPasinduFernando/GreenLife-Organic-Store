@@ -155,6 +155,35 @@ namespace GreenLife_Organic_Store.Database
             return users;
         }
 
+        public static List<string> GetAdminEmails()
+        {
+            var emails = new List<string>();
+            try
+            {
+                using (var connection = DatabaseConnection.GetConnection())
+                {
+                    connection.Open();
+                    string query = "SELECT Email FROM Users WHERE UserType = 'Admin' AND IsActive = TRUE AND Email IS NOT NULL";
+                    using (var cmd = new MySqlCommand(query, connection))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var email = reader["Email"]?.ToString();
+                            if (!string.IsNullOrWhiteSpace(email))
+                                emails.Add(email);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving admin emails: {ex.Message}", ex);
+            }
+
+            return emails;
+        }
+
         /// <summary>
         /// Creates a new user
         /// </summary>
