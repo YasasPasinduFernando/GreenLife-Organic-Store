@@ -284,7 +284,7 @@ namespace GreenLife_Organic_Store.Database
                                      DiscountPrice = @DiscountPrice,
                                      Stock = @Stock,
                                      Supplier = @Supplier,
-                                     ImagePath = @ImagePath,
+                                     ImagePath = COALESCE(NULLIF(@ImagePath, ''), ImagePath),
                                      IsFeatured = @IsFeatured,
                                      IsActive = @IsActive
                                      WHERE ID = @ID";
