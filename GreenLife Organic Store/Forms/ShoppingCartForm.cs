@@ -1,5 +1,7 @@
 using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Database;
+using GreenLife_Organic_Store.Utilities;
+using System.IO;
 using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
@@ -85,10 +87,19 @@ namespace GreenLife_Organic_Store.Forms
                     Padding = new Padding(5)
                 },
                 ColumnHeadersHeight = 35,
-                RowTemplate = new DataGridViewRow { Height = 35 }
+                RowTemplate = new DataGridViewRow { Height = 50 }
             };
 
             // Add text columns
+            var imgCol = new DataGridViewImageColumn
+            {
+                Name = "Image",
+                HeaderText = "Image",
+                ImageLayout = DataGridViewImageCellLayout.Zoom,
+                Width = 60,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            };
+            _dgvCart.Columns.Add(imgCol);
             _dgvCart.Columns.Add("ProductName", "Product");
             _dgvCart.Columns.Add("Quantity", "Quantity");
             _dgvCart.Columns.Add("UnitPrice", "Price");
@@ -298,7 +309,23 @@ namespace GreenLife_Organic_Store.Forms
 
                 foreach (var item in _cartItems)
                 {
+                    Image? thumb = null;
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(item.Product.ImagePath))
+                        {
+                            var fullPath = ImageStore.GetFullPath(item.Product.ImagePath);
+                            if (File.Exists(fullPath))
+                            {
+                                using var img = Image.FromFile(fullPath);
+                                thumb = new Bitmap(img, new Size(50, 50));
+                            }
+                        }
+                    }
+                    catch { }
+
                     _dgvCart.Rows.Add(
+                        thumb,
                         item.Product.ProductName,
                         item.Quantity,
                         item.Product.GetFormattedPrice(),
