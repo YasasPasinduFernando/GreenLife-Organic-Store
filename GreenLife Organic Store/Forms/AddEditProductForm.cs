@@ -88,19 +88,41 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(numPrice);
             yPosition += 35;
 
-            // Discount Price
+            // Discount Price (display only)
             Label lblDiscount = new Label { Text = "Discount Price:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            NumericUpDown numDiscount = new NumericUpDown
+            Label lblDiscountValue = new Label
             {
-                Name = "numDiscount",
+                Name = "lblDiscountValue",
                 Location = new Point(120, yPosition),
-                Size = new Size(150, 25),
-                Maximum = 1000000,
-                DecimalPlaces = 2
+                Size = new Size(120, 20),
+                Text = "-"
+            };
+            Label lblDiscountHint = new Label
+            {
+                Name = "lblDiscountHint",
+                Text = "Click Manage Discounts to add discounts",
+                Location = new Point(120, yPosition + 22),
+                Size = new Size(300, 18),
+                ForeColor = Color.DimGray
+            };
+            Button btnManageDiscounts = new Button
+            {
+                Text = "Manage Discounts",
+                Location = new Point(120, yPosition + 45),
+                Size = new Size(150, 26),
+                BackColor = Color.FromArgb(46, 204, 113),
+                ForeColor = Color.White
+            };
+            btnManageDiscounts.Click += (s, e) =>
+            {
+                using var form = new DiscountManagementForm();
+                form.ShowDialog();
             };
             this.Controls.Add(lblDiscount);
-            this.Controls.Add(numDiscount);
-            yPosition += 35;
+            this.Controls.Add(lblDiscountValue);
+            this.Controls.Add(lblDiscountHint);
+            this.Controls.Add(btnManageDiscounts);
+            yPosition += 75;
 
             // Stock
             Label lblStock = new Label { Text = "Stock Quantity:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
@@ -172,12 +194,16 @@ namespace GreenLife_Organic_Store.Forms
             Button btnCancel = new Button
             {
                 Text = "Cancel",
-                Location = new Point(310, yPosition + 10),
+                Location = new Point(310, yPosition),
                 Size = new Size(150, 40),
                 BackColor = Color.LightGray
             };
             btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
             this.Controls.Add(btnCancel);
+
+            // Keep buttons visible and allow scroll if needed
+            this.AutoScroll = true;
+            this.ClientSize = new Size(this.ClientSize.Width, yPosition + 120);
         }
 
         private void LoadCategories()
@@ -207,7 +233,6 @@ namespace GreenLife_Organic_Store.Forms
             ComboBox cmbCategory = (ComboBox)this.Controls["cmbCategory"];
             TextBox txtDescription = (TextBox)this.Controls["txtDescription"];
             NumericUpDown numPrice = (NumericUpDown)this.Controls["numPrice"];
-            NumericUpDown numDiscount = (NumericUpDown)this.Controls["numDiscount"];
             NumericUpDown numStock = (NumericUpDown)this.Controls["numStock"];
             TextBox txtSupplier = (TextBox)this.Controls["txtSupplier"];
             CheckBox chkFeatured = (CheckBox)this.Controls["chkFeatured"];
@@ -217,11 +242,21 @@ namespace GreenLife_Organic_Store.Forms
             cmbCategory.SelectedItem = _existingProduct.CategoryName;
             txtDescription.Text = _existingProduct.Description ?? "";
             numPrice.Value = _existingProduct.Price;
-            numDiscount.Value = _existingProduct.DiscountPrice ?? 0;
             numStock.Value = _existingProduct.Stock;
             txtSupplier.Text = _existingProduct.Supplier ?? "";
             chkFeatured.Checked = _existingProduct.IsFeatured;
             chkActive.Checked = _existingProduct.IsActive;
+            if (this.Controls["lblDiscountValue"] is Label lblDiscountValue)
+            {
+                if (_existingProduct.DiscountPrice.HasValue && _existingProduct.DiscountPrice.Value > 0)
+                {
+                    lblDiscountValue.Text = $"Rs. {_existingProduct.DiscountPrice.Value:N2}";
+                }
+                else
+                {
+                    lblDiscountValue.Text = "-";
+                }
+            }
 
             // Populate image preview if available
             try
@@ -285,7 +320,6 @@ namespace GreenLife_Organic_Store.Forms
             ComboBox cmbCategory = (ComboBox)this.Controls["cmbCategory"];
             TextBox txtDescription = (TextBox)this.Controls["txtDescription"];
             NumericUpDown numPrice = (NumericUpDown)this.Controls["numPrice"];
-            NumericUpDown numDiscount = (NumericUpDown)this.Controls["numDiscount"];
             NumericUpDown numStock = (NumericUpDown)this.Controls["numStock"];
             TextBox txtSupplier = (TextBox)this.Controls["txtSupplier"];
             CheckBox chkFeatured = (CheckBox)this.Controls["chkFeatured"];
@@ -340,7 +374,7 @@ namespace GreenLife_Organic_Store.Forms
                     CategoryID = category.ID,
                     Description = string.IsNullOrWhiteSpace(txtDescription.Text) ? null : txtDescription.Text,
                     Price = numPrice.Value,
-                    DiscountPrice = numDiscount.Value > 0 ? numDiscount.Value : null,
+                    DiscountPrice = _existingProduct?.DiscountPrice,
                     Stock = (int)numStock.Value,
                     Supplier = string.IsNullOrWhiteSpace(txtSupplier.Text) ? null : txtSupplier.Text,
                     ImagePath = rawImagePath,
