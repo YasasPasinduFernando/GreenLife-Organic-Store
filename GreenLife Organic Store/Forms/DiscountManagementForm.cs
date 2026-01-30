@@ -1,6 +1,8 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 using FontAwesome.Sharp;
+using System.IO;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -32,7 +34,7 @@ namespace GreenLife_Organic_Store.Forms
             {
                 Dock = DockStyle.Top,
                 Height = 50,
-                BackColor = Color.FromArgb(52, 152, 219),
+                BackColor = Color.FromArgb(46, 204, 113),
                 Padding = new Padding(15)
             };
 
@@ -46,8 +48,6 @@ namespace GreenLife_Organic_Store.Forms
                 BackColor = Color.Transparent
             };
             pnlHeader.Controls.Add(lblHeader);
-
-            this.Controls.Add(pnlHeader);
 
             // Toolbar
             Panel pnlToolbar = new Panel
@@ -81,7 +81,7 @@ namespace GreenLife_Organic_Store.Forms
                 Text = "Refresh",
                 Location = new Point(180, 10),
                 Size = new Size(110, 35),
-                BackColor = Color.FromArgb(52, 152, 219),
+                BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand,
                 IconChar = IconChar.Sync,
@@ -94,7 +94,7 @@ namespace GreenLife_Organic_Store.Forms
             btnRefresh.Click += (s, e) => LoadData();
             pnlToolbar.Controls.Add(btnRefresh);
 
-            this.Controls.Add(pnlToolbar);
+            // keep toolbar added later for order
 
             // DataGridView
             _dgvDiscounts = new DataGridView
@@ -119,6 +119,14 @@ namespace GreenLife_Organic_Store.Forms
                 RowTemplate = new DataGridViewRow { Height = 30 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.FromArgb(250, 250, 250) }
             };
+            var imgCol = new DataGridViewImageColumn
+            {
+                Name = "Image",
+                HeaderText = "Image",
+                ImageLayout = DataGridViewImageCellLayout.Zoom,
+                Width = 60
+            };
+            _dgvDiscounts.Columns.Add(imgCol);
             _dgvDiscounts.Columns.Add("ID", "ID");
             _dgvDiscounts.Columns.Add("DiscountName", "Discount Name");
             _dgvDiscounts.Columns.Add("ProductName", "Product");
@@ -127,7 +135,7 @@ namespace GreenLife_Organic_Store.Forms
             _dgvDiscounts.Columns.Add("EndDate", "End Date");
             _dgvDiscounts.Columns.Add("Status", "Status");
             _dgvDiscounts.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) EditSelectedDiscount(); };
-            this.Controls.Add(_dgvDiscounts);
+            // keep grid added later for order
 
             // Action Buttons
             Panel pnlActions = new Panel
@@ -143,7 +151,7 @@ namespace GreenLife_Organic_Store.Forms
                 Text = "Edit Discount",
                 Location = new Point(10, 10),
                 Size = new Size(140, 35),
-                BackColor = Color.FromArgb(52, 152, 219),
+                BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 Cursor = Cursors.Hand,
                 IconChar = IconChar.Edit,
@@ -192,7 +200,11 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.Click += (s, e) => this.Close();
             pnlActions.Controls.Add(btnClose);
 
+            // Add in strict top-to-bottom order
             this.Controls.Add(pnlActions);
+            this.Controls.Add(_dgvDiscounts);
+            this.Controls.Add(pnlToolbar);
+            this.Controls.Add(pnlHeader);
         }
 
         private void LoadData()
@@ -221,7 +233,24 @@ namespace GreenLife_Organic_Store.Forms
 
                 foreach (var discount in _allDiscounts)
                 {
+                    Image? thumb = null;
+                    try
+                    {
+                        var product = _allProducts.FirstOrDefault(p => p.ID == discount.ProductID);
+                        if (product != null && !string.IsNullOrWhiteSpace(product.ImagePath))
+                        {
+                            var fullPath = ImageStore.GetFullPath(product.ImagePath);
+                            if (File.Exists(fullPath))
+                            {
+                                using var img = Image.FromFile(fullPath);
+                                thumb = new Bitmap(img, new Size(60, 60));
+                            }
+                        }
+                    }
+                    catch { }
+
                     _dgvDiscounts.Rows.Add(
+                        thumb,
                         discount.ID,
                         discount.DiscountName,
                         discount.ProductName,

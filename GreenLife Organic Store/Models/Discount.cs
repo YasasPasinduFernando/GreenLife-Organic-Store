@@ -22,9 +22,9 @@ namespace GreenLife_Organic_Store.Models
 
         public string GetStatusText()
         {
-            if (!IsActive) return "Inactive";
-            if (DateTime.Now < StartDate) return "Upcoming";
             if (DateTime.Now > EndDate) return "Expired";
+            if (DateTime.Now < StartDate) return IsActive ? "Upcoming" : "Inactive";
+            if (!IsActive) return "Inactive";
             return "Active";
         }
 

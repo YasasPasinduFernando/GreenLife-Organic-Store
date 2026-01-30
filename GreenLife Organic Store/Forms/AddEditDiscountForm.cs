@@ -1,6 +1,8 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 using FontAwesome.Sharp;
+using System.IO;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -13,10 +15,11 @@ namespace GreenLife_Organic_Store.Forms
         public AddEditDiscountForm(List<Product> products)
         {
             this.Text = "Add New Discount";
-            this.Size = new Size(500, 550);
+            this.Size = new Size(500, 650);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.AutoScroll = true;
             this.Load += AddEditDiscountForm_Load;
             _products = products;
         }
@@ -60,6 +63,7 @@ namespace GreenLife_Organic_Store.Forms
             };
             this.Controls.Add(lblProduct);
             this.Controls.Add(cmbProduct);
+            cmbProduct.SelectedIndexChanged += (s, e) => UpdateProductImage();
             yPosition += 35;
 
             // Discount Percent
@@ -134,6 +138,20 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(chkActive);
             yPosition += 40;
 
+            // Product Image Preview
+            Label lblImage = new Label { Text = "Product Image:", Location = new Point(10, yPosition), Size = new Size(120, 20), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
+            PictureBox picProduct = new PictureBox
+            {
+                Name = "picProduct",
+                Location = new Point(140, yPosition),
+                Size = new Size(120, 120),
+                BorderStyle = BorderStyle.FixedSingle,
+                SizeMode = PictureBoxSizeMode.Zoom
+            };
+            this.Controls.Add(lblImage);
+            this.Controls.Add(picProduct);
+            yPosition += 140;
+
             // Save Button
             IconButton btnSave = new IconButton
             {
@@ -182,6 +200,7 @@ namespace GreenLife_Organic_Store.Forms
 
             if (cmbProduct.Items.Count > 0)
                 cmbProduct.SelectedIndex = 0;
+            UpdateProductImage();
         }
 
         private void PopulateForm()
@@ -210,6 +229,58 @@ namespace GreenLife_Organic_Store.Forms
                     break;
                 }
             }
+
+            UpdateProductImage();
+        }
+
+        private void UpdateProductImage()
+        {
+            if (this.Controls["cmbProduct"] is not ComboBox cmbProduct ||
+                this.Controls["picProduct"] is not PictureBox picProduct)
+            {
+                return;
+            }
+
+            if (cmbProduct.SelectedIndex < 0)
+            {
+                picProduct.Image = null;
+                picProduct.ImageLocation = null;
+                return;
+            }
+
+            string selectedItem = cmbProduct.SelectedItem?.ToString() ?? "";
+            if (!selectedItem.Contains("ID: "))
+            {
+                picProduct.Image = null;
+                picProduct.ImageLocation = null;
+                return;
+            }
+
+            string idStr = selectedItem.Substring(selectedItem.LastIndexOf("ID: ") + 4).TrimEnd(')');
+            if (!int.TryParse(idStr, out int productId))
+            {
+                picProduct.Image = null;
+                picProduct.ImageLocation = null;
+                return;
+            }
+
+            var product = _products.FirstOrDefault(p => p.ID == productId);
+            if (product == null || string.IsNullOrWhiteSpace(product.ImagePath))
+            {
+                picProduct.Image = null;
+                picProduct.ImageLocation = null;
+                return;
+            }
+
+            var fullPath = ImageStore.GetFullPath(product.ImagePath);
+            if (!File.Exists(fullPath))
+            {
+                picProduct.Image = null;
+                picProduct.ImageLocation = null;
+                return;
+            }
+
+            picProduct.ImageLocation = fullPath;
         }
 
         private void BtnSave_Click(object? sender, EventArgs e)
@@ -281,10 +352,34 @@ namespace GreenLife_Organic_Store.Forms
                 }
                 else
                 {
-                    if (DiscountRepository.CreateDiscount(discount) > 0)
+                    var newId = DiscountRepository.CreateDiscount(discount);
+                    if (newId > 0)
                     {
+                        discount.ID = newId;
+                        bool deactivatedOld = false;
+                        try
+                        {
+                            var existing = DiscountRepository.GetDiscountsByProductId(productId);
+                            foreach (var old in existing)
+                            {
+                                if (old.ID != newId && old.IsActive)
+                                {
+                                    old.IsActive = false;
+                                    old.EndDate = DateTime.Now;
+                                    DiscountRepository.UpdateDiscount(old);
+                                    deactivatedOld = true;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // non-fatal
+                        }
                         DiscountRepository.SyncActiveDiscountForProduct(productId);
-                        MessageBox.Show("Discount created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        var msg = deactivatedOld
+                            ? "Discount created successfully! Previous discounts for this product were deactivated."
+                            : "Discount created successfully!";
+                        MessageBox.Show(msg, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.DialogResult = DialogResult.OK;
                     }
                 }
