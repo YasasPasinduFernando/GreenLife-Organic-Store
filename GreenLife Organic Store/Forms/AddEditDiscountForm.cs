@@ -192,7 +192,6 @@ namespace GreenLife_Organic_Store.Forms
             btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
             this.Controls.Add(btnCancel);
 
-            // Populate products combo
             foreach (var product in _products)
             {
                 cmbProduct.Items.Add($"{product.ProductName} (ID: {product.ID})");
@@ -220,7 +219,6 @@ namespace GreenLife_Organic_Store.Forms
             dtpEndDate.Value = _existingDiscount.EndDate;
             chkActive.Checked = _existingDiscount.IsActive;
 
-            // Select the product in combo
             for (int i = 0; i < cmbProduct.Items.Count; i++)
             {
                 if (cmbProduct.Items[i].ToString().Contains($"ID: {_existingDiscount.ProductID}"))
@@ -293,7 +291,6 @@ namespace GreenLife_Organic_Store.Forms
             DateTimePicker? dtpEndDate = this.Controls["dtpEndDate"] as DateTimePicker;
             CheckBox? chkActive = this.Controls["chkActive"] as CheckBox;
 
-            // Validation
             if (string.IsNullOrWhiteSpace(txtName?.Text))
             {
                 MessageBox.Show("Please enter a discount name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -320,7 +317,6 @@ namespace GreenLife_Organic_Store.Forms
 
             try
             {
-                // Extract product ID from selected item
                 string selectedItem = cmbProduct?.SelectedItem?.ToString() ?? "";
                 string idStr = selectedItem.Substring(selectedItem.LastIndexOf("ID: ") + 4).TrimEnd(')');
                 int productId = int.Parse(idStr);
@@ -373,7 +369,6 @@ namespace GreenLife_Organic_Store.Forms
                         }
                         catch
                         {
-                            // non-fatal
                         }
                         DiscountRepository.SyncActiveDiscountForProduct(productId);
                         var msg = deactivatedOld

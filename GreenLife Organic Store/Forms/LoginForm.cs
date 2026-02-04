@@ -169,7 +169,6 @@ namespace GreenLife_Organic_Store.Forms
 
         private void linkLabelForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Open forgot password form
             var forgot = new ForgotPasswordForm();
             this.Hide();
             forgot.ShowDialog();
@@ -178,10 +177,8 @@ namespace GreenLife_Organic_Store.Forms
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
-            // Set default selection
             radioButtonCustomer.Checked = true;
 
-            // Test database connection on form load
             if (!DatabaseConnection.TestConnection())
             {
                 MessageBox.Show("Warning: Unable to connect to the database. Please ensure MySQL is running and the database is configured correctly.",

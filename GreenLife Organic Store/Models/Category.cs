@@ -1,8 +1,5 @@
 namespace GreenLife_Organic_Store.Models
 {
-    /// <summary>
-    /// Category model representing a product category
-    /// </summary>
     public class Category
     {
         public int ID { get; set; }

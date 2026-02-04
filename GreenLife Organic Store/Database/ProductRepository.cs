@@ -4,15 +4,9 @@ using GreenLife_Organic_Store.Utilities;
 
 namespace GreenLife_Organic_Store.Database
 {
-    /// <summary>
-    /// Repository class for Product database operations
-    /// </summary>
+    // DB operations for products
     public class ProductRepository
     {
-        /// <summary>
-        /// Gets all products
-        /// </summary>
-        /// <returns>List of all products</returns>
         public static List<Product> GetAllProducts()
         {
             var products = new List<Product>();
@@ -45,11 +39,6 @@ namespace GreenLife_Organic_Store.Database
             return products;
         }
 
-        /// <summary>
-        /// Gets a product by ID
-        /// </summary>
-        /// <param name="id">Product ID</param>
-        /// <returns>Product object if found, null otherwise</returns>
         public static Product? GetProductById(int id)
         {
             try
@@ -81,11 +70,7 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets products by category
-        /// </summary>
-        /// <param name="categoryId">Category ID</param>
-        /// <returns>List of products in the category</returns>
+        // Filter by category using WHERE clause in DB
         public static List<Product> GetProductsByCategory(int categoryId)
         {
             var products = new List<Product>();
@@ -119,16 +104,11 @@ namespace GreenLife_Organic_Store.Database
             return products;
         }
 
-        /// <summary>
-        /// Searches products by name (linear search as per coursework requirement)
-        /// </summary>
-        /// <param name="searchTerm">Search term</param>
-        /// <returns>List of matching products</returns>
+        // Linear search - coursework requires in-memory search
         public static List<Product> SearchProducts(string searchTerm)
         {
             var allProducts = GetAllProducts();
             
-            // Linear search implementation as per coursework requirement
             var results = new List<Product>();
             foreach (var product in allProducts)
             {
@@ -143,10 +123,6 @@ namespace GreenLife_Organic_Store.Database
             return results;
         }
 
-        /// <summary>
-        /// Gets featured products
-        /// </summary>
-        /// <returns>List of featured products</returns>
         public static List<Product> GetFeaturedProducts()
         {
             var products = new List<Product>();
@@ -179,10 +155,7 @@ namespace GreenLife_Organic_Store.Database
             return products;
         }
 
-        /// <summary>
-        /// Gets low stock products (stock <= 10)
-        /// </summary>
-        /// <returns>List of low stock products</returns>
+        // Stock <= 10 counts as low
         public static List<Product> GetLowStockProducts()
         {
             var products = new List<Product>();
@@ -215,11 +188,7 @@ namespace GreenLife_Organic_Store.Database
             return products;
         }
 
-        /// <summary>
-        /// Creates a new product
-        /// </summary>
-        /// <param name="product">Product object to create</param>
-        /// <returns>The ID of the created product</returns>
+        // Returns new product ID
         public static int CreateProduct(Product product)
         {
             try
@@ -264,11 +233,6 @@ namespace GreenLife_Organic_Store.Database
             return 0;
         }
 
-        /// <summary>
-        /// Updates an existing product
-        /// </summary>
-        /// <param name="product">Product object with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
         public static bool UpdateProduct(Product product)
         {
             try
@@ -319,11 +283,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Deletes a product
-        /// </summary>
-        /// <param name="productId">Product ID</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
         public static bool DeleteProduct(int productId)
         {
             try
@@ -346,12 +305,7 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Updates product stock
-        /// </summary>
-        /// <param name="productId">Product ID</param>
-        /// <param name="quantity">Quantity to reduce stock by</param>
-        /// <returns>True if update was successful, false otherwise</returns>
+        // Only reduces if enough stock available
         public static bool ReduceStock(int productId, int quantity)
         {
             try
@@ -375,9 +329,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Maps a database reader to a Product object
-        /// </summary>
         private static Product MapReaderToProduct(MySqlDataReader reader)
         {
             return new Product

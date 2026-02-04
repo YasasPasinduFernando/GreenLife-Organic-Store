@@ -7,20 +7,16 @@ using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Utilities
 {
-    /// <summary>
-    /// Email service for sending emails via Gmail SMTP.
-    /// </summary>
+    // Sends emails via Gmail SMTP
     public static class EmailService
     {
-        // Hard coded configuration
         private const string SMTP_SERVER = "smtp.gmail.com";
         private const int SMTP_PORT = 587;
         private const string SENDER_EMAIL = "greenlifeorganicstore@gmail.com";
-        private const string SENDER_PASSWORD = "nede eilq sypk nhrx"; // Gmail App Password
+        private const string SENDER_PASSWORD = "nede eilq sypk nhrx";
         private const string SENDER_NAME = "GreenLife Organic Store";
         
-        // Set to TRUE for mock mode (testing without Gmail)
-        // Set to FALSE for real Gmail SMTP
+        // TRUE = fake emails (for testing), FALSE = real emails
         private const bool USE_MOCK_MODE = false;
 
         public static bool SendEmail(string toEmail, string subject, string body, bool isHtml = true)
@@ -35,9 +31,7 @@ namespace GreenLife_Organic_Store.Utilities
             }
         }
 
-        /// <summary>
-        /// Mock email sender - for testing without Gmail
-        /// </summary>
+        // Fake send for testing
         private static bool SendEmailMock(string toEmail, string subject, string body)
         {
             try
@@ -52,15 +46,11 @@ namespace GreenLife_Organic_Store.Utilities
             }
         }
 
-        /// <summary>
-        /// Special method to handle password reset emails in mock mode
-        /// Shows the reset code to the user via MessageBox
-        /// </summary>
+        // Shows reset code in popup for testing
         public static bool SendPasswordResetEmailMock(string toEmail, string userName, string resetCode)
         {
             try
             {
-                // In MOCK MODE, show the reset code in a messagebox so user can see it
                 System.Windows.Forms.MessageBox.Show(
                     $"Password Reset Code\n\n" +
                     $"Email: {toEmail}\n\n" +
@@ -82,9 +72,7 @@ namespace GreenLife_Organic_Store.Utilities
             }
         }
 
-        /// <summary>
-        /// Real SMTP email sender - requires valid Gmail app password
-        /// </summary>
+        // Actual email sending via Gmail SMTP
         private static bool SendEmailReal(string toEmail, string subject, string body, bool isHtml = true)
         {
             try
@@ -123,12 +111,10 @@ namespace GreenLife_Organic_Store.Utilities
 
         private static void LogEmailSuccess(string toEmail, string subject)
         {
-            // Minimal logging - no timestamps or extra formatting
         }
 
         private static void LogEmailError(string message)
         {
-            // Log errors only
             Console.WriteLine($"? {message}");
         }
 
@@ -213,7 +199,6 @@ namespace GreenLife_Organic_Store.Utilities
                 }
                 catch
                 {
-                    // swallow async alert errors
                 }
             });
         }
@@ -239,7 +224,6 @@ namespace GreenLife_Organic_Store.Utilities
         {
             if (USE_MOCK_MODE)
             {
-                // In mock mode, show the code to the user
                 return SendPasswordResetEmailMock(userEmail, userName, resetCode);
             }
             else
@@ -321,7 +305,6 @@ namespace GreenLife_Organic_Store.Utilities
                 }
                 catch
                 {
-                    // swallow async alert errors
                 }
             });
         }

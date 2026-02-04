@@ -188,7 +188,6 @@ namespace GreenLife_Organic_Store.Forms
             btnPlaceOrder.Click += BtnPlaceOrder_Click;
             this.Controls.Add(btnPlaceOrder);
 
-            // Progress bar for email sending � full width with margins
             progressBarEmail = new ProgressBar
             {
                 Style = ProgressBarStyle.Marquee,
@@ -262,7 +261,6 @@ namespace GreenLife_Organic_Store.Forms
 
         private async void BtnPlaceOrder_Click(object sender, EventArgs e)
         {
-            // Validation
             TextBox txtName = (TextBox)this.Controls["txtName"];
             TextBox txtPhone = (TextBox)this.Controls["txtPhone"];
             TextBox txtEmail = (TextBox)this.Controls["txtEmail"];
@@ -282,7 +280,6 @@ namespace GreenLife_Organic_Store.Forms
                 return;
             }
 
-            // Basic phone validation: allow common separators but require 7-15 digits total
             var digitsOnly = Regex.Replace(txtPhone.Text ?? string.Empty, "\\D", "");
             if (digitsOnly.Length < 7 || digitsOnly.Length > 15)
             {
@@ -305,7 +302,6 @@ namespace GreenLife_Organic_Store.Forms
 
             try
             {
-                // Create order
                 Order order = new Order
                 {
                     OrderNumber = new Order().GenerateOrderNumber(),
@@ -320,7 +316,6 @@ namespace GreenLife_Organic_Store.Forms
                     Notes = txtNotes.Text
                 };
 
-                // Add items to order
                 foreach (var item in ShoppingCart.Items)
                 {
                     var orderItem = new OrderItem
@@ -334,11 +329,9 @@ namespace GreenLife_Organic_Store.Forms
                     order.Items.Add(orderItem);
                 }
 
-                // Save to database
-                // Ensure customer exists in DB. If no logged-in user, attempt to find by email or create a new customer user.
+                // If not logged in, find or create customer by email
                 if (_currentUser == null || _currentUser.ID == 0)
                 {
-                    // Try to find an existing user by email
                     var existing = UserRepository.GetUserByEmail(order.CustomerEmail);
                     if (existing != null)
                     {
@@ -346,7 +339,6 @@ namespace GreenLife_Organic_Store.Forms
                     }
                     else
                     {
-                        // Create a new customer user with a random password placeholder
                         var newUser = new User
                         {
                             Email = order.CustomerEmail,
@@ -370,8 +362,6 @@ namespace GreenLife_Organic_Store.Forms
                 if (orderId > 0)
                 {
                     ShoppingCart.Clear();
-                    // Clear DB cart for the customer associated with this order if available.
-                    // Use order.CustomerID (may be a newly created user or an existing user found by email)
                     try
                     {
                         if (order.CustomerID > 0)
@@ -381,13 +371,11 @@ namespace GreenLife_Organic_Store.Forms
                     }
                     catch
                     {
-                        // non-fatal
                     }
-                    // Send confirmation email (best-effort) but show progress to user
+                    // Send order email
                     try
                     {
                         progressBarEmail.Visible = true;
-                        // run send on background and await completion briefly so user sees progress
                         bool emailSent = await Task.Run(() =>
                         {
                             try
@@ -406,16 +394,14 @@ namespace GreenLife_Organic_Store.Forms
                                 return false;
                             }
                         });
-                        // keep progress visible briefly
                         await Task.Delay(300);
                         progressBarEmail.Visible = false;
-                        // ignore emailSent result (best-effort)
                     }
                     catch
                     {
                         try { progressBarEmail.Visible = false; } catch { }
                     }
-                    // Notify all admins (best-effort, async)
+                    // Notify admins
                     try
                     {
                         var adminEmails = UserRepository.GetAdminEmails();
@@ -428,10 +414,9 @@ namespace GreenLife_Organic_Store.Forms
                     }
                     catch
                     {
-                        // ignore admin email failures
                     }
 
-                    // Low stock alerts after checkout (best-effort)
+                    // Check for low stock items
                     try
                     {
                         var lowStockProducts = ProductRepository.GetLowStockProducts();
@@ -444,7 +429,6 @@ namespace GreenLife_Organic_Store.Forms
                     }
                     catch
                     {
-                        // ignore low stock email failures
                     }
 
                     MessageBox.Show(

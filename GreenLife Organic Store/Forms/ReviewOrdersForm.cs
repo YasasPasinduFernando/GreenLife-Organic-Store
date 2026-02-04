@@ -37,10 +37,7 @@ namespace GreenLife_Organic_Store.Forms
             }
             catch
             {
-                // Ignore icon load errors.
             }
-
-            // Button icons are handled by FontAwesome.Sharp in the designer.
         }
 
         private void LoadOrders()
@@ -147,7 +144,6 @@ namespace GreenLife_Organic_Store.Forms
                     }
                     catch
                     {
-                        // Ignore image load errors.
                     }
                 }
 

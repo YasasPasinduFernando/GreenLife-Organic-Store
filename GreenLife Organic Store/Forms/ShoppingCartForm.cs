@@ -23,7 +23,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Load += ShoppingCartForm_Load;
         }
 
-        // Allow creating the cart form with an optional logged-in user so we can continue checkout as that user
         public ShoppingCartForm(User? currentUser) : this()
         {
             _currentUser = currentUser;
@@ -275,8 +274,7 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
-                // Check if the Remove button column was clicked
-                if (e.RowIndex >= 0 && e.ColumnIndex == _dgvCart.Columns["Remove"].Index)
+            if (e.RowIndex >= 0 && e.ColumnIndex == _dgvCart.Columns["Remove"].Index)
                 {
                     var cartItem = _cartItems[e.RowIndex];
                     
@@ -399,7 +397,6 @@ namespace GreenLife_Organic_Store.Forms
                 }
                 else
                 {
-                    // Only enforce stock limit when increasing quantity
                     bool isIncrease = newQuantity > cartItem.Quantity;
                     if (isIncrease && newQuantity > cartItem.Product.Stock)
                     {

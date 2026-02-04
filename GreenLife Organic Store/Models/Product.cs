@@ -1,8 +1,5 @@
 namespace GreenLife_Organic_Store.Models
 {
-    /// <summary>
-    /// Product model representing a product in the e-commerce system
-    /// </summary>
     public class Product
     {
         public int ID { get; set; }
@@ -20,7 +17,6 @@ namespace GreenLife_Organic_Store.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; } = true;
 
-        // Helper Methods
         public bool IsInStock() => Stock > 0 && IsActive;
 
         public decimal GetFinalPrice() => DiscountPrice ?? Price;

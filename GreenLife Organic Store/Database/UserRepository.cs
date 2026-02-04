@@ -6,20 +6,13 @@ using System;
 
 namespace GreenLife_Organic_Store.Database
 {
-    /// <summary>
-    /// Repository class for User database operations
-    /// </summary>
+    // DB operations for users
     public class UserRepository
     {
-        // Password Reset Token storage (in-memory for simplicity)
+        // Stores reset codes in memory - works fine for single server
         private static Dictionary<string, (string Code, DateTime Expiry)> _resetCodes = new();
 
-        /// <summary>
-        /// Authenticates a user with email and password
-        /// </summary>
-        /// <param name="email">User email</param>
-        /// <param name="password">User password (plain text)</param>
-        /// <returns>User object if authentication successful, null otherwise</returns>
+        // Returns user if email+password match, null otherwise
         public static User? AuthenticateUser(string email, string password)
         {
             try
@@ -53,11 +46,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets a user by email
-        /// </summary>
-        /// <param name="email">User email</param>
-        /// <returns>User object if found, null otherwise</returns>
         public static User? GetUserByEmail(string email)
         {
             try
@@ -65,7 +53,7 @@ namespace GreenLife_Organic_Store.Database
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
-                    // Case-insensitive lookup and ignore surrounding whitespace
+                    // case-insensitive + trim whitespace
                     string query = "SELECT * FROM Users WHERE LOWER(Email) = LOWER(@Email)";
                     using (var cmd = new MySqlCommand(query, connection))
                     {
@@ -88,11 +76,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets a user by ID
-        /// </summary>
-        /// <param name="id">User ID</param>
-        /// <returns>User object if found, null otherwise</returns>
         public static User? GetUserById(int id)
         {
             try
@@ -122,10 +105,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets all users
-        /// </summary>
-        /// <returns>List of all users</returns>
         public static List<User> GetAllUsers()
         {
             var users = new List<User>();
@@ -184,16 +163,12 @@ namespace GreenLife_Organic_Store.Database
             return emails;
         }
 
-        /// <summary>
-        /// Creates a new user
-        /// </summary>
-        /// <param name="user">User object to create</param>
-        /// <returns>The ID of the created user</returns>
+        // Returns new user ID or 0 if failed
         public static int CreateUser(User user)
         {
             try
             {
-                // Validate email doesn't exist
+                // Check if email already taken
                 if (GetUserByEmail(user.Email) != null)
                 {
                     throw new Exception("Email already exists");
@@ -233,9 +208,7 @@ namespace GreenLife_Organic_Store.Database
             return 0;
         }
 
-        /// <summary>
-        /// Generates and sends password reset code
-        /// </summary>
+        // Sends reset code email, returns false if user not found
         public static bool RequestPasswordReset(string email)
         {
             try
@@ -243,10 +216,9 @@ namespace GreenLife_Organic_Store.Database
                 var user = GetUserByEmail(email);
                 if (user == null) return false;
 
-                // Generate 6-digit code
                 string resetCode = new Random().Next(100000, 999999).ToString();
 
-                // Store with 15 minute expiry
+                // 15 min expiry for reset code
                 _resetCodes[email] = (resetCode, DateTime.Now.AddMinutes(15));
 
                 // Send email
@@ -258,14 +230,11 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Verifies reset code and updates password
-        /// </summary>
+        // Checks code and updates password if valid
         public static bool ResetPassword(string email, string code, string newPassword)
         {
             try
             {
-                // Check if code exists and not expired
                 if (!_resetCodes.ContainsKey(email)) return false;
                 var (storedCode, expiry) = _resetCodes[email];
 
@@ -276,9 +245,7 @@ namespace GreenLife_Organic_Store.Database
                 }
 
                 if (storedCode != code)
-                    return false; // Wrong code
-
-                // Update password
+                    return false;
                 using (var connection = DatabaseConnection.GetConnection())
                 {
                     connection.Open();
@@ -293,7 +260,7 @@ namespace GreenLife_Organic_Store.Database
 
                         if (success)
                         {
-                            _resetCodes.Remove(email); // Remove used code
+                            _resetCodes.Remove(email);
                         }
 
                         return success;
@@ -306,11 +273,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Updates an existing user
-        /// </summary>
-        /// <param name="user">User object with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
         public static bool UpdateUser(User user)
         {
             try
@@ -345,12 +307,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Changes a user's password
-        /// </summary>
-        /// <param name="userId">User ID</param>
-        /// <param name="newPassword">New password (plain text)</param>
-        /// <returns>True if password change was successful, false otherwise</returns>
         public static bool ChangePassword(int userId, string newPassword)
         {
             try
@@ -375,11 +331,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Deletes a user
-        /// </summary>
-        /// <param name="userId">User ID</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
         public static bool DeleteUser(int userId)
         {
             try
@@ -402,9 +353,7 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Maps a database reader to a User object
-        /// </summary>
+        // Converts DB row to User object
         private static User MapReaderToUser(MySqlDataReader reader)
         {
             return new User

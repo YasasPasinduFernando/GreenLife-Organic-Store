@@ -1,8 +1,6 @@
 namespace GreenLife_Organic_Store.Models
 {
-    /// <summary>
-    /// Static ShoppingCart class for managing in-memory shopping cart
-    /// </summary>
+    // In-memory cart for current session
     public static class ShoppingCart
     {
         private static List<CartItem> _items = new();
@@ -75,9 +73,6 @@ namespace GreenLife_Organic_Store.Models
         }
     }
 
-    /// <summary>
-    /// CartItem class representing an item in the shopping cart
-    /// </summary>
     public class CartItem
     {
         public Product Product { get; set; } = null!;

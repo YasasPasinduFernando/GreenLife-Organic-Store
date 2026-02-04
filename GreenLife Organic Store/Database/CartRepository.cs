@@ -3,9 +3,7 @@ using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Database
 {
-    /// <summary>
-    /// Repository for persisting shopping cart items in the database
-    /// </summary>
+    // Saves cart items to DB so they persist between sessions
     public static class CartRepository
     {
         public static void AddOrUpdateCartItem(int userId, int productId, int quantity)
@@ -16,7 +14,7 @@ namespace GreenLife_Organic_Store.Database
                 {
                     conn.Open();
 
-                    // Try update existing (increment quantity)
+                    // Try update first, insert if not exists
                     const string updateSql = "UPDATE CartItems SET Quantity = Quantity + @Quantity, UpdatedDate = NOW() WHERE UserID = @UserID AND ProductID = @ProductID";
                     using (var cmd = new MySqlCommand(updateSql, conn))
                     {
@@ -69,9 +67,7 @@ namespace GreenLife_Organic_Store.Database
             return 0;
         }
 
-        /// <summary>
-        /// Gets all cart items for a user as a mapping of ProductID => Quantity
-        /// </summary>
+        // Returns ProductID -> Quantity mapping
         public static Dictionary<int, int> GetCartItems(int userId)
         {
             var result = new Dictionary<int, int>();
@@ -148,7 +144,6 @@ namespace GreenLife_Organic_Store.Database
                         if (affected > 0) return;
                     }
 
-                    // If no existing row, insert a new one
                     const string insertSql = "INSERT INTO CartItems (UserID, ProductID, Quantity) VALUES (@UserID, @ProductID, @Quantity)";
                     using (var cmd = new MySqlCommand(insertSql, conn))
                     {

@@ -1,8 +1,5 @@
 namespace GreenLife_Organic_Store.Models
 {
-    /// <summary>
-    /// Discount model representing a discount that can be applied to products
-    /// </summary>
     public class Discount
     {
         public int ID { get; set; }
@@ -17,7 +14,7 @@ namespace GreenLife_Organic_Store.Models
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        // Helper Methods
+        // Checks if discount is currently active
         public bool IsValid() => IsActive && DateTime.Now >= StartDate && DateTime.Now <= EndDate;
 
         public string GetStatusText()

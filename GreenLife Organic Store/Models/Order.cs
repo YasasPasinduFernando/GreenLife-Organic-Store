@@ -1,8 +1,5 @@
 namespace GreenLife_Organic_Store.Models
 {
-    /// <summary>
-    /// Enum for order status
-    /// </summary>
     public enum OrderStatus
     {
         Pending,
@@ -12,9 +9,6 @@ namespace GreenLife_Organic_Store.Models
         Cancelled
     }
 
-    /// <summary>
-    /// Order model representing an order in the e-commerce system
-    /// </summary>
     public class Order
     {
         public int ID { get; set; }
@@ -32,7 +26,6 @@ namespace GreenLife_Organic_Store.Models
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        // Helper Methods
         public string GenerateOrderNumber()
         {
             return "ORD-" + DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -59,9 +52,6 @@ namespace GreenLife_Organic_Store.Models
         }
     }
 
-    /// <summary>
-    /// OrderItem model representing a single item in an order
-    /// </summary>
     public class OrderItem
     {
         public int ID { get; set; }
