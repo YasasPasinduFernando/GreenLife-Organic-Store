@@ -20,6 +20,7 @@ namespace GreenLife_Organic_Store.Forms
         private LinkLabel linkLabelRegister;
         private LinkLabel linkLabelForgot;
         private Label labelRegisterPrompt;
+        private Label lblSignature;
 
         protected override void Dispose(bool disposing)
         {
@@ -47,6 +48,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonLogin = new IconButton();
             labelRegisterPrompt = new Label();
             linkLabelRegister = new LinkLabel();
+            lblSignature = new Label();
             panelContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)iconLogo).BeginInit();
             SuspendLayout();
@@ -68,6 +70,7 @@ namespace GreenLife_Organic_Store.Forms
             panelContainer.Controls.Add(buttonLogin);
             panelContainer.Controls.Add(labelRegisterPrompt);
             panelContainer.Controls.Add(linkLabelRegister);
+            panelContainer.Controls.Add(lblSignature);
             panelContainer.Dock = DockStyle.Fill;
             panelContainer.Location = new Point(0, 0);
             panelContainer.Margin = new Padding(3, 2, 3, 2);
@@ -254,6 +257,19 @@ namespace GreenLife_Organic_Store.Forms
             linkLabelRegister.TabStop = true;
             linkLabelRegister.Text = "Register here";
             linkLabelRegister.LinkClicked += linkLabelRegister_LinkClicked;
+            // 
+            // lblSignature
+            // 
+            lblSignature.AutoSize = false;
+            lblSignature.Font = new Font("Segoe UI", 8.5F);
+            lblSignature.ForeColor = Color.Gray;
+            lblSignature.Location = new Point(0, 470);
+            lblSignature.Name = "lblSignature";
+            lblSignature.Size = new Size(438, 15);
+            lblSignature.TabIndex = 13;
+            lblSignature.Text = "E280041 – Yasas Pasindu Fernando | Coursework 01";
+            lblSignature.TextAlign = ContentAlignment.MiddleCenter;
+            lblSignature.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             // 
             // LoginForm
             // 
