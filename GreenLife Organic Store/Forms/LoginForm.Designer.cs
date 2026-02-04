@@ -262,7 +262,7 @@ namespace GreenLife_Organic_Store.Forms
             // 
             lblSignature.AutoSize = false;
             lblSignature.Font = new Font("Segoe UI", 8.5F);
-            lblSignature.ForeColor = Color.LightGray;
+            lblSignature.ForeColor = Color.Gray;
             lblSignature.Location = new Point(0, 470);
             lblSignature.Name = "lblSignature";
             lblSignature.Size = new Size(438, 15);
