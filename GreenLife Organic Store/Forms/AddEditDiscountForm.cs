@@ -44,14 +44,12 @@ namespace GreenLife_Organic_Store.Forms
         {
             int yPosition = 10;
 
-            // Discount Name
             Label lblName = new Label { Text = "Discount Name:", Location = new Point(10, yPosition), Size = new Size(120, 20), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             TextBox txtName = new TextBox { Name = "txtName", Location = new Point(140, yPosition), Size = new Size(330, 25) };
             this.Controls.Add(lblName);
             this.Controls.Add(txtName);
             yPosition += 35;
 
-            // Product Selection
             Label lblProduct = new Label { Text = "Select Product:", Location = new Point(10, yPosition), Size = new Size(120, 20), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             ComboBox cmbProduct = new ComboBox
             {
@@ -66,7 +64,6 @@ namespace GreenLife_Organic_Store.Forms
             cmbProduct.SelectedIndexChanged += (s, e) => UpdateProductImage();
             yPosition += 35;
 
-            // Discount Percent
             Label lblPercent = new Label { Text = "Discount %:", Location = new Point(10, yPosition), Size = new Size(120, 20), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             NumericUpDown numPercent = new NumericUpDown
             {
@@ -82,7 +79,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(numPercent);
             yPosition += 35;
 
-            // Description
             Label lblDescription = new Label { Text = "Description:", Location = new Point(10, yPosition), Size = new Size(120, 20), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             TextBox txtDescription = new TextBox
             {
@@ -96,7 +92,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(txtDescription);
             yPosition += 70;
 
-            // Start Date
             Label lblStartDate = new Label { Text = "Start Date:", Location = new Point(10, yPosition), Size = new Size(120, 20), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             DateTimePicker dtpStartDate = new DateTimePicker
             {
@@ -110,7 +105,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(dtpStartDate);
             yPosition += 35;
 
-            // End Date
             Label lblEndDate = new Label { Text = "End Date:", Location = new Point(10, yPosition), Size = new Size(120, 20), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             DateTimePicker dtpEndDate = new DateTimePicker
             {
@@ -125,7 +119,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(dtpEndDate);
             yPosition += 35;
 
-            // Active checkbox
             CheckBox chkActive = new CheckBox
             {
                 Name = "chkActive",
@@ -138,7 +131,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(chkActive);
             yPosition += 40;
 
-            // Product Image Preview
             Label lblImage = new Label { Text = "Product Image:", Location = new Point(10, yPosition), Size = new Size(120, 20), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             PictureBox picProduct = new PictureBox
             {
@@ -152,7 +144,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(picProduct);
             yPosition += 140;
 
-            // Save Button
             IconButton btnSave = new IconButton
             {
                 Text = "Save Discount",
@@ -172,7 +163,6 @@ namespace GreenLife_Organic_Store.Forms
             btnSave.Click += BtnSave_Click;
             this.Controls.Add(btnSave);
 
-            // Cancel Button
             IconButton btnCancel = new IconButton
             {
                 Text = "Cancel",
@@ -192,7 +182,6 @@ namespace GreenLife_Organic_Store.Forms
             btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
             this.Controls.Add(btnCancel);
 
-            // Populate products combo
             foreach (var product in _products)
             {
                 cmbProduct.Items.Add($"{product.ProductName} (ID: {product.ID})");
@@ -220,7 +209,6 @@ namespace GreenLife_Organic_Store.Forms
             dtpEndDate.Value = _existingDiscount.EndDate;
             chkActive.Checked = _existingDiscount.IsActive;
 
-            // Select the product in combo
             for (int i = 0; i < cmbProduct.Items.Count; i++)
             {
                 if (cmbProduct.Items[i].ToString().Contains($"ID: {_existingDiscount.ProductID}"))
@@ -293,7 +281,6 @@ namespace GreenLife_Organic_Store.Forms
             DateTimePicker? dtpEndDate = this.Controls["dtpEndDate"] as DateTimePicker;
             CheckBox? chkActive = this.Controls["chkActive"] as CheckBox;
 
-            // Validation
             if (string.IsNullOrWhiteSpace(txtName?.Text))
             {
                 MessageBox.Show("Please enter a discount name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -320,7 +307,6 @@ namespace GreenLife_Organic_Store.Forms
 
             try
             {
-                // Extract product ID from selected item
                 string selectedItem = cmbProduct?.SelectedItem?.ToString() ?? "";
                 string idStr = selectedItem.Substring(selectedItem.LastIndexOf("ID: ") + 4).TrimEnd(')');
                 int productId = int.Parse(idStr);

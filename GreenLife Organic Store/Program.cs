@@ -6,31 +6,22 @@ using GreenLife_Organic_Store.Database;
 
 namespace GreenLife_Organic_Store
 {
-    /// <summary>
-    /// Application entry point for GreenLife Organic Store
-    /// </summary>
     internal static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            // Ensure proper DPI scaling across resolutions.
+            // DPI scaling
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
 
-            // Log application startup
             Console.WriteLine("\n========================================");
             Console.WriteLine("GreenLife Organic Store - Starting Up");
             Console.WriteLine($"Started at: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
             Console.WriteLine("========================================\n");
 
-            // Enable visual styles for Windows Forms
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            // Create and apply application icon
             try
             {
                 ApplyApplicationIcon();
@@ -40,7 +31,7 @@ namespace GreenLife_Organic_Store
                 Console.WriteLine($"[Startup] Warning: Could not apply application icon: {ex.Message}");
             }
             
-            // Initialize database on first run - ensure tables exist
+            // Check DB connection
             try
             {
                 Console.WriteLine("[Startup] Initializing database...");
@@ -58,22 +49,20 @@ namespace GreenLife_Organic_Store
                 Console.WriteLine($"[Startup] Warning: Database initialization issue: {ex.Message}");
             }
             
-            // Ensure images directory exists for storing uploaded product/category images
+            // Create images folder
             try
             {
                 ImageStore.EnsureImagesDirectoryExists();
             }
             catch
             {
-                // non-fatal - if we cannot create directory, UI will still allow selecting images but saving may fail
+                // non-fatal
             }
 
-            // Log email configuration status on startup
+            // Email setup check
             try
             {
                 EmailConfigValidator.LogConfigurationStatus();
-                
-                // Test email service
                 EmailService.TestConnection();
             }
             catch (Exception ex)
@@ -81,14 +70,10 @@ namespace GreenLife_Organic_Store
                 Console.WriteLine($"[Startup] Warning: Could not log email configuration: {ex.Message}\n");
             }
             
-            // Start the login form
             LoginForm loginForm = new LoginForm();
             Application.Run(loginForm);
         }
 
-        /// <summary>
-        /// Creates and applies a green leaf application icon
-        /// </summary>
         private static Icon CreateApplicationIcon()
         {
             int iconSize = 32;

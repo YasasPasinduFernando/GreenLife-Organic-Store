@@ -3,14 +3,12 @@ using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Database
 {
-    /// <summary>
-    /// Repository class for Discount database operations
-    /// </summary>
+    // DB operations for discounts
     public class DiscountRepository
     {
         private static void EnsureSchema(SqliteConnection connection)
         {
-            // Ensure Discounts table exists
+            // Create Discounts table if missing
             const string createDiscountsSql = @"CREATE TABLE IF NOT EXISTS Discounts (
                                                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                                                     DiscountName TEXT NOT NULL,
@@ -38,7 +36,7 @@ namespace GreenLife_Organic_Store.Database
                 cmd.ExecuteNonQuery();
             }
 
-            // Ensure Products.DiscountPrice column exists
+            // Add DiscountPrice column if missing
             bool hasDiscountPrice = false;
             using (var cmd = new SqliteCommand("PRAGMA table_info(Products);", connection))
             using (var reader = cmd.ExecuteReader())
@@ -61,10 +59,6 @@ namespace GreenLife_Organic_Store.Database
                 }
             }
         }
-        /// <summary>
-        /// Gets all discounts
-        /// </summary>
-        /// <returns>List of all discounts</returns>
         public static List<Discount> GetAllDiscounts()
         {
             var discounts = new List<Discount>();
@@ -97,11 +91,6 @@ namespace GreenLife_Organic_Store.Database
             return discounts;
         }
 
-        /// <summary>
-        /// Gets a discount by ID
-        /// </summary>
-        /// <param name="id">Discount ID</param>
-        /// <returns>Discount object if found, null otherwise</returns>
         public static Discount? GetDiscountById(int id)
         {
             try
@@ -134,11 +123,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets discounts by product ID
-        /// </summary>
-        /// <param name="productId">Product ID</param>
-        /// <returns>List of discounts for the product</returns>
         public static List<Discount> GetDiscountsByProductId(int productId)
         {
             var discounts = new List<Discount>();
@@ -173,11 +157,7 @@ namespace GreenLife_Organic_Store.Database
             return discounts;
         }
 
-        /// <summary>
-        /// Gets active discounts for a product
-        /// </summary>
-        /// <param name="productId">Product ID</param>
-        /// <returns>Active discount if exists, null otherwise</returns>
+        // Check date range to see if discount is currently active
         public static Discount? GetActiveDiscountForProduct(int productId)
         {
             try
@@ -217,11 +197,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Creates a new discount
-        /// </summary>
-        /// <param name="discount">Discount object to create</param>
-        /// <returns>The ID of the created discount</returns>
         public static int CreateDiscount(Discount discount)
         {
             try
@@ -260,11 +235,6 @@ namespace GreenLife_Organic_Store.Database
             return 0;
         }
 
-        /// <summary>
-        /// Updates an existing discount
-        /// </summary>
-        /// <param name="discount">Discount object with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
         public static bool UpdateDiscount(Discount discount)
         {
             try
@@ -304,11 +274,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Deletes a discount
-        /// </summary>
-        /// <param name="discountId">Discount ID</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
         public static bool DeleteDiscount(int discountId)
         {
             try
@@ -332,10 +297,7 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Syncs Products.DiscountPrice for a product based on the current active discount (if any)
-        /// </summary>
-        /// <param name="productId">Product ID</param>
+        // Update product's discount price based on active discount
         public static void SyncActiveDiscountForProduct(int productId)
         {
             try
@@ -394,9 +356,7 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Maps a database reader to a Discount object
-        /// </summary>
+        // Map DB row to Discount object
         private static Discount MapReaderToDiscount(SqliteDataReader reader)
         {
             return new Discount

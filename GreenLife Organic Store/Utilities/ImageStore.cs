@@ -19,10 +19,7 @@ namespace GreenLife_Organic_Store.Utilities
             return imagesPath;
         }
 
-        /// <summary>
-        /// Gets the project root directory by walking up from AppContext.BaseDirectory
-        /// until it finds a folder that contains a .csproj file or the expected project structure
-        /// </summary>
+        // Find project root by looking for .csproj file
         private static string GetProjectRoot()
         {
             var baseDir = AppContext.BaseDirectory;

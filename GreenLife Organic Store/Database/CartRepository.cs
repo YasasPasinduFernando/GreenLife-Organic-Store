@@ -3,9 +3,7 @@ using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Database
 {
-    /// <summary>
-    /// Repository for persisting shopping cart items in the database
-    /// </summary>
+    // DB functions for cart
     public static class CartRepository
     {
         public static void AddOrUpdateCartItem(int userId, int productId, int quantity)
@@ -69,9 +67,7 @@ namespace GreenLife_Organic_Store.Database
             return 0;
         }
 
-        /// <summary>
-        /// Gets all cart items for a user as a mapping of ProductID => Quantity
-        /// </summary>
+        // Returns ProductID => Quantity mapping
         public static Dictionary<int, int> GetCartItems(int userId)
         {
             var result = new Dictionary<int, int>();

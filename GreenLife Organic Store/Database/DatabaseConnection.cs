@@ -5,9 +5,7 @@ using System.Collections.Generic;
 
 namespace GreenLife_Organic_Store.Database
 {
-    /// <summary>
-    /// Manages SQLite database connections for the GreenLife application
-    /// </summary>
+    // SQLite connection helper
     public class DatabaseConnection
     {
         private static readonly string DbFileName = "greenlife.db";
@@ -120,10 +118,6 @@ namespace GreenLife_Organic_Store.Database
             return new SqliteConnectionStringBuilder { DataSource = dbPath }.ToString();
         }
 
-        /// <summary>
-        /// Gets a new database connection
-        /// </summary>
-        /// <returns>A new SqliteConnection object</returns>
         public static SqliteConnection GetConnection()
         {
             // Resolve DB path and create connection string here so we can run a quick diagnostic check
@@ -173,10 +167,6 @@ namespace GreenLife_Organic_Store.Database
             return conn;
         }
 
-        /// <summary>
-        /// Tests the database connection
-        /// </summary>
-        /// <returns>True if connection is successful, false otherwise</returns>
         public static bool TestConnection()
         {
             try

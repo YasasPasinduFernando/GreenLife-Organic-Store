@@ -3,15 +3,9 @@ using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Database
 {
-    /// <summary>
-    /// Repository class for Category database operations
-    /// </summary>
+    // DB operations for categories
     public class CategoryRepository
     {
-        /// <summary>
-        /// Gets all active categories
-        /// </summary>
-        /// <returns>List of all active categories</returns>
         public static List<Category> GetAllCategories()
         {
             var categories = new List<Category>();
@@ -41,11 +35,6 @@ namespace GreenLife_Organic_Store.Database
             return categories;
         }
 
-        /// <summary>
-        /// Gets a category by ID
-        /// </summary>
-        /// <param name="id">Category ID</param>
-        /// <returns>Category object if found, null otherwise</returns>
         public static Category? GetCategoryById(int id)
         {
             try
@@ -75,11 +64,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets a category by name
-        /// </summary>
-        /// <param name="categoryName">Category name</param>
-        /// <returns>Category object if found, null otherwise</returns>
         public static Category? GetCategoryByName(string categoryName)
         {
             try
@@ -109,11 +93,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Creates a new category
-        /// </summary>
-        /// <param name="category">Category object to create</param>
-        /// <returns>The ID of the created category</returns>
         public static int CreateCategory(Category category)
         {
             try
@@ -153,11 +132,6 @@ namespace GreenLife_Organic_Store.Database
             return 0;
         }
 
-        /// <summary>
-        /// Updates an existing category
-        /// </summary>
-        /// <param name="category">Category object with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
         public static bool UpdateCategory(Category category)
         {
             try
@@ -190,11 +164,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Deletes a category
-        /// </summary>
-        /// <param name="categoryId">Category ID</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
         public static bool DeleteCategory(int categoryId)
         {
             try
@@ -217,9 +186,7 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Maps a database reader to a Category object
-        /// </summary>
+        // Map DB row to Category object
         private static Category MapReaderToCategory(SqliteDataReader reader)
         {
             return new Category

@@ -23,7 +23,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Load += ShoppingCartForm_Load;
         }
 
-        // Allow creating the cart form with an optional logged-in user so we can continue checkout as that user
         public ShoppingCartForm(User? currentUser) : this()
         {
             _currentUser = currentUser;
@@ -44,7 +43,6 @@ namespace GreenLife_Organic_Store.Forms
 
         private void InitializeUI()
         {
-            // Header Panel
             Panel pnlHeader = new Panel
             {
                 Dock = DockStyle.Top,
@@ -64,7 +62,6 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeader.Controls.Add(lblHeader);
             this.Controls.Add(pnlHeader);
 
-            // Create DataGridView for cart items
             _dgvCart = new DataGridView
             {
                 Name = "dgvCart",
@@ -90,7 +87,6 @@ namespace GreenLife_Organic_Store.Forms
                 RowTemplate = new DataGridViewRow { Height = 50 }
             };
 
-            // Add text columns
             var imgCol = new DataGridViewImageColumn
             {
                 Name = "Image",
@@ -105,7 +101,6 @@ namespace GreenLife_Organic_Store.Forms
             _dgvCart.Columns.Add("UnitPrice", "Price");
             _dgvCart.Columns.Add("Subtotal", "Subtotal");
 
-            // Add button column for Remove
             DataGridViewButtonColumn btnRemoveColumn = new DataGridViewButtonColumn
             {
                 Name = "Remove",
@@ -117,12 +112,10 @@ namespace GreenLife_Organic_Store.Forms
             };
             _dgvCart.Columns.Add(btnRemoveColumn);
 
-            // Handle button click
             _dgvCart.CellClick += DgvCart_CellClick;
 
             this.Controls.Add(_dgvCart);
 
-            // Quantity adjustment panel
             Panel pnlQuantity = new Panel
             {
                 Location = new Point(20, 370),
@@ -198,7 +191,6 @@ namespace GreenLife_Organic_Store.Forms
 
             this.Controls.Add(pnlQuantity);
 
-            // Summary Panel
             Panel pnlSummary = new Panel
             {
                 Location = new Point(20, 430),
@@ -231,7 +223,6 @@ namespace GreenLife_Organic_Store.Forms
 
             this.Controls.Add(pnlSummary);
 
-            // Action buttons
             IconButton btnContinue = new IconButton
             {
                 Text = "Continue Shopping",
@@ -275,7 +266,6 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
-                // Check if the Remove button column was clicked
                 if (e.RowIndex >= 0 && e.ColumnIndex == _dgvCart.Columns["Remove"].Index)
                 {
                     var cartItem = _cartItems[e.RowIndex];
@@ -399,7 +389,7 @@ namespace GreenLife_Organic_Store.Forms
                 }
                 else
                 {
-                    // Only enforce stock limit when increasing quantity
+                    // Check stock when increasing
                     bool isIncrease = newQuantity > cartItem.Quantity;
                     if (isIncrease && newQuantity > cartItem.Product.Stock)
                     {

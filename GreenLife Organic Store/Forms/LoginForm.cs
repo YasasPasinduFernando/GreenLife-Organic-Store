@@ -14,35 +14,29 @@ namespace GreenLife_Organic_Store.Forms
             InitializeComponent();
             ApplyStyles();
 
-            // Make sure Load event is hooked (in case designer didn't)
             this.Load += LoginForm_Load;
         }
 
         private void ApplyStyles()
         {
-            // Form styling
             this.BackColor = Color.FromArgb(245, 245, 245);
             this.Font = new Font("Segoe UI", 9F);
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            // Panel styling
             panelContainer.BackColor = Color.White;
             panelContainer.BorderStyle = BorderStyle.None;
 
-            // Label styling
             labelTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            labelTitle.ForeColor = Color.FromArgb(34, 139, 34); // Forest Green
+            labelTitle.ForeColor = Color.FromArgb(34, 139, 34);
 
             labelEmail.Font = new Font("Segoe UI", 10F);
             labelPassword.Font = new Font("Segoe UI", 10F);
             labelUserType.Font = new Font("Segoe UI", 10F);
 
-            // TextBox styling
             textBoxEmail.BorderStyle = BorderStyle.FixedSingle;
             textBoxPassword.BorderStyle = BorderStyle.FixedSingle;
 
-            // Button styling
-            buttonLogin.BackColor = Color.FromArgb(34, 139, 34); // Forest Green
+            buttonLogin.BackColor = Color.FromArgb(34, 139, 34);
             buttonLogin.ForeColor = Color.White;
             buttonLogin.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             buttonLogin.FlatStyle = FlatStyle.Flat;
@@ -53,13 +47,11 @@ namespace GreenLife_Organic_Store.Forms
             linkLabelRegister.ActiveLinkColor = Color.FromArgb(0, 100, 0);
         }
 
-        // ✅ Async Load - prevents "open but can't click" freeze
+        // Async load to prevent UI freeze
         private async void LoginForm_Load(object? sender, EventArgs e)
         {
-            // Default selection
             radioButtonCustomer.Checked = true;
 
-            // Let UI render first
             await Task.Delay(50);
 
             bool ok;
@@ -86,13 +78,11 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
-        // ✅ Keep this event in designer, but now it calls async login safely
         private async void buttonLogin_Click(object sender, EventArgs e)
         {
             if (!ValidateInput())
                 return;
 
-            // Prevent double click + show busy cursor
             buttonLogin.Enabled = false;
             UseWaitCursor = true;
 
@@ -146,7 +136,7 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
-        // ✅ Async login - prevents freeze when DB/auth is slow
+        // Async login to avoid UI freeze
         private async Task PerformLoginAsync()
         {
             try
@@ -164,7 +154,7 @@ namespace GreenLife_Organic_Store.Forms
                     return;
                 }
 
-                // Verify user type matches selected radio button
+                // Check user type matches selection
                 string selectedUserType = radioButtonAdmin.Checked ? "Admin" : "Customer";
 
                 if (_currentUser.UserType.ToString() != selectedUserType)
@@ -178,10 +168,8 @@ namespace GreenLife_Organic_Store.Forms
                     return;
                 }
 
-                // Login successful
                 MessageBox.Show($"Welcome, {_currentUser.Name}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Open appropriate dashboard
                 Form dash = _currentUser.UserType == UserType.Admin
                     ? new AdminDashboard(_currentUser)
                     : new CustomerDashboard(_currentUser);
@@ -220,7 +208,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Show();
         }
 
-        // Keep these (empty handlers ok)
         private void labelTitle_Click(object sender, EventArgs e) { }
         private void radioButtonAdmin_CheckedChanged(object sender, EventArgs e) { }
 

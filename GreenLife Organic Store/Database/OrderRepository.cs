@@ -4,15 +4,9 @@ using GreenLife_Organic_Store.Utilities;
 
 namespace GreenLife_Organic_Store.Database
 {
-    /// <summary>
-    /// Repository class for Order database operations with transaction support
-    /// </summary>
+    // DB operations for orders (uses transactions for safety)
     public class OrderRepository
     {
-        /// <summary>
-        /// Gets all orders
-        /// </summary>
-        /// <returns>List of all orders</returns>
         public static List<Order> GetAllOrders()
         {
             var orders = new List<Order>();
@@ -40,11 +34,7 @@ namespace GreenLife_Organic_Store.Database
             return orders;
         }
 
-        /// <summary>
-        /// Deletes an order and its items, restoring product stock quantities.
-        /// </summary>
-        /// <param name="orderId">Order ID to delete</param>
-        /// <returns>True if delete succeeded</returns>
+        // Delete order and restore stock (uses transaction)
         public static bool DeleteOrder(int orderId)
         {
             SqliteConnection? connection = null;
@@ -113,11 +103,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Gets an order by ID with all order items
-        /// </summary>
-        /// <param name="id">Order ID</param>
-        /// <returns>Order object if found, null otherwise</returns>
         public static Order? GetOrderById(int id)
         {
             try
@@ -155,11 +140,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets orders by customer ID
-        /// </summary>
-        /// <param name="customerId">Customer ID</param>
-        /// <returns>List of orders for the customer</returns>
         public static List<Order> GetOrdersByCustomerId(int customerId)
         {
             var orders = new List<Order>();
@@ -197,11 +177,6 @@ namespace GreenLife_Organic_Store.Database
             return orders;
         }
 
-        /// <summary>
-        /// Gets orders by status
-        /// </summary>
-        /// <param name="status">Order status</param>
-        /// <returns>List of orders with the specified status</returns>
         public static List<Order> GetOrdersByStatus(OrderStatus status)
         {
             var orders = new List<Order>();
@@ -239,11 +214,7 @@ namespace GreenLife_Organic_Store.Database
             return orders;
         }
 
-        /// <summary>
-        /// Creates a new order with order items (with transaction support)
-        /// </summary>
-        /// <param name="order">Order object to create</param>
-        /// <returns>The ID of the created order</returns>
+        // Use transaction so order + items save together
         public static int CreateOrder(Order order)
         {
             SqliteConnection? connection = null;
@@ -251,7 +222,7 @@ namespace GreenLife_Organic_Store.Database
 
             try
             {
-                // Ensure referenced customer exists to avoid foreign key violations
+                // Make sure customer exists first
                 var customer = UserRepository.GetUserById(order.CustomerID);
                 if (customer == null)
                 {
@@ -361,12 +332,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Updates an order status
-        /// </summary>
-        /// <param name="orderId">Order ID</param>
-        /// <param name="newStatus">New order status</param>
-        /// <returns>True if update was successful, false otherwise</returns>
         public static bool UpdateOrderStatus(int orderId, OrderStatus newStatus)
         {
             try
@@ -390,11 +355,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Updates an order
-        /// </summary>
-        /// <param name="order">Order object with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
         public static bool UpdateOrder(Order order)
         {
             try
@@ -431,12 +391,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Gets orders by date range
-        /// </summary>
-        /// <param name="fromDate">Start date</param>
-        /// <param name="toDate">End date</param>
-        /// <returns>List of orders within the date range</returns>
         public static List<Order> GetOrdersByDateRange(DateTime fromDate, DateTime toDate)
         {
             var orders = new List<Order>();
@@ -475,9 +429,6 @@ namespace GreenLife_Organic_Store.Database
             return orders;
         }
 
-        /// <summary>
-        /// Gets order items for a specific order
-        /// </summary>
         private static List<OrderItem> GetOrderItems(int orderId, SqliteConnection connection)
         {
             var items = new List<OrderItem>();
@@ -506,9 +457,7 @@ namespace GreenLife_Organic_Store.Database
             return items;
         }
 
-        /// <summary>
-        /// Maps a database reader to an Order object
-        /// </summary>
+        // Map DB row to Order object
         private static Order MapReaderToOrder(SqliteDataReader reader)
         {
             return new Order

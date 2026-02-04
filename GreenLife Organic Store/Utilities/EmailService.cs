@@ -7,20 +7,16 @@ using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Utilities
 {
-    /// <summary>
-    /// Email service for sending emails via Gmail SMTP.
-    /// </summary>
+    // Email service - Gmail SMTP
     public static class EmailService
     {
-        // Hard coded configuration
         private const string SMTP_SERVER = "smtp.gmail.com";
         private const int SMTP_PORT = 587;
         private const string SENDER_EMAIL = "greenlifeorganicstore@gmail.com";
         private const string SENDER_PASSWORD = "nede eilq sypk nhrx"; // Gmail App Password
         private const string SENDER_NAME = "GreenLife Organic Store";
         
-        // Set to TRUE for mock mode (testing without Gmail)
-        // Set to FALSE for real Gmail SMTP
+        // TRUE = fake emails (for testing), FALSE = real emails
         private const bool USE_MOCK_MODE = false;
 
         public static bool SendEmail(string toEmail, string subject, string body, bool isHtml = true)
@@ -35,9 +31,7 @@ namespace GreenLife_Organic_Store.Utilities
             }
         }
 
-        /// <summary>
-        /// Mock email sender - for testing without Gmail
-        /// </summary>
+        // Fake send for testing
         private static bool SendEmailMock(string toEmail, string subject, string body)
         {
             try
@@ -52,10 +46,7 @@ namespace GreenLife_Organic_Store.Utilities
             }
         }
 
-        /// <summary>
-        /// Special method to handle password reset emails in mock mode
-        /// Shows the reset code to the user via MessageBox
-        /// </summary>
+        // In mock mode, show code in messagebox
         public static bool SendPasswordResetEmailMock(string toEmail, string userName, string resetCode)
         {
             try
@@ -82,9 +73,7 @@ namespace GreenLife_Organic_Store.Utilities
             }
         }
 
-        /// <summary>
-        /// Real SMTP email sender - requires valid Gmail app password
-        /// </summary>
+        // Actual SMTP send
         private static bool SendEmailReal(string toEmail, string subject, string body, bool isHtml = true)
         {
             try

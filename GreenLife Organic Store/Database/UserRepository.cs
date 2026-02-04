@@ -6,20 +6,13 @@ using System;
 
 namespace GreenLife_Organic_Store.Database
 {
-    /// <summary>
-    /// Repository class for User database operations
-    /// </summary>
+    // DB operations for users
     public class UserRepository
     {
-        // Password Reset Token storage (in-memory for simplicity)
+        // Reset codes stored in memory (simple approach)
         private static Dictionary<string, (string Code, DateTime Expiry)> _resetCodes = new();
 
-        /// <summary>
-        /// Authenticates a user with email and password
-        /// </summary>
-        /// <param name="email">User email</param>
-        /// <param name="password">User password (plain text)</param>
-        /// <returns>User object if authentication successful, null otherwise</returns>
+        // Login check using saved hash
         public static User? AuthenticateUser(string email, string password)
         {
             try
@@ -53,11 +46,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets a user by email
-        /// </summary>
-        /// <param name="email">User email</param>
-        /// <returns>User object if found, null otherwise</returns>
         public static User? GetUserByEmail(string email)
         {
             try
@@ -88,11 +76,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets a user by ID
-        /// </summary>
-        /// <param name="id">User ID</param>
-        /// <returns>User object if found, null otherwise</returns>
         public static User? GetUserById(int id)
         {
             try
@@ -122,10 +105,6 @@ namespace GreenLife_Organic_Store.Database
             return null;
         }
 
-        /// <summary>
-        /// Gets all users
-        /// </summary>
-        /// <returns>List of all users</returns>
         public static List<User> GetAllUsers()
         {
             var users = new List<User>();
@@ -184,11 +163,6 @@ namespace GreenLife_Organic_Store.Database
             return emails;
         }
 
-        /// <summary>
-        /// Creates a new user
-        /// </summary>
-        /// <param name="user">User object to create</param>
-        /// <returns>The ID of the created user</returns>
         public static int CreateUser(User user)
         {
             try
@@ -234,9 +208,7 @@ namespace GreenLife_Organic_Store.Database
             return 0;
         }
 
-        /// <summary>
-        /// Generates and sends password reset code
-        /// </summary>
+        // Send reset code email
         public static bool RequestPasswordReset(string email)
         {
             try
@@ -259,9 +231,7 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Verifies reset code and updates password
-        /// </summary>
+        // Check code and update password
         public static bool ResetPassword(string email, string code, string newPassword)
         {
             try
@@ -307,11 +277,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Updates an existing user
-        /// </summary>
-        /// <param name="user">User object with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
         public static bool UpdateUser(User user)
         {
             try
@@ -346,12 +311,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Changes a user's password
-        /// </summary>
-        /// <param name="userId">User ID</param>
-        /// <param name="newPassword">New password (plain text)</param>
-        /// <returns>True if password change was successful, false otherwise</returns>
         public static bool ChangePassword(int userId, string newPassword)
         {
             try
@@ -376,11 +335,6 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Deletes a user
-        /// </summary>
-        /// <param name="userId">User ID</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
         public static bool DeleteUser(int userId)
         {
             try
@@ -403,9 +357,7 @@ namespace GreenLife_Organic_Store.Database
             }
         }
 
-        /// <summary>
-        /// Maps a database reader to a User object
-        /// </summary>
+        // Map DB row to User object
         private static User MapReaderToUser(SqliteDataReader reader)
         {
             return new User

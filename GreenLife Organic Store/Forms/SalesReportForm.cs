@@ -74,7 +74,6 @@ namespace GreenLife_Organic_Store.Forms
 
                 if (save.ShowDialog() == DialogResult.OK)
                 {
-                    // call Pdf generator
                     GreenLife_Organic_Store.Reports.PdfReportGenerator.GenerateSalesReportPdf(save.FileName,
                         "GreenLife Organic Store",
                         dtFromDate.Value.Date, dtToDate.Value.Date,
@@ -100,7 +99,6 @@ namespace GreenLife_Organic_Store.Forms
         {
             int yPosition = 10;
 
-            // Report Type
             Label lblReportType = new Label { Text = "Report Type:", Location = new Point(10, yPosition), Size = new Size(80, 20) };
             ComboBox cmbReportType = new ComboBox
             {
@@ -119,7 +117,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(cmbReportType);
             yPosition += 35;
 
-            // Date Range
             Label lblFromDate = new Label { Text = "From Date:", Location = new Point(10, yPosition), Size = new Size(80, 20) };
             DateTimePicker dtFromDate = new DateTimePicker
             {
@@ -265,7 +262,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(pnlSummary);
             yPosition += 110;
 
-            // Daily Sales DataGridView
             Label lblDailySales = new Label
             {
                 Text = "Sales by Date",
@@ -360,7 +356,7 @@ namespace GreenLife_Organic_Store.Forms
                 var orders = OrderRepository.GetOrdersByDateRange(dtFromDate.Value.Date, dtToDate.Value.Date.AddDays(1));
                 var allItems = new List<(string name, int qty, decimal revenue)>();
 
-                // For sales/totals we consider only completed (Delivered) orders
+                // Only count delivered orders for sales
                 var completedOrderList = orders.Where(o => o.Status == OrderStatus.Delivered).ToList();
                 decimal totalSales = completedOrderList.Sum(o => o.TotalAmount);
                 int totalOrdersCount = completedOrderList.Count;
@@ -387,7 +383,6 @@ namespace GreenLife_Organic_Store.Forms
                     ((Label)pnlSummary.Controls["lblCompletedOrders"]).Text = $"Completed Orders: {completedOrders}";
                     ((Label)pnlSummary.Controls["lblPendingOrders"]).Text = $"Pending Orders: {pendingOrders}";
 
-                    // Top product - build allItems from completed orders only
                     foreach (var order in completedOrderList)
                     {
                         if (order.Items == null) continue;
@@ -412,7 +407,6 @@ namespace GreenLife_Organic_Store.Forms
                         $"Top Product: {topProduct.name} ({topProduct.qty} units)" : "Top Product: -";
                 }
 
-                // Load daily sales
                 DataGridView? dgvDaily = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvDaily") as DataGridView;
                 if (dgvDaily != null)
                 {
@@ -429,7 +423,6 @@ namespace GreenLife_Organic_Store.Forms
                     }
                 }
 
-                // Load top products
                 DataGridView? dgvTopProducts = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvTopProducts") as DataGridView;
                 if (dgvTopProducts != null)
                 {
@@ -464,12 +457,10 @@ namespace GreenLife_Organic_Store.Forms
                 {
                     using (var writer = new System.IO.StreamWriter(saveDialog.FileName))
                     {
-                        // Write headers
                         writer.WriteLine("GreenLife Organic Store - Sales Report");
                         writer.WriteLine($"Generated: {DateTime.Now:dd/MM/yyyy HH:mm}");
                         writer.WriteLine();
 
-                        // Write summary
                         Panel? pnlSummary = null;
                         foreach (var control in this.Controls)
                         {
@@ -488,7 +479,6 @@ namespace GreenLife_Organic_Store.Forms
                             writer.WriteLine();
                         }
 
-                        // Write daily sales
                         DataGridView? dgvDaily = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "dgvDaily") as DataGridView;
                         if (dgvDaily != null)
                         {

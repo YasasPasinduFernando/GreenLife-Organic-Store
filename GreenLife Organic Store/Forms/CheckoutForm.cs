@@ -15,7 +15,6 @@ namespace GreenLife_Organic_Store.Forms
         public CheckoutForm()
         {
             this.Text = "Checkout & Place Order";
-            // Slightly taller than original to fit progress bar comfortably
             this.Size = new Size(700, 740);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -46,7 +45,6 @@ namespace GreenLife_Organic_Store.Forms
         {
             int yPosition = 10;
 
-            // Delivery Information Section
             Label lblDeliveryInfo = new Label
             {
                 Text = "DELIVERY INFORMATION",
@@ -58,28 +56,24 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(lblDeliveryInfo);
             yPosition += 30;
 
-            // Full Name
             Label lblName = new Label { Text = "Full Name:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
             TextBox txtName = new TextBox { Name = "txtName", Location = new Point(120, yPosition), Size = new Size(540, 25) };
             this.Controls.Add(lblName);
             this.Controls.Add(txtName);
             yPosition += 30;
 
-            // Phone
             Label lblPhone = new Label { Text = "Phone:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
             TextBox txtPhone = new TextBox { Name = "txtPhone", Location = new Point(120, yPosition), Size = new Size(540, 25) };
             this.Controls.Add(lblPhone);
             this.Controls.Add(txtPhone);
             yPosition += 30;
 
-            // Email
             Label lblEmail = new Label { Text = "Email:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
             TextBox txtEmail = new TextBox { Name = "txtEmail", Location = new Point(120, yPosition), Size = new Size(540, 25) };
             this.Controls.Add(lblEmail);
             this.Controls.Add(txtEmail);
             yPosition += 30;
 
-            // Address
             Label lblAddress = new Label { Text = "Address:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
             TextBox txtAddress = new TextBox
             {
@@ -92,7 +86,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(txtAddress);
             yPosition += 100;
 
-            // Order Summary Section
             Label lblOrderSummary = new Label
             {
                 Text = "ORDER SUMMARY",
@@ -104,7 +97,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(lblOrderSummary);
             yPosition += 30;
 
-            // DataGridView for order items
             DataGridView dgvItems = new DataGridView
             {
                 Name = "dgvItems",
@@ -122,7 +114,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(dgvItems);
             yPosition += 130;
 
-            // Total Amount
             Label lblTotal = new Label
             {
                 Name = "lblTotal",
@@ -135,7 +126,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(lblTotal);
             yPosition += 40;
 
-            // Notes
             Label lblNotes = new Label { Text = "Notes (Optional):", Location = new Point(10, yPosition), Size = new Size(100, 20) };
             TextBox txtNotes = new TextBox
             {
@@ -147,7 +137,6 @@ namespace GreenLife_Organic_Store.Forms
             this.Controls.Add(lblNotes);
             this.Controls.Add(txtNotes);
 
-            // Cancel button
             IconButton btnCancel = new IconButton
             {
                 Name = "btnCancel",
@@ -167,7 +156,6 @@ namespace GreenLife_Organic_Store.Forms
             btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
             this.Controls.Add(btnCancel);
 
-            // Place Order button
             IconButton btnPlaceOrder = new IconButton
             {
                 Name = "btnPlaceOrder",
@@ -196,7 +184,7 @@ namespace GreenLife_Organic_Store.Forms
                 Visible = false,
                 Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
             };
-            int pbWidth = Math.Max(200, this.ClientSize.Width - 40); // 20px margin each side
+            int pbWidth = Math.Max(200, this.ClientSize.Width - 40);
             progressBarEmail.Size = new Size(pbWidth, 18);
             progressBarEmail.Location = new Point(20, btnPlaceOrder.Bottom + 12);
             this.Controls.Add(progressBarEmail);
@@ -262,7 +250,6 @@ namespace GreenLife_Organic_Store.Forms
 
         private async void BtnPlaceOrder_Click(object sender, EventArgs e)
         {
-            // Validation
             TextBox txtName = (TextBox)this.Controls["txtName"];
             TextBox txtPhone = (TextBox)this.Controls["txtPhone"];
             TextBox txtEmail = (TextBox)this.Controls["txtEmail"];
@@ -282,7 +269,7 @@ namespace GreenLife_Organic_Store.Forms
                 return;
             }
 
-            // Basic phone validation: allow common separators but require 7-15 digits total
+            // Phone validation - 7-15 digits
             var digitsOnly = Regex.Replace(txtPhone.Text ?? string.Empty, "\\D", "");
             if (digitsOnly.Length < 7 || digitsOnly.Length > 15)
             {
@@ -305,7 +292,6 @@ namespace GreenLife_Organic_Store.Forms
 
             try
             {
-                // Create order
                 Order order = new Order
                 {
                     OrderNumber = new Order().GenerateOrderNumber(),
@@ -320,7 +306,6 @@ namespace GreenLife_Organic_Store.Forms
                     Notes = txtNotes.Text
                 };
 
-                // Add items to order
                 foreach (var item in ShoppingCart.Items)
                 {
                     var orderItem = new OrderItem
@@ -334,11 +319,9 @@ namespace GreenLife_Organic_Store.Forms
                     order.Items.Add(orderItem);
                 }
 
-                // Save to database
-                // Ensure customer exists in DB. If no logged-in user, attempt to find by email or create a new customer user.
+                // Make sure customer exists in DB
                 if (_currentUser == null || _currentUser.ID == 0)
                 {
-                    // Try to find an existing user by email
                     var existing = UserRepository.GetUserByEmail(order.CustomerEmail);
                     if (existing != null)
                     {
@@ -346,7 +329,7 @@ namespace GreenLife_Organic_Store.Forms
                     }
                     else
                     {
-                        // Create a new customer user with a random password placeholder
+                        // Create guest customer account
                         var newUser = new User
                         {
                             Email = order.CustomerEmail,
@@ -370,8 +353,6 @@ namespace GreenLife_Organic_Store.Forms
                 if (orderId > 0)
                 {
                     ShoppingCart.Clear();
-                    // Clear DB cart for the customer associated with this order if available.
-                    // Use order.CustomerID (may be a newly created user or an existing user found by email)
                     try
                     {
                         if (order.CustomerID > 0)
@@ -383,11 +364,10 @@ namespace GreenLife_Organic_Store.Forms
                     {
                         // non-fatal
                     }
-                    // Send confirmation email (best-effort) but show progress to user
+                    // Send email confirmation
                     try
                     {
                         progressBarEmail.Visible = true;
-                        // run send on background and await completion briefly so user sees progress
                         bool emailSent = await Task.Run(() =>
                         {
                             try
@@ -406,16 +386,14 @@ namespace GreenLife_Organic_Store.Forms
                                 return false;
                             }
                         });
-                        // keep progress visible briefly
                         await Task.Delay(300);
                         progressBarEmail.Visible = false;
-                        // ignore emailSent result (best-effort)
                     }
                     catch
                     {
                         try { progressBarEmail.Visible = false; } catch { }
                     }
-                    // Notify all admins (best-effort, async)
+                    // Notify admins
                     try
                     {
                         var adminEmails = UserRepository.GetAdminEmails();
@@ -431,7 +409,7 @@ namespace GreenLife_Organic_Store.Forms
                         // ignore admin email failures
                     }
 
-                    // Low stock alerts after checkout (best-effort)
+                    // Check low stock
                     try
                     {
                         var lowStockProducts = ProductRepository.GetLowStockProducts();
