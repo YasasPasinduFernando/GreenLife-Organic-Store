@@ -21,7 +21,7 @@ namespace GreenLife_Organic_Store.Forms
             this.AutoScaleMode = AutoScaleMode.Dpi;
             this.AutoScaleDimensions = new SizeF(96F, 96F);
             this.Text = "Admin Dashboard - GreenLife Organic Store";
-            this.Size = new Size(1000, 700);
+            this.Size = new Size(900, 580);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(245, 245, 245);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -74,19 +74,6 @@ namespace GreenLife_Organic_Store.Forms
                     var adminEmails = UserRepository.GetAdminEmails();
                     var items = lowStockProducts.Select(p => (p.ProductName, p.Stock));
                     _ = EmailService.SendLowStockAlertsToAdminsAsync(adminEmails, items);
-                }
-
-                dgvRecent.Rows.Clear();
-                var recent = allOrders.OrderByDescending(o => o.OrderDate).Take(10).ToList();
-                foreach (var order in recent)
-                {
-                    dgvRecent.Rows.Add(
-                        order.OrderNumber,
-                        order.CustomerName,
-                        order.GetStatusText(),
-                        order.GetFormattedTotal(),
-                        order.OrderDate.ToString("dd/MM/yyyy")
-                    );
                 }
             }
             catch (Exception ex)
