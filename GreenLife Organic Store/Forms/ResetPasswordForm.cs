@@ -2,67 +2,26 @@ using System;
 using System.Windows.Forms;
 using FontAwesome.Sharp;
 using GreenLife_Organic_Store.Database;
+using GreenLife_Organic_Store.Utilities;
 
 namespace GreenLife_Organic_Store.Forms
 {
     public partial class ResetPasswordForm : Form
     {
         private string _email;
-        private Label labelEmail;
-        private TextBox textBoxCode;
-        private TextBox textBoxNewPassword;
-        private TextBox textBoxConfirmPassword;
-        private IconButton buttonResetPassword;
 
         public ResetPasswordForm(string email)
         {
             _email = email;
             InitializeComponent();
+            labelEmail.Text = $"Email: {_email}";
+            this.Load += ResetPasswordForm_Load;
         }
 
-        private void InitializeComponent()
+        private void ResetPasswordForm_Load(object? sender, EventArgs e)
         {
-            this.Text = "Reset Password";
-            this.Size = new System.Drawing.Size(420, 320);
-            this.StartPosition = FormStartPosition.CenterParent;
-
-            labelEmail = new Label { Text = $"Email: {_email}", Location = new System.Drawing.Point(20, 20), AutoSize = true };
-            this.Controls.Add(labelEmail);
-
-            var lblCode = new Label { Text = "Reset Code:", Location = new System.Drawing.Point(20, 55), AutoSize = true };
-            this.Controls.Add(lblCode);
-            textBoxCode = new TextBox { Location = new System.Drawing.Point(20, 75), Size = new System.Drawing.Size(360, 25) };
-            this.Controls.Add(textBoxCode);
-
-            var lblNew = new Label { Text = "New Password:", Location = new System.Drawing.Point(20, 110), AutoSize = true };
-            this.Controls.Add(lblNew);
-            textBoxNewPassword = new TextBox { Location = new System.Drawing.Point(20, 130), Size = new System.Drawing.Size(360, 25), UseSystemPasswordChar = true };
-            this.Controls.Add(textBoxNewPassword);
-
-            var lblConfirm = new Label { Text = "Confirm Password:", Location = new System.Drawing.Point(20, 165), AutoSize = true };
-            this.Controls.Add(lblConfirm);
-            textBoxConfirmPassword = new TextBox { Location = new System.Drawing.Point(20, 185), Size = new System.Drawing.Size(360, 25), UseSystemPasswordChar = true };
-            this.Controls.Add(textBoxConfirmPassword);
-
-            buttonResetPassword = new IconButton
-            {
-                Text = "Reset Password",
-                Location = new System.Drawing.Point(20, 225),
-                Size = new System.Drawing.Size(150, 36),
-                BackColor = System.Drawing.Color.FromArgb(34, 139, 34),
-                ForeColor = System.Drawing.Color.White,
-                Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat,
-                IconChar = IconChar.Key,
-                IconColor = System.Drawing.Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                Padding = new Padding(8, 0, 0, 0),
-                Cursor = Cursors.Hand
-            };
-            buttonResetPassword.FlatAppearance.BorderSize = 0;
-            buttonResetPassword.Click += ButtonResetPassword_Click;
-            this.Controls.Add(buttonResetPassword);
+            GreenLife_Organic_Store.Utilities.FormThemeManager.ApplyToForm(this);
+            GreenLife_Organic_Store.Utilities.FormThemeManager.ApplyIconButton(buttonResetPassword);
         }
 
         private void ButtonResetPassword_Click(object? sender, EventArgs e)
@@ -99,18 +58,18 @@ namespace GreenLife_Organic_Store.Forms
             {
                 Console.WriteLine($"[ResetPasswordForm] Attempting to reset password for email: {_email}");
                 bool success = UserRepository.ResetPassword(_email, textBoxCode.Text.Trim(), textBoxNewPassword.Text);
-                
+
                 if (success)
                 {
                     Console.WriteLine($"[ResetPasswordForm] Password reset successful for email: {_email}");
-                    MessageBox.Show("? Your password has been reset successfully!\n\nYou can now login with your new password.", 
+                    MessageBox.Show("Your password has been reset successfully!\n\nYou can now login with your new password.",
                         "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
                 else
                 {
                     Console.WriteLine($"[ResetPasswordForm] Password reset failed - Invalid or expired code for email: {_email}");
-                    MessageBox.Show("The reset code is invalid or has expired.\n\nPlease:\n1. Go back and request a new code\n2. Make sure you enter the code within 15 minutes\n3. Check the code matches exactly", 
+                    MessageBox.Show("The reset code is invalid or has expired.\n\nPlease:\n1. Go back and request a new code\n2. Make sure you enter the code within 15 minutes\n3. Check the code matches exactly",
                         "Invalid Code", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     textBoxCode.Clear();
                     textBoxCode.Focus();

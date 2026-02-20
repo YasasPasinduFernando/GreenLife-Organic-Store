@@ -13,144 +13,33 @@ namespace GreenLife_Organic_Store.Forms
 
         public ManageCategoriesForm()
         {
+            InitializeComponent();
             this.Text = "Manage Categories";
             this.Size = new Size(700, 500);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.Load += ManageCategoriesForm_Load;
+            if (!DesignMode)
+                this.Load += ManageCategoriesForm_Load;
         }
 
-        private void ManageCategoriesForm_Load(object sender, EventArgs e)
+        private void ManageCategoriesForm_Load(object? sender, EventArgs e)
         {
-            InitializeUI();
+            if (DesignMode) return;
             LoadCategories();
         }
 
-        private void InitializeUI()
-        {
-            Panel pnlToolbar = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 50,
-                BackColor = Color.LightGray
-            };
-
-            IconButton btnAdd = new IconButton
-            {
-                Text = "Add Category",
-                Location = new Point(10, 10),
-                Size = new Size(150, 30),
-                BackColor = Color.Green,
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Plus,
-                IconColor = Color.White,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnAdd.Click += (s, e) => AddCategory();
-            pnlToolbar.Controls.Add(btnAdd);
-
-            IconButton btnRefresh = new IconButton
-            {
-                Text = "Refresh",
-                Location = new Point(170, 10),
-                Size = new Size(100, 30),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Sync,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnRefresh.Click += (s, e) => LoadCategories();
-            pnlToolbar.Controls.Add(btnRefresh);
-
-            this.Controls.Add(pnlToolbar);
-
-            DataGridView dgvCategories = new DataGridView
-            {
-                Name = "dgvCategories",
-                Dock = DockStyle.Top,
-                Height = 300,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            // Image thumbnail column
-            var imgCol = new DataGridViewImageColumn { Name = "Image", HeaderText = "Image", ImageLayout = DataGridViewImageCellLayout.Zoom, Width = 60 };
-            dgvCategories.Columns.Add(imgCol);
-            dgvCategories.Columns.Add("ID", "ID");
-            dgvCategories.Columns.Add("CategoryName", "Category Name");
-            dgvCategories.Columns.Add("Description", "Description");
-            dgvCategories.Columns.Add("Status", "Status");
-            this.Controls.Add(dgvCategories);
-
-            Panel pnlActions = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 50,
-                BackColor = Color.WhiteSmoke,
-                Padding = new Padding(10)
-            };
-
-            IconButton btnEdit = new IconButton
-            {
-                Text = "Edit",
-                Location = new Point(10, 10),
-                Size = new Size(100, 30),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Edit,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnEdit.Click += (s, e) => EditCategory();
-            pnlActions.Controls.Add(btnEdit);
-
-            IconButton btnDelete = new IconButton
-            {
-                Text = "Delete",
-                Location = new Point(120, 10),
-                Size = new Size(100, 30),
-                BackColor = Color.LightCoral,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.TrashAlt,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnDelete.Click += (s, e) => DeleteCategory();
-            pnlActions.Controls.Add(btnDelete);
-
-            IconButton btnClose = new IconButton
-            {
-                Text = "Close",
-                Location = new Point(230, 10),
-                Size = new Size(100, 30),
-                BackColor = Color.LightGray,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Times,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnClose.Click += (s, e) => this.Close();
-            pnlActions.Controls.Add(btnClose);
-
-            this.Controls.Add(pnlActions);
-        }
+        private void BtnAdd_Click(object? sender, EventArgs e) => AddCategory();
+        private void BtnRefresh_Click(object? sender, EventArgs e) => LoadCategories();
+        private void BtnEdit_Click(object? sender, EventArgs e) => EditCategory();
+        private void BtnDelete_Click(object? sender, EventArgs e) => DeleteCategory();
+        private void BtnClose_Click(object? sender, EventArgs e) => Close();
 
         private void LoadCategories()
         {
             try
             {
                 _categories = CategoryRepository.GetAllCategories();
-                DataGridView dgv = (DataGridView)this.Controls[1];
-                dgv.Rows.Clear();
+                _dgvCategories.Rows.Clear();
 
                 foreach (var cat in _categories)
                 {
@@ -169,7 +58,7 @@ namespace GreenLife_Organic_Store.Forms
                     }
                     catch { }
 
-                    dgv.Rows.Add(thumb, cat.ID, cat.CategoryName, cat.Description ?? "", cat.IsActive ? "Active" : "Inactive");
+                    _dgvCategories.Rows.Add(thumb, cat.ID, cat.CategoryName, cat.Description ?? "", cat.IsActive ? "Active" : "Inactive");
                 }
             }
             catch (Exception ex)
@@ -285,10 +174,9 @@ namespace GreenLife_Organic_Store.Forms
 
         private void EditCategory()
         {
-            DataGridView dgv = (DataGridView)this.Controls[1];
-            if (dgv.SelectedRows.Count > 0)
+            if (_dgvCategories.SelectedRows.Count > 0)
             {
-                int id = (int)dgv.SelectedRows[0].Cells["ID"].Value;
+                int id = (int)_dgvCategories.SelectedRows[0].Cells["ID"].Value;
                 var cat = _categories.FirstOrDefault(c => c.ID == id);
                 if (cat != null)
                 {
@@ -405,10 +293,9 @@ namespace GreenLife_Organic_Store.Forms
 
         private void DeleteCategory()
         {
-            DataGridView dgv = (DataGridView)this.Controls[1];
-            if (dgv.SelectedRows.Count > 0 && MessageBox.Show("Delete this category?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (_dgvCategories.SelectedRows.Count > 0 && MessageBox.Show("Delete this category?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                int id = (int)dgv.SelectedRows[0].Cells["ID"].Value;
+                int id = (int)_dgvCategories.SelectedRows[0].Cells["ID"].Value;
                 try
                 {
                     CategoryRepository.DeleteCategory(id);

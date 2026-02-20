@@ -1,133 +1,58 @@
+using System;
+using System.Linq;
+using System.Windows.Forms;
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
 
 namespace GreenLife_Organic_Store.Forms
 {
-    public class AdminRegistrationsForm : Form
+    public partial class AdminRegistrationsForm : Form
     {
-        private DataGridView _dgvAdmins;
-        private Button _btnRefresh;
-        private Button _btnClose;
-        private Button _btnAdd;
-        private Button _btnEdit;
-        private Button _btnDelete;
-
         public AdminRegistrationsForm()
         {
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
-            this.Text = "Admin Registrations - Logs";
-            this.Size = new Size(800, 500);
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.BackColor = Color.FromArgb(245, 245, 245);
+            InitializeComponent();
+            if (!DesignMode)
+                LoadAdminRegistrations();
+        }
 
-            InitializeComponents();
+        private void BtnRefresh_Click(object? sender, EventArgs e)
+        {
             LoadAdminRegistrations();
         }
 
-        private void InitializeComponents()
+        private void BtnClose_Click(object? sender, EventArgs e)
         {
-            _dgvAdmins = new DataGridView
-            {
-                Dock = DockStyle.Top,
-                Height = 380,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.LightGray }
-            };
+            this.Close();
+        }
 
-            _dgvAdmins.Columns.Add("ID", "ID");
-            _dgvAdmins.Columns.Add("Name", "Name");
-            _dgvAdmins.Columns.Add("Email", "Email");
-            _dgvAdmins.Columns.Add("Phone", "Phone");
-            _dgvAdmins.Columns.Add("Age", "Age");
-            _dgvAdmins.Columns.Add("Address", "Address");
-            _dgvAdmins.Columns.Add("CreatedDate", "Created Date");
-
-            _btnRefresh = new Button
+        private void BtnAdd_Click(object? sender, EventArgs e)
+        {
+            try
             {
-                Text = "Refresh",
-                Location = new Point(10, 390),
-                Size = new Size(100, 30),
-                BackColor = Color.FromArgb(34, 139, 34),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand
-            };
-            _btnRefresh.Click += (s, e) => LoadAdminRegistrations();
-
-            _btnAdd = new Button
+                var frm = new AdminRegistrationForm();
+                frm.ShowDialog();
+                LoadAdminRegistrations();
+            }
+            catch (Exception ex)
             {
-                Text = "Add Admin",
-                Location = new Point(230, 390),
-                Size = new Size(100, 30),
-                BackColor = Color.FromArgb(34, 139, 34),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand
-            };
-            _btnAdd.Click += (s, e) =>
-            {
-                try
-                {
-                    var frm = new AdminRegistrationForm();
-                    frm.ShowDialog();
-                    LoadAdminRegistrations();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error adding admin: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            };
+                MessageBox.Show($"Error adding admin: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
-            _btnEdit = new Button
-            {
-                Text = "Edit",
-                Location = new Point(340, 390),
-                Size = new Size(100, 30),
-                BackColor = Color.FromArgb(34, 139, 34),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand
-            };
-            _btnEdit.Click += (s, e) => EditSelectedAdmin();
+        private void BtnEdit_Click(object? sender, EventArgs e)
+        {
+            EditSelectedAdmin();
+        }
 
-            _btnDelete = new Button
-            {
-                Text = "Delete",
-                Location = new Point(450, 390),
-                Size = new Size(100, 30),
-                BackColor = Color.FromArgb(200, 50, 50),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand
-            };
-            _btnDelete.Click += (s, e) => DeleteSelectedAdmin();
+        private void BtnDelete_Click(object? sender, EventArgs e)
+        {
+            DeleteSelectedAdmin();
+        }
 
-            _btnClose = new Button
-            {
-                Text = "Close",
-                Location = new Point(120, 390),
-                Size = new Size(100, 30),
-                BackColor = Color.FromArgb(200, 200, 200),
-                ForeColor = Color.Black,
-                Cursor = Cursors.Hand
-            };
-            _btnClose.Click += (s, e) => this.Close();
-
-            this.Controls.Add(_dgvAdmins);
-            this.Controls.Add(_btnRefresh);
-            this.Controls.Add(_btnAdd);
-            this.Controls.Add(_btnEdit);
-            this.Controls.Add(_btnDelete);
-            this.Controls.Add(_btnClose);
-
-            _dgvAdmins.CellDoubleClick += (s, e) =>
-            {
-                if (e.RowIndex >= 0)
-                {
-                    EditSelectedAdmin();
-                }
-            };
+        private void DgvAdmins_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+                EditSelectedAdmin();
         }
 
         private void LoadAdminRegistrations()

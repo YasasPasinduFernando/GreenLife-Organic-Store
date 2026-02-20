@@ -8,134 +8,28 @@ namespace GreenLife_Organic_Store.Forms
 {
     public partial class ForgotPasswordForm : Form
     {
-        private TextBox textBoxEmail;
-        private Button buttonSendCode;
-        private Label labelStatus;
-        private ProgressBar progressBar;
-        private Label labelProgress;
-        private IconPictureBox iconEmailStatus;
-
         public ForgotPasswordForm()
         {
             InitializeComponent();
+            Load += ForgotPasswordForm_Load;
         }
 
-        private void InitializeComponent()
+        private void ForgotPasswordForm_Load(object? sender, EventArgs e)
         {
-            this.Text = "Forgot Password";
-            this.Size = new System.Drawing.Size(480, 320);
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.BackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-
-            // Title
-            var lblTitle = new Label 
-            { 
-                Text = "Reset Your Password", 
-                Location = new System.Drawing.Point(20, 15),
-                AutoSize = true,
-                Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold),
-                ForeColor = System.Drawing.Color.FromArgb(34, 139, 34)
-            };
-            this.Controls.Add(lblTitle);
-
-            // Instructions
-            var lblInstructions = new Label 
-            { 
-                Text = "Enter your registered email address and we'll send you a reset code:", 
-                Location = new System.Drawing.Point(20, 50),
-                AutoSize = true,
-                Font = new System.Drawing.Font("Segoe UI", 9F)
-            };
-            this.Controls.Add(lblInstructions);
-
-            // Email input
-            textBoxEmail = new TextBox 
-            { 
-                Name = "textBoxEmail", 
-                Location = new System.Drawing.Point(20, 75), 
-                Size = new System.Drawing.Size(440, 25),
-                BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-            };
-            this.Controls.Add(textBoxEmail);
-
-            // Send button
-            buttonSendCode = new Button 
-            { 
-                Text = "Send Reset Code", 
-                Location = new System.Drawing.Point(20, 115), 
-                Size = new System.Drawing.Size(150, 35),
-                BackColor = System.Drawing.Color.FromArgb(34, 139, 34),
-                ForeColor = System.Drawing.Color.White,
-                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
-                FlatStyle = System.Windows.Forms.FlatStyle.Flat,
-                Cursor = System.Windows.Forms.Cursors.Hand
-            };
-            buttonSendCode.FlatAppearance.BorderSize = 0;
-            buttonSendCode.Click += ButtonSendCode_Click;
-            this.Controls.Add(buttonSendCode);
-
-            // Progress bar (hidden by default) - marquee style while sending
-            progressBar = new ProgressBar
+            try
             {
-                Style = ProgressBarStyle.Marquee,
-                MarqueeAnimationSpeed = 30,
-                Location = new System.Drawing.Point(190, 120),
-                Size = new System.Drawing.Size(270, 25),
-                Visible = false
-            };
-            this.Controls.Add(progressBar);
-
-            // Progress / status label shown while sending
-            labelProgress = new Label
+                bool isConfigured = GreenLife_Organic_Store.Utilities.EmailConfigValidator.IsEmailConfigured();
+                iconEmailStatus.IconChar = isConfigured ? IconChar.CheckCircle : IconChar.ExclamationTriangle;
+                iconEmailStatus.IconColor = isConfigured ? System.Drawing.Color.FromArgb(34, 139, 34) : System.Drawing.Color.DarkOrange;
+                labelStatus.Text = isConfigured ? "Email service is configured" : "Email service may not be configured";
+                labelStatus.ForeColor = isConfigured ? System.Drawing.Color.FromArgb(34, 139, 34) : System.Drawing.Color.DarkOrange;
+                GreenLife_Organic_Store.Utilities.EmailConfigValidator.LogConfigurationStatus();
+            }
+            catch
             {
-                Text = string.Empty,
-                Location = new System.Drawing.Point(190, 145),
-                AutoSize = true,
-                Font = new System.Drawing.Font("Segoe UI", 9F),
-                ForeColor = System.Drawing.Color.Black,
-                Visible = false
-            };
-            this.Controls.Add(labelProgress);
-
-            // Configuration status (icon + label)
-            bool isConfigured = GreenLife_Organic_Store.Utilities.EmailConfigValidator.IsEmailConfigured();
-
-            iconEmailStatus = new IconPictureBox
-            {
-                IconChar = isConfigured ? IconChar.CheckCircle : IconChar.ExclamationTriangle,
-                IconColor = isConfigured ? System.Drawing.Color.FromArgb(34, 139, 34) : System.Drawing.Color.DarkOrange,
-                Location = new System.Drawing.Point(20, 170),
-                Size = new System.Drawing.Size(20, 20),
-                BackColor = System.Drawing.Color.Transparent
-            };
-            this.Controls.Add(iconEmailStatus);
-
-            labelStatus = new Label 
-            { 
-                Text = isConfigured ? "Email service is configured" : "Email service may not be configured",
-                Location = new System.Drawing.Point(48, 168), 
-                AutoSize = true,
-                Font = new System.Drawing.Font("Segoe UI", 9F),
-                ForeColor = isConfigured ? System.Drawing.Color.FromArgb(34, 139, 34) : System.Drawing.Color.DarkOrange,
-                BackColor = System.Drawing.Color.Transparent
-            };
-            this.Controls.Add(labelStatus);
-
-            // Help link
-            var lblHelp = new Label 
-            { 
-                Text = "A reset code will be sent to your registered email.", 
-                Location = new System.Drawing.Point(20, 230),
-                AutoSize = true,
-                Font = new System.Drawing.Font("Segoe UI", 8F),
-                ForeColor = System.Drawing.Color.Gray
-            };
-            this.Controls.Add(lblHelp);
-
-            // Log configuration on form load
-            GreenLife_Organic_Store.Utilities.EmailConfigValidator.LogConfigurationStatus();
+                labelStatus.Text = "Email configuration status unavailable.";
+                labelStatus.ForeColor = System.Drawing.Color.DarkGray;
+            }
         }
 
         private async void ButtonSendCode_Click(object? sender, EventArgs e)
@@ -198,8 +92,8 @@ namespace GreenLife_Organic_Store.Forms
                     MessageBox.Show(
                         $"? Failed to send reset code.\n\n" +
                         $"Please check:\n" +
-                        $"• Your email address is correct\n" +
-                        $"• Your internet connection is stable\n\n" +
+                        $" Your email address is correct\n" +
+                        $" Your internet connection is stable\n\n" +
                         $"Try again later or contact support.",
                         "Email Error", 
                         MessageBoxButtons.OK, 

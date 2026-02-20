@@ -1,25 +1,23 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
-    public class ManageCustomersForm : Form
+    public partial class ManageCustomersForm : Form
     {
         private List<User> _allCustomers = new();
-        private DataGridView _dgvCustomers;
-        private IconButton _btnEditCustomer;
-        private IconButton _btnChangePassword;
 
         public ManageCustomersForm()
         {
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
+            InitializeComponent();
             this.Text = "Manage Customers";
             this.Size = new Size(900, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.Load += ManageCustomersForm_Load;
+            if (!DesignMode)
+                this.Load += ManageCustomersForm_Load;
         }
 
         private void EditCustomerDetails()
@@ -58,184 +56,32 @@ namespace GreenLife_Organic_Store.Forms
             changeForm.ShowDialog();
         }
 
-        private void ManageCustomersForm_Load(object sender, EventArgs e)
+        private void ManageCustomersForm_Load(object? sender, EventArgs e)
         {
-            InitializeUI();
+            if (DesignMode) return;
             LoadCustomers();
+            FormThemeManager.ApplyToForm(this);
         }
 
-        private void InitializeUI()
+        private void TxtSearch_Enter(object? sender, EventArgs e)
         {
-            // Toolbar
-            Panel pnlToolbar = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 50,
-                BackColor = Color.LightGray
-            };
-
-            TextBox txtSearch = new TextBox
-            {
-                Name = "txtSearch",
-                Location = new Point(10, 10),
-                Size = new Size(200, 30),
-                Text = "Search..."
-            };
-            pnlToolbar.Controls.Add(txtSearch);
-
-            IconButton btnSearch = new IconButton
-            {
-                Text = "Search",
-                Location = new Point(220, 10),
-                Size = new Size(100, 30),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Search,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnSearch.Click += (s, e) => SearchCustomers(txtSearch.Text);
-            pnlToolbar.Controls.Add(btnSearch);
-
-            IconButton btnRefresh = new IconButton
-            {
-                Text = "Refresh",
-                Location = new Point(330, 10),
-                Size = new Size(100, 30),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Sync,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnRefresh.Click += (s, e) => LoadCustomers();
-            pnlToolbar.Controls.Add(btnRefresh);
-
-            IconButton btnExport = new IconButton
-            {
-                Text = "Export to CSV",
-                Location = new Point(440, 10),
-                Size = new Size(120, 30),
-                BackColor = Color.LightGreen,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.FileExport,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnExport.Click += (s, e) => ExportToCSV();
-            pnlToolbar.Controls.Add(btnExport);
-
-            this.Controls.Add(pnlToolbar);
-
-            // DataGridView
-            _dgvCustomers = new DataGridView
-            {
-                Name = "dgvCustomers",
-                Dock = DockStyle.Top,
-                Height = 350,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            _dgvCustomers.Columns.Add("ID", "ID");
-            _dgvCustomers.Columns.Add("Name", "Customer Name");
-            _dgvCustomers.Columns.Add("Email", "Email");
-            _dgvCustomers.Columns.Add("Phone", "Phone");
-            _dgvCustomers.Columns.Add("Address", "Address");
-            _dgvCustomers.Columns.Add("RegistrationDate", "Registered Date");
-            _dgvCustomers.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) EditCustomerDetails(); };
-            this.Controls.Add(_dgvCustomers);
-
-            // Action Buttons Panel - Changed from DockStyle.Fill to Top
-            Panel pnlActions = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 110,
-                BackColor = Color.White,
-                Padding = new Padding(10)
-            };
-
-            IconButton btnViewDetails = new IconButton
-            {
-                Text = "View Details",
-                Location = new Point(10, 10),
-                Size = new Size(150, 35),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Eye,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnViewDetails.Click += (s, e) => ViewCustomerDetails();
-            pnlActions.Controls.Add(btnViewDetails);
-
-            _btnEditCustomer = new IconButton
-            {
-                Text = "Edit",
-                Location = new Point(10, 55),
-                Size = new Size(150, 35),
-                BackColor = Color.LightGreen,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Edit,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            _btnEditCustomer.Click += (s, e) => EditCustomerDetails();
-            pnlActions.Controls.Add(_btnEditCustomer);
-
-            _btnChangePassword = new IconButton
-            {
-                Text = "Change Password",
-                Location = new Point(170, 55),
-                Size = new Size(150, 35),
-                BackColor = Color.LightSkyBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Key,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            _btnChangePassword.Click += (s, e) => ChangeSelectedCustomerPassword();
-            pnlActions.Controls.Add(_btnChangePassword);
-
-            IconButton btnDeleteAccount = new IconButton
-            {
-                Text = "Delete Account",
-                Location = new Point(170, 10),
-                Size = new Size(150, 35),
-                BackColor = Color.LightCoral,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.TrashAlt,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnDeleteAccount.Click += (s, e) => DeleteCustomerAccount();
-            pnlActions.Controls.Add(btnDeleteAccount);
-
-            IconButton btnClose = new IconButton
-            {
-                Text = "Close",
-                Location = new Point(330, 10),
-                Size = new Size(150, 35),
-                BackColor = Color.LightGray,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Times,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnClose.Click += (s, e) => this.Close();
-            pnlActions.Controls.Add(btnClose);
-
-            this.Controls.Add(pnlActions);
+            if (txtSearch.Text == "Search...") txtSearch.Text = "";
+        }
+        private void TxtSearch_Leave(object? sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtSearch.Text)) txtSearch.Text = "Search...";
+        }
+        private void BtnSearch_Click(object? sender, EventArgs e) => SearchCustomers(txtSearch.Text);
+        private void BtnRefresh_Click(object? sender, EventArgs e) => LoadCustomers();
+        private void BtnExport_Click(object? sender, EventArgs e) => ExportToCSV();
+        private void BtnViewDetails_Click(object? sender, EventArgs e) => ViewCustomerDetails();
+        private void BtnEditCustomer_Click(object? sender, EventArgs e) => EditCustomerDetails();
+        private void BtnChangePassword_Click(object? sender, EventArgs e) => ChangeSelectedCustomerPassword();
+        private void BtnDeleteAccount_Click(object? sender, EventArgs e) => DeleteCustomerAccount();
+        private void BtnClose_Click(object? sender, EventArgs e) => Close();
+        private void DgvCustomers_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0) EditCustomerDetails();
         }
 
         private void LoadCustomers()

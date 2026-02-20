@@ -17,7 +17,7 @@ namespace GreenLife_Organic_Store.Utilities
         private const string SENDER_NAME = "GreenLife Organic Store";
         
         // TRUE = fake emails (for testing), FALSE = real emails
-        private const bool USE_MOCK_MODE = false;
+        private static readonly bool USE_MOCK_MODE = false;
 
         public static bool SendEmail(string toEmail, string subject, string body, bool isHtml = true)
         {

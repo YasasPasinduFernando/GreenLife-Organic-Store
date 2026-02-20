@@ -10,201 +10,32 @@ namespace GreenLife_Organic_Store.Forms
     {
         private List<Discount> _allDiscounts = new();
         private List<Product> _allProducts = new();
-        private DataGridView _dgvDiscounts = null!;
 
         public DiscountManagementForm()
         {
+            InitializeComponent();
             this.Text = "Manage Discounts";
             this.Size = new Size(1000, 650);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.Load += DiscountManagementForm_Load;
+            if (!DesignMode)
+                this.Load += DiscountManagementForm_Load;
         }
 
         private void DiscountManagementForm_Load(object? sender, EventArgs e)
         {
-            InitializeUI();
+            if (DesignMode) return;
             LoadData();
         }
 
-        private void InitializeUI()
+        private void BtnAdd_Click(object? sender, EventArgs e) => AddDiscount();
+        private void BtnRefresh_Click(object? sender, EventArgs e) => LoadData();
+        private void BtnEdit_Click(object? sender, EventArgs e) => EditSelectedDiscount();
+        private void BtnDelete_Click(object? sender, EventArgs e) => DeleteSelectedDiscount();
+        private void BtnClose_Click(object? sender, EventArgs e) => Close();
+        private void DgvDiscounts_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
         {
-            // Header
-            Panel pnlHeader = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 50,
-                BackColor = Color.FromArgb(46, 204, 113),
-                Padding = new Padding(15)
-            };
-
-            Label lblHeader = new Label
-            {
-                Text = "Discount Management",
-                Location = new Point(15, 12),
-                Size = new Size(300, 30),
-                Font = new Font("Segoe UI", 14, FontStyle.Bold),
-                ForeColor = Color.White,
-                BackColor = Color.Transparent
-            };
-            pnlHeader.Controls.Add(lblHeader);
-
-            // Toolbar
-            Panel pnlToolbar = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 50,
-                BackColor = Color.WhiteSmoke,
-                Padding = new Padding(10)
-            };
-
-            IconButton btnAdd = new IconButton
-            {
-                Text = "Add New Discount",
-                Location = new Point(10, 10),
-                Size = new Size(160, 35),
-                BackColor = Color.FromArgb(46, 204, 113),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Plus,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold)
-            };
-            btnAdd.FlatAppearance.BorderSize = 0;
-            btnAdd.Click += (s, e) => AddDiscount();
-            pnlToolbar.Controls.Add(btnAdd);
-
-            IconButton btnRefresh = new IconButton
-            {
-                Text = "Refresh",
-                Location = new Point(180, 10),
-                Size = new Size(110, 35),
-                BackColor = Color.FromArgb(46, 204, 113),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Sync,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold)
-            };
-            btnRefresh.FlatAppearance.BorderSize = 0;
-            btnRefresh.Click += (s, e) => LoadData();
-            pnlToolbar.Controls.Add(btnRefresh);
-
-            // keep toolbar added later for order
-
-            // DataGridView
-            _dgvDiscounts = new DataGridView
-            {
-                Name = "dgvDiscounts",
-                Dock = DockStyle.Top,
-                Height = 400,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                EnableHeadersVisualStyles = false,
-                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
-                {
-                    BackColor = Color.FromArgb(52, 73, 94),
-                    ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                    Padding = new Padding(5)
-                },
-                ColumnHeadersHeight = 40,
-                RowTemplate = new DataGridViewRow { Height = 30 },
-                AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.FromArgb(250, 250, 250) }
-            };
-            var imgCol = new DataGridViewImageColumn
-            {
-                Name = "Image",
-                HeaderText = "Image",
-                ImageLayout = DataGridViewImageCellLayout.Zoom,
-                Width = 60
-            };
-            _dgvDiscounts.Columns.Add(imgCol);
-            _dgvDiscounts.Columns.Add("ID", "ID");
-            _dgvDiscounts.Columns.Add("DiscountName", "Discount Name");
-            _dgvDiscounts.Columns.Add("ProductName", "Product");
-            _dgvDiscounts.Columns.Add("Percent", "Discount %");
-            _dgvDiscounts.Columns.Add("StartDate", "Start Date");
-            _dgvDiscounts.Columns.Add("EndDate", "End Date");
-            _dgvDiscounts.Columns.Add("Status", "Status");
-            _dgvDiscounts.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) EditSelectedDiscount(); };
-            // keep grid added later for order
-
-            // Action Buttons
-            Panel pnlActions = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 50,
-                BackColor = Color.WhiteSmoke,
-                Padding = new Padding(10)
-            };
-
-            IconButton btnEdit = new IconButton
-            {
-                Text = "Edit Discount",
-                Location = new Point(10, 10),
-                Size = new Size(140, 35),
-                BackColor = Color.FromArgb(46, 204, 113),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Edit,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold)
-            };
-            btnEdit.FlatAppearance.BorderSize = 0;
-            btnEdit.Click += (s, e) => EditSelectedDiscount();
-            pnlActions.Controls.Add(btnEdit);
-
-            IconButton btnDelete = new IconButton
-            {
-                Text = "Delete Discount",
-                Location = new Point(160, 10),
-                Size = new Size(140, 35),
-                BackColor = Color.FromArgb(231, 76, 60),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.TrashAlt,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold)
-            };
-            btnDelete.FlatAppearance.BorderSize = 0;
-            btnDelete.Click += (s, e) => DeleteSelectedDiscount();
-            pnlActions.Controls.Add(btnDelete);
-
-            IconButton btnClose = new IconButton
-            {
-                Text = "Close",
-                Location = new Point(310, 10),
-                Size = new Size(100, 35),
-                BackColor = Color.FromArgb(149, 165, 166),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Times,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold)
-            };
-            btnClose.FlatAppearance.BorderSize = 0;
-            btnClose.Click += (s, e) => this.Close();
-            pnlActions.Controls.Add(btnClose);
-
-            // Add in strict top-to-bottom order
-            this.Controls.Add(pnlActions);
-            this.Controls.Add(_dgvDiscounts);
-            this.Controls.Add(pnlToolbar);
-            this.Controls.Add(pnlHeader);
+            if (e.RowIndex >= 0) EditSelectedDiscount();
         }
 
         private void LoadData()

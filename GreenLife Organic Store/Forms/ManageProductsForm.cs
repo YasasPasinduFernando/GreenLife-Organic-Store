@@ -8,170 +8,41 @@ namespace GreenLife_Organic_Store.Forms
     public partial class ManageProductsForm : Form
     {
         private List<Product> _allProducts = new();
-        private DataGridView _dgvProducts = null!;
 
         public ManageProductsForm()
         {
+            InitializeComponent();
             this.Text = "Manage Products";
             this.Size = new Size(900, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.Load += ManageProductsForm_Load;
+            if (!DesignMode)
+                this.Load += ManageProductsForm_Load;
         }
 
         private void ManageProductsForm_Load(object? sender, EventArgs e)
         {
-            InitializeUI();
+            if (DesignMode) return;
             LoadProducts();
         }
 
-        private void InitializeUI()
+        private void TxtSearch_Enter(object? sender, EventArgs e)
         {
-            // Toolbar
-            Panel pnlToolbar = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 50,
-                BackColor = Color.LightGray
-            };
-
-            IconButton btnAdd = new IconButton
-            {
-                Text = "Add New Product",
-                Location = new Point(10, 10),
-                Size = new Size(150, 30),
-                BackColor = Color.Green,
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Plus,
-                IconColor = Color.White,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnAdd.Click += (s, e) => AddProduct();
-            pnlToolbar.Controls.Add(btnAdd);
-
-            TextBox txtSearch = new TextBox
-            {
-                Name = "txtSearch",
-                Location = new Point(170, 10),
-                Size = new Size(200, 30),
-                Text = "Search..."
-            };
-            pnlToolbar.Controls.Add(txtSearch);
-
-            IconButton btnSearch = new IconButton
-            {
-                Text = "Search",
-                Location = new Point(380, 10),
-                Size = new Size(100, 30),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Search,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnSearch.Click += (s, e) => SearchProducts(txtSearch.Text);
-            pnlToolbar.Controls.Add(btnSearch);
-
-            IconButton btnRefresh = new IconButton
-            {
-                Text = "Refresh",
-                Location = new Point(490, 10),
-                Size = new Size(100, 30),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Sync,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnRefresh.Click += (s, e) => LoadProducts();
-            pnlToolbar.Controls.Add(btnRefresh);
-
-            this.Controls.Add(pnlToolbar);
-
-            // DataGridView
-            _dgvProducts = new DataGridView
-            {
-                Name = "dgvProducts",
-                Dock = DockStyle.Top,
-                Height = 400,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            // Add image thumbnail column
-            var imgCol = new DataGridViewImageColumn { Name = "Image", HeaderText = "Image", ImageLayout = DataGridViewImageCellLayout.Zoom, Width = 60 };
-            _dgvProducts.Columns.Add(imgCol);
-            _dgvProducts.Columns.Add("ID", "ID");
-            _dgvProducts.Columns.Add("ProductName", "Product Name");
-            _dgvProducts.Columns.Add("Category", "Category");
-            _dgvProducts.Columns.Add("Price", "Price");
-            _dgvProducts.Columns.Add("DiscountPercent", "Discount %");
-            _dgvProducts.Columns.Add("Stock", "Stock");
-            _dgvProducts.Columns.Add("Status", "Status");
-            _dgvProducts.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) EditSelectedProduct(); };
-            this.Controls.Add(_dgvProducts);
-
-            // Action Buttons
-            Panel pnlActions = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 50,
-                BackColor = Color.WhiteSmoke,
-                Padding = new Padding(10)
-            };
-
-            IconButton btnEdit = new IconButton
-            {
-                Text = "Edit Product",
-                Location = new Point(10, 10),
-                Size = new Size(130, 30),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Edit,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnEdit.Click += (s, e) => EditSelectedProduct();
-            pnlActions.Controls.Add(btnEdit);
-
-            IconButton btnDelete = new IconButton
-            {
-                Text = "Delete Product",
-                Location = new Point(150, 10),
-                Size = new Size(130, 30),
-                BackColor = Color.LightCoral,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.TrashAlt,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnDelete.Click += (s, e) => DeleteSelectedProduct();
-            pnlActions.Controls.Add(btnDelete);
-
-            IconButton btnClose = new IconButton
-            {
-                Text = "Close",
-                Location = new Point(290, 10),
-                Size = new Size(100, 30),
-                BackColor = Color.LightGray,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Times,
-                IconColor = Color.Black,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnClose.Click += (s, e) => this.Close();
-            pnlActions.Controls.Add(btnClose);
-
-            this.Controls.Add(pnlActions);
+            if (txtSearch.Text == "Search...") txtSearch.Text = "";
+        }
+        private void TxtSearch_Leave(object? sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtSearch.Text)) txtSearch.Text = "Search...";
+        }
+        private void BtnAdd_Click(object? sender, EventArgs e) => AddProduct();
+        private void BtnSearch_Click(object? sender, EventArgs e) => SearchProducts(txtSearch.Text);
+        private void BtnRefresh_Click(object? sender, EventArgs e) => LoadProducts();
+        private void BtnEdit_Click(object? sender, EventArgs e) => EditSelectedProduct();
+        private void BtnDelete_Click(object? sender, EventArgs e) => DeleteSelectedProduct();
+        private void BtnClose_Click(object? sender, EventArgs e) => Close();
+        private void DgvProducts_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0) EditSelectedProduct();
         }
 
         private void LoadProducts()

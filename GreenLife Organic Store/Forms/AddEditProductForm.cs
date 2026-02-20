@@ -13,12 +13,9 @@ namespace GreenLife_Organic_Store.Forms
 
         public AddEditProductForm()
         {
-            this.Text = "Add New Product";
-            this.Size = new Size(600, 600);
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.Load += AddEditProductForm_Load;
+            InitializeComponent();
+            if (!DesignMode)
+                this.Load += AddEditProductForm_Load;
         }
 
         public AddEditProductForm(Product product) : this()
@@ -27,183 +24,23 @@ namespace GreenLife_Organic_Store.Forms
             this.Text = "Edit Product";
         }
 
-        private void AddEditProductForm_Load(object sender, EventArgs e)
+        private void AddEditProductForm_Load(object? sender, EventArgs e)
         {
-            InitializeUI();
+            if (DesignMode) return;
             LoadCategories();
             if (_existingProduct != null)
-            {
                 PopulateForm();
-            }
         }
 
-        private void InitializeUI()
+        private void BtnManageDiscounts_Click(object? sender, EventArgs e)
         {
-            int yPosition = 10;
+            using var form = new DiscountManagementForm();
+            form.ShowDialog();
+        }
 
-            // Product Name
-            Label lblName = new Label { Text = "Product Name:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtName = new TextBox { Name = "txtName", Location = new Point(120, yPosition), Size = new Size(400, 25) };
-            this.Controls.Add(lblName);
-            this.Controls.Add(txtName);
-            yPosition += 35;
-
-            // Category
-            Label lblCategory = new Label { Text = "Category:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            ComboBox cmbCategory = new ComboBox
-            {
-                Name = "cmbCategory",
-                Location = new Point(120, yPosition),
-                Size = new Size(400, 25),
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
-            this.Controls.Add(lblCategory);
-            this.Controls.Add(cmbCategory);
-            yPosition += 35;
-
-            // Description
-            Label lblDescription = new Label { Text = "Description:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtDescription = new TextBox
-            {
-                Name = "txtDescription",
-                Location = new Point(120, yPosition),
-                Size = new Size(400, 60),
-                Multiline = true
-            };
-            this.Controls.Add(lblDescription);
-            this.Controls.Add(txtDescription);
-            yPosition += 70;
-
-            // Price
-            Label lblPrice = new Label { Text = "Price (Rs.):", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            NumericUpDown numPrice = new NumericUpDown
-            {
-                Name = "numPrice",
-                Location = new Point(120, yPosition),
-                Size = new Size(150, 25),
-                Maximum = 1000000,
-                DecimalPlaces = 2
-            };
-            this.Controls.Add(lblPrice);
-            this.Controls.Add(numPrice);
-            yPosition += 35;
-
-            // Discount Price (display only)
-            Label lblDiscount = new Label { Text = "Discount Price:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            Label lblDiscountValue = new Label
-            {
-                Name = "lblDiscountValue",
-                Location = new Point(120, yPosition),
-                Size = new Size(120, 20),
-                Text = "-"
-            };
-            Label lblDiscountHint = new Label
-            {
-                Name = "lblDiscountHint",
-                Text = "Click Manage Discounts to add discounts",
-                Location = new Point(120, yPosition + 22),
-                Size = new Size(300, 18),
-                ForeColor = Color.DimGray
-            };
-            Button btnManageDiscounts = new Button
-            {
-                Text = "Manage Discounts",
-                Location = new Point(120, yPosition + 45),
-                Size = new Size(150, 26),
-                BackColor = Color.FromArgb(46, 204, 113),
-                ForeColor = Color.White
-            };
-            btnManageDiscounts.Click += (s, e) =>
-            {
-                using var form = new DiscountManagementForm();
-                form.ShowDialog();
-            };
-            this.Controls.Add(lblDiscount);
-            this.Controls.Add(lblDiscountValue);
-            this.Controls.Add(lblDiscountHint);
-            this.Controls.Add(btnManageDiscounts);
-            yPosition += 75;
-
-            // Stock
-            Label lblStock = new Label { Text = "Stock Quantity:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            NumericUpDown numStock = new NumericUpDown
-            {
-                Name = "numStock",
-                Location = new Point(120, yPosition),
-                Size = new Size(150, 25),
-                Maximum = 10000
-            };
-            this.Controls.Add(lblStock);
-            this.Controls.Add(numStock);
-            yPosition += 35;
-
-            // Supplier
-            Label lblSupplier = new Label { Text = "Supplier:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtSupplier = new TextBox { Name = "txtSupplier", Location = new Point(120, yPosition), Size = new Size(400, 25) };
-            this.Controls.Add(lblSupplier);
-            this.Controls.Add(txtSupplier);
-            yPosition += 35;
-
-            // Featured
-            CheckBox chkFeatured = new CheckBox
-            {
-                Name = "chkFeatured",
-                Text = "Mark as Featured",
-                Location = new Point(120, yPosition),
-                Size = new Size(150, 25)
-            };
-            this.Controls.Add(chkFeatured);
-            yPosition += 35;
-
-            // Active
-            CheckBox chkActive = new CheckBox
-            {
-                Name = "chkActive",
-                Text = "Active",
-                Location = new Point(120, yPosition),
-                Size = new Size(150, 25),
-                Checked = true
-            };
-            this.Controls.Add(chkActive);
-            yPosition += 45;
-
-            // Image selection
-            Label lblImage = new Label { Text = "Image:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            PictureBox picPreview = new PictureBox { Name = "picPreview", Location = new Point(120, yPosition), Size = new Size(120, 120), BorderStyle = BorderStyle.FixedSingle, SizeMode = PictureBoxSizeMode.Zoom };
-            Button btnChooseImage = new Button { Name = "btnChooseImage", Text = "Choose Image...", Location = new Point(250, yPosition + 45), Size = new Size(140, 30) };
-            btnChooseImage.Click += BtnChooseImage_Click;
-            this.Controls.Add(lblImage);
-            this.Controls.Add(picPreview);
-            this.Controls.Add(btnChooseImage);
-            yPosition += 140;
-
-            // Save button
-            Button btnSave = new Button
-            {
-                Text = "Save Product",
-                Location = new Point(150, yPosition),
-                Size = new Size(150, 40),
-                BackColor = Color.Green,
-                ForeColor = Color.White,
-                Font = new Font("Arial", 10, FontStyle.Bold)
-            };
-            btnSave.Click += BtnSave_Click;
-            this.Controls.Add(btnSave);
-
-            // Cancel button
-            Button btnCancel = new Button
-            {
-                Text = "Cancel",
-                Location = new Point(310, yPosition),
-                Size = new Size(150, 40),
-                BackColor = Color.LightGray
-            };
-            btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
-            this.Controls.Add(btnCancel);
-
-            // Keep buttons visible and allow scroll if needed
-            this.AutoScroll = true;
-            this.ClientSize = new Size(this.ClientSize.Width, yPosition + 120);
+        private void BtnCancel_Click(object? sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
         }
 
         private void LoadCategories()
@@ -211,13 +48,9 @@ namespace GreenLife_Organic_Store.Forms
             try
             {
                 _categories = CategoryRepository.GetAllCategories();
-                ComboBox cmbCategory = (ComboBox)this.Controls["cmbCategory"];
-
+                cmbCategory.Items.Clear();
                 foreach (var category in _categories)
-                {
                     cmbCategory.Items.Add(category.CategoryName);
-                }
-
                 if (cmbCategory.Items.Count > 0)
                     cmbCategory.SelectedIndex = 0;
             }
@@ -229,15 +62,7 @@ namespace GreenLife_Organic_Store.Forms
 
         private void PopulateForm()
         {
-            TextBox txtName = (TextBox)this.Controls["txtName"];
-            ComboBox cmbCategory = (ComboBox)this.Controls["cmbCategory"];
-            TextBox txtDescription = (TextBox)this.Controls["txtDescription"];
-            NumericUpDown numPrice = (NumericUpDown)this.Controls["numPrice"];
-            NumericUpDown numStock = (NumericUpDown)this.Controls["numStock"];
-            TextBox txtSupplier = (TextBox)this.Controls["txtSupplier"];
-            CheckBox chkFeatured = (CheckBox)this.Controls["chkFeatured"];
-            CheckBox chkActive = (CheckBox)this.Controls["chkActive"];
-
+            if (_existingProduct == null) return;
             txtName.Text = _existingProduct.ProductName;
             cmbCategory.SelectedItem = _existingProduct.CategoryName;
             txtDescription.Text = _existingProduct.Description ?? "";
@@ -246,30 +71,19 @@ namespace GreenLife_Organic_Store.Forms
             txtSupplier.Text = _existingProduct.Supplier ?? "";
             chkFeatured.Checked = _existingProduct.IsFeatured;
             chkActive.Checked = _existingProduct.IsActive;
-            if (this.Controls["lblDiscountValue"] is Label lblDiscountValue)
-            {
-                if (_existingProduct.DiscountPrice.HasValue && _existingProduct.DiscountPrice.Value > 0)
-                {
-                    lblDiscountValue.Text = $"Rs. {_existingProduct.DiscountPrice.Value:N2}";
-                }
-                else
-                {
-                    lblDiscountValue.Text = "-";
-                }
-            }
+            if (_existingProduct.DiscountPrice.HasValue && _existingProduct.DiscountPrice.Value > 0)
+                lblDiscountValue.Text = $"Rs. {_existingProduct.DiscountPrice.Value:N2}";
+            else
+                lblDiscountValue.Text = "-";
 
-            // Populate image preview if available
             try
             {
-                var pic = (PictureBox)this.Controls["picPreview"];
                 if (!string.IsNullOrWhiteSpace(_existingProduct.ImagePath))
                 {
                     var full = ImageStore.GetFullPath(_existingProduct.ImagePath);
                     if (File.Exists(full))
                     {
-                        pic.ImageLocation = full;
-
-                        // Normalize to "Images/filename" when the file is inside the Images directory
+                        picPreview.ImageLocation = full;
                         try
                         {
                             var imagesDir = ImageStore.GetImagesDirectory();
@@ -279,58 +93,38 @@ namespace GreenLife_Organic_Store.Forms
                             {
                                 var relFromImages = Path.GetRelativePath(imagesDirNormalized, fullNormalized)
                                     .Replace(Path.DirectorySeparatorChar, '/');
-                                pic.Tag = "Images/" + relFromImages;
+                                picPreview.Tag = "Images/" + relFromImages;
                             }
                             else
-                            {
-                                pic.Tag = _existingProduct.ImagePath;
-                            }
+                                picPreview.Tag = _existingProduct.ImagePath;
                         }
                         catch
                         {
-                            pic.Tag = _existingProduct.ImagePath;
+                            picPreview.Tag = _existingProduct.ImagePath;
                         }
                     }
                     else
                     {
-                        pic.Image = null;
-                        pic.Tag = _existingProduct.ImagePath; // keep path in tag even if missing file so save logic can preserve value
+                        picPreview.Image = null;
+                        picPreview.Tag = _existingProduct.ImagePath;
                     }
                 }
                 else
                 {
-                    pic.Image = null;
-                    pic.Tag = null;
+                    picPreview.Image = null;
+                    picPreview.Tag = null;
                 }
             }
-            catch
-            {
-                // ignore if preview not available
-            }
+            catch { }
         }
 
-        private void InitializeComponent()
+        private void BtnSave_Click(object? sender, EventArgs e)
         {
-
-        }
-
-        private void BtnSave_Click(object sender, EventArgs e)
-        {
-            TextBox txtName = (TextBox)this.Controls["txtName"];
-            ComboBox cmbCategory = (ComboBox)this.Controls["cmbCategory"];
-            TextBox txtDescription = (TextBox)this.Controls["txtDescription"];
-            NumericUpDown numPrice = (NumericUpDown)this.Controls["numPrice"];
-            NumericUpDown numStock = (NumericUpDown)this.Controls["numStock"];
-            TextBox txtSupplier = (TextBox)this.Controls["txtSupplier"];
-            CheckBox chkFeatured = (CheckBox)this.Controls["chkFeatured"];
-            CheckBox chkActive = (CheckBox)this.Controls["chkActive"];
-
             if (string.IsNullOrWhiteSpace(txtName.Text))
             {
                 MessageBox.Show("Please enter a product name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             if (numPrice.Value <= 0)
             {
                 MessageBox.Show("Price must be greater than 0.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -339,14 +133,14 @@ namespace GreenLife_Organic_Store.Forms
 
             try
             {
-                var category = _categories.FirstOrDefault(c => c.CategoryName == cmbCategory.SelectedItem.ToString());
+                var category = _categories.FirstOrDefault(c => c.CategoryName == cmbCategory.SelectedItem?.ToString());
                 if (category == null)
                 {
                     MessageBox.Show("Please select a valid category.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                var rawImagePath = ((PictureBox)this.Controls["picPreview"]).Tag as string;
+                var rawImagePath = picPreview.Tag as string;
                 if (!string.IsNullOrWhiteSpace(rawImagePath))
                 {
                     try
@@ -362,10 +156,7 @@ namespace GreenLife_Organic_Store.Forms
                             rawImagePath = "Images/" + relFromImages;
                         }
                     }
-                    catch
-                    {
-                        // keep rawImagePath if normalization fails
-                    }
+                    catch { }
                 }
 
                 var product = new Product
@@ -385,7 +176,6 @@ namespace GreenLife_Organic_Store.Forms
                 if (_existingProduct != null)
                 {
                     product.ID = _existingProduct.ID;
-                    // If no new image selected, keep existing path
                     if (string.IsNullOrWhiteSpace(product.ImagePath))
                         product.ImagePath = _existingProduct.ImagePath;
                     if (ProductRepository.UpdateProduct(product))
@@ -415,14 +205,13 @@ namespace GreenLife_Organic_Store.Forms
             ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                    try
-                    {
-                        var relative = ImageStore.SaveImageFile(ofd.FileName);
-                        var full = ImageStore.GetFullPath(relative);
-                        var pic = (PictureBox)this.Controls["picPreview"];
-                        pic.ImageLocation = full;
-                        pic.Tag = relative; // store relative path in Tag so it can be saved to DB
-                    }
+                try
+                {
+                    var relative = ImageStore.SaveImageFile(ofd.FileName);
+                    var full = ImageStore.GetFullPath(relative);
+                    picPreview.ImageLocation = full;
+                    picPreview.Tag = relative;
+                }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Failed to add image: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

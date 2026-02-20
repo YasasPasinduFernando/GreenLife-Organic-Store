@@ -1,5 +1,6 @@
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
@@ -7,15 +8,16 @@ namespace GreenLife_Organic_Store.Forms
     public partial class ManageOrdersForm : Form
     {
         private List<Order> _allOrders = new();
-        private DataGridView _dgvOrders;
 
         public ManageOrdersForm()
         {
+            InitializeComponent();
             this.Text = "Manage Orders";
             this.Size = new Size(900, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.Load += ManageOrdersForm_Load;
+            if (!DesignMode)
+                this.Load += ManageOrdersForm_Load;
         }
 
         private void EditSelectedOrder()
@@ -58,202 +60,19 @@ namespace GreenLife_Organic_Store.Forms
 
         private void ManageOrdersForm_Load(object sender, EventArgs e)
         {
-            InitializeUI();
+            if (DesignMode) return;
             LoadOrders();
+            FormThemeManager.ApplyToForm(this);
         }
 
-        private void InitializeUI()
-        {
-            // Toolbar
-            Panel pnlToolbar = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 70,
-                BackColor = Color.LightGray
-            };
-
-            Label lblStatus = new Label { Text = "Filter by Status:", Location = new Point(10, 10), Size = new Size(100, 20) };
-            ComboBox cmbStatus = new ComboBox
-            {
-                Name = "cmbStatus",
-                Location = new Point(120, 10),
-                Size = new Size(150, 25),
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
-            cmbStatus.Items.Add("All Orders");
-            cmbStatus.Items.Add("Pending");
-            cmbStatus.Items.Add("Processing");
-            cmbStatus.Items.Add("Shipped");
-            cmbStatus.Items.Add("Delivered");
-            cmbStatus.Items.Add("Cancelled");
-            cmbStatus.SelectedIndex = 0;
-            cmbStatus.SelectedIndexChanged += (s, e) => FilterByStatus();
-            pnlToolbar.Controls.Add(lblStatus);
-            pnlToolbar.Controls.Add(cmbStatus);
-
-            Label lblDate = new Label { Text = "From Date:", Location = new Point(10, 40), Size = new Size(100, 20) };
-            DateTimePicker dtFromDate = new DateTimePicker
-            {
-                Name = "dtFromDate",
-                Location = new Point(120, 40),
-                Size = new Size(150, 25),
-                Value = DateTime.Now.AddDays(-30)
-            };
-            pnlToolbar.Controls.Add(lblDate);
-            pnlToolbar.Controls.Add(dtFromDate);
-
-            Label lblToDate = new Label { Text = "To Date:", Location = new Point(280, 40), Size = new Size(80, 20) };
-            DateTimePicker dtToDate = new DateTimePicker
-            {
-                Name = "dtToDate",
-                Location = new Point(370, 40),
-                Size = new Size(150, 25),
-                Value = DateTime.Now
-            };
-            pnlToolbar.Controls.Add(lblToDate);
-            pnlToolbar.Controls.Add(dtToDate);
-
-            IconButton btnFilter = new IconButton
-            {
-                Text = "Filter",
-                Location = new Point(530, 40),
-                Size = new Size(100, 25),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Filter,
-                IconColor = Color.Black,
-                IconSize = 16,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnFilter.Click += (s, e) => FilterByDateRange();
-            pnlToolbar.Controls.Add(btnFilter);
-
-            IconButton btnRefresh = new IconButton
-            {
-                Text = "Refresh",
-                Location = new Point(640, 40),
-                Size = new Size(100, 25),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Sync,
-                IconColor = Color.Black,
-                IconSize = 16,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnRefresh.Click += (s, e) => LoadOrders();
-            pnlToolbar.Controls.Add(btnRefresh);
-
-            this.Controls.Add(pnlToolbar);
-
-            // DataGridView
-            _dgvOrders = new DataGridView
-            {
-                Name = "dgvOrders",
-                Dock = DockStyle.Top,
-                Height = 350,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackColor = Color.White,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            _dgvOrders.Columns.Add("OrderNumber", "Order #");
-            _dgvOrders.Columns.Add("CustomerName", "Customer");
-            _dgvOrders.Columns.Add("Status", "Status");
-            _dgvOrders.Columns.Add("Amount", "Amount");
-            _dgvOrders.Columns.Add("Date", "Date");
-            _dgvOrders.RowHeadersVisible = false;
-            _dgvOrders.CellDoubleClick += (s, e) => { if (e.RowIndex >= 0) ViewOrderDetails(); };
-            this.Controls.Add(_dgvOrders);
-
-            // Action Panel
-            Panel pnlActions = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 90,
-                BackColor = Color.White,
-                Padding = new Padding(10)
-            };
-
-            Label lblChangeStatus = new Label { Text = "Change Status To:", Location = new Point(10, 15), Size = new Size(100, 20) };
-            ComboBox cmbNewStatus = new ComboBox
-            {
-                Name = "cmbNewStatus",
-                Location = new Point(120, 15),
-                Size = new Size(150, 25),
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
-            cmbNewStatus.Items.Add("Pending");
-            cmbNewStatus.Items.Add("Processing");
-            cmbNewStatus.Items.Add("Shipped");
-            cmbNewStatus.Items.Add("Delivered");
-            cmbNewStatus.Items.Add("Cancelled");
-            cmbNewStatus.SelectedIndex = 0;
-            pnlActions.Controls.Add(lblChangeStatus);
-            pnlActions.Controls.Add(cmbNewStatus);
-
-            IconButton btnUpdate = new IconButton
-            {
-                Text = "Update Status",
-                Location = new Point(280, 15),
-                Size = new Size(150, 25),
-                BackColor = Color.Orange,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Edit,
-                IconColor = Color.Black,
-                IconSize = 16,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnUpdate.Click += (s, e) => UpdateOrderStatus();
-            pnlActions.Controls.Add(btnUpdate);
-
-            IconButton btnViewDetails = new IconButton
-            {
-                Text = "View Details",
-                Location = new Point(440, 15),
-                Size = new Size(120, 25),
-                BackColor = Color.LightBlue,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Eye,
-                IconColor = Color.Black,
-                IconSize = 16,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnViewDetails.Click += (s, e) => ViewOrderDetails();
-            pnlActions.Controls.Add(btnViewDetails);
-
-            IconButton btnEditOrder = new IconButton
-            {
-                Text = "Edit Order",
-                Location = new Point(440, 45),
-                Size = new Size(120, 25),
-                BackColor = Color.LightGreen,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Edit,
-                IconColor = Color.Black,
-                IconSize = 16,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnEditOrder.Click += (s, e) => EditSelectedOrder();
-            pnlActions.Controls.Add(btnEditOrder);
-
-            IconButton btnClose = new IconButton
-            {
-                Text = "Close",
-                Location = new Point(570, 15),
-                Size = new Size(100, 25),
-                BackColor = Color.LightGray,
-                Cursor = Cursors.Hand,
-                IconChar = IconChar.Times,
-                IconColor = Color.Black,
-                IconSize = 16,
-                TextImageRelation = TextImageRelation.ImageBeforeText
-            };
-            btnClose.Click += (s, e) => this.Close();
-            pnlActions.Controls.Add(btnClose);
-
-            this.Controls.Add(pnlActions);
-        }
+        private void CmbStatus_SelectedIndexChanged(object? sender, EventArgs e) => FilterByStatus();
+        private void BtnFilter_Click(object? sender, EventArgs e) => FilterByDateRange();
+        private void BtnRefresh_Click(object? sender, EventArgs e) => LoadOrders();
+        private void DgvOrders_CellDoubleClick(object? sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) ViewOrderDetails(); }
+        private void BtnUpdate_Click(object? sender, EventArgs e) => UpdateOrderStatus();
+        private void BtnViewDetails_Click(object? sender, EventArgs e) => ViewOrderDetails();
+        private void BtnEditOrder_Click(object? sender, EventArgs e) => EditSelectedOrder();
+        private void BtnClose_Click(object? sender, EventArgs e) => Close();
 
         private void LoadOrders()
         {
@@ -299,13 +118,13 @@ namespace GreenLife_Organic_Store.Forms
 
         private void FilterByStatus()
         {
-            ComboBox cmbStatus = (ComboBox)this.Controls[0].Controls["cmbStatus"];
             _dgvOrders.Rows.Clear();
 
-            string selectedStatus = cmbStatus.SelectedItem.ToString();
+            string? selectedStatus = cmbStatus.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedStatus)) selectedStatus = "All Orders";
             List<Order> filtered;
 
-            if (selectedStatus == "All Orders")
+            if (selectedStatus == "All Orders" || selectedStatus == null)
             {
                 filtered = _allOrders;
             }
@@ -329,10 +148,6 @@ namespace GreenLife_Organic_Store.Forms
 
         private void FilterByDateRange()
         {
-            Panel pnlToolbar = this.Controls[0] as Panel;
-            DateTimePicker dtFromDate = (DateTimePicker)pnlToolbar.Controls["dtFromDate"];
-            DateTimePicker dtToDate = (DateTimePicker)pnlToolbar.Controls["dtToDate"];
-
             var filtered = OrderRepository.GetOrdersByDateRange(dtFromDate.Value, dtToDate.Value);
             _dgvOrders.Rows.Clear();
 
@@ -350,8 +165,6 @@ namespace GreenLife_Organic_Store.Forms
 
         private void UpdateOrderStatus()
         {
-            ComboBox cmbNewStatus = (ComboBox)this.Controls[2].Controls["cmbNewStatus"];
-
             if (_dgvOrders.SelectedRows.Count > 0)
             {
                 string orderNumber = _dgvOrders.SelectedRows[0].Cells["OrderNumber"].Value.ToString();
@@ -361,7 +174,7 @@ namespace GreenLife_Organic_Store.Forms
                 {
                     try
                     {
-                        var newStatus = Enum.Parse<OrderStatus>(cmbNewStatus.SelectedItem.ToString());
+                        var newStatus = Enum.Parse<OrderStatus>(cmbNewStatus.SelectedItem?.ToString() ?? "Pending");
                         if (OrderRepository.UpdateOrderStatus(order.ID, newStatus))
                         {
                             // Send status update email (best-effort) on background thread

@@ -10,17 +10,18 @@ namespace GreenLife_Organic_Store.Forms
     {
         private List<CartItem> _cartItems = new();
         private User? _currentUser;
-        private DataGridView _dgvCart = null!;
 
         public ShoppingCartForm()
         {
+            InitializeComponent();
             this.Text = "Shopping Cart";
             this.Size = new Size(820, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.BackColor = Color.FromArgb(245, 245, 245);
-            this.Load += ShoppingCartForm_Load;
+            if (!DesignMode)
+                this.Load += ShoppingCartForm_Load;
         }
 
         public ShoppingCartForm(User? currentUser) : this()
@@ -28,11 +29,11 @@ namespace GreenLife_Organic_Store.Forms
             _currentUser = currentUser;
         }
 
-        private void ShoppingCartForm_Load(object sender, EventArgs e)
+        private void ShoppingCartForm_Load(object? sender, EventArgs e)
         {
+            if (DesignMode) return;
             try
             {
-                InitializeUI();
                 LoadCartItems();
             }
             catch (Exception ex)
@@ -41,236 +42,11 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
-        private void InitializeUI()
-        {
-            // Header Panel
-            Panel pnlHeader = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 60,
-                BackColor = Color.FromArgb(34, 139, 34)
-            };
+        private void BtnDecrement_Click(object? sender, EventArgs e) => AdjustQuantity(-1);
+        private void BtnIncrement_Click(object? sender, EventArgs e) => AdjustQuantity(1);
+        private void BtnContinue_Click(object? sender, EventArgs e) => Close();
 
-            Label lblHeader = new Label
-            {
-                Text = "Shopping Cart",
-                Location = new Point(20, 18),
-                Size = new Size(300, 30),
-                Font = new Font("Segoe UI", 16, FontStyle.Bold),
-                ForeColor = Color.White,
-                BackColor = Color.Transparent
-            };
-            pnlHeader.Controls.Add(lblHeader);
-            this.Controls.Add(pnlHeader);
-
-            // Create DataGridView for cart items
-            _dgvCart = new DataGridView
-            {
-                Name = "dgvCart",
-                Location = new Point(20, 80),
-                Size = new Size(760, 280),
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackgroundColor = Color.White,
-                GridColor = Color.LightGray,
-                BorderStyle = BorderStyle.FixedSingle,
-                EnableHeadersVisualStyles = false,
-                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
-                {
-                    BackColor = Color.FromArgb(52, 73, 94),
-                    ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                    Padding = new Padding(5)
-                },
-                ColumnHeadersHeight = 35,
-                RowTemplate = new DataGridViewRow { Height = 50 }
-            };
-
-            // Add text columns
-            var imgCol = new DataGridViewImageColumn
-            {
-                Name = "Image",
-                HeaderText = "Image",
-                ImageLayout = DataGridViewImageCellLayout.Zoom,
-                Width = 60,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-            };
-            _dgvCart.Columns.Add(imgCol);
-            _dgvCart.Columns.Add("ProductName", "Product");
-            _dgvCart.Columns.Add("Quantity", "Quantity");
-            _dgvCart.Columns.Add("UnitPrice", "Price");
-            _dgvCart.Columns.Add("Subtotal", "Subtotal");
-
-            // Add button column for Remove
-            DataGridViewButtonColumn btnRemoveColumn = new DataGridViewButtonColumn
-            {
-                Name = "Remove",
-                HeaderText = "Action",
-                Text = "Remove",
-                UseColumnTextForButtonValue = true,
-                Width = 100,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-            };
-            _dgvCart.Columns.Add(btnRemoveColumn);
-
-            // Handle button click
-            _dgvCart.CellClick += DgvCart_CellClick;
-
-            this.Controls.Add(_dgvCart);
-
-            // Quantity adjustment panel
-            Panel pnlQuantity = new Panel
-            {
-                Location = new Point(20, 370),
-                Size = new Size(760, 50),
-                BackColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle
-            };
-
-            Label lblQuantityInfo = new Label
-            {
-                Text = "Adjust Quantity:",
-                Location = new Point(15, 15),
-                Size = new Size(150, 25),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94)
-            };
-            pnlQuantity.Controls.Add(lblQuantityInfo);
-
-            IconButton btnDecrement = new IconButton
-            {
-                Text = "",
-                Location = new Point(180, 10),
-                Size = new Size(45, 32),
-                BackColor = Color.FromArgb(230, 126, 34),
-                ForeColor = Color.White,
-                IconChar = IconChar.Minus,
-                IconColor = Color.White,
-                IconSize = 20,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 14, FontStyle.Bold)
-            };
-            btnDecrement.FlatAppearance.BorderSize = 0;
-            btnDecrement.Click += (s, e) => AdjustQuantity(-1);
-            pnlQuantity.Controls.Add(btnDecrement);
-
-            IconButton btnIncrement = new IconButton
-            {
-                Text = "",
-                Location = new Point(235, 10),
-                Size = new Size(45, 32),
-                BackColor = Color.FromArgb(46, 204, 113),
-                ForeColor = Color.White,
-                IconChar = IconChar.Plus,
-                IconColor = Color.White,
-                IconSize = 20,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 14, FontStyle.Bold)
-            };
-            btnIncrement.FlatAppearance.BorderSize = 0;
-            btnIncrement.Click += (s, e) => AdjustQuantity(1);
-            pnlQuantity.Controls.Add(btnIncrement);
-
-            IconButton btnClearCart = new IconButton
-            {
-                Text = "Clear Cart",
-                Location = new Point(620, 10),
-                Size = new Size(130, 32),
-                BackColor = Color.FromArgb(231, 76, 60),
-                ForeColor = Color.White,
-                IconChar = IconChar.TrashAlt,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold)
-            };
-            btnClearCart.FlatAppearance.BorderSize = 0;
-            btnClearCart.Click += BtnClearCart_Click;
-            pnlQuantity.Controls.Add(btnClearCart);
-
-            this.Controls.Add(pnlQuantity);
-
-            // Summary Panel
-            Panel pnlSummary = new Panel
-            {
-                Location = new Point(20, 430),
-                Size = new Size(760, 50),
-                BackColor = Color.FromArgb(240, 255, 240),
-                BorderStyle = BorderStyle.FixedSingle
-            };
-
-            Label lblTotal = new Label
-            {
-                Name = "lblTotal",
-                Text = "Total: Rs. 0.00",
-                Location = new Point(15, 12),
-                Size = new Size(300, 30),
-                Font = new Font("Segoe UI", 16, FontStyle.Bold),
-                ForeColor = Color.FromArgb(34, 139, 34)
-            };
-            pnlSummary.Controls.Add(lblTotal);
-
-            Label lblItemCount = new Label
-            {
-                Name = "lblItemCount",
-                Text = "Items: 0",
-                Location = new Point(320, 15),
-                Size = new Size(150, 25),
-                Font = new Font("Segoe UI", 11),
-                ForeColor = Color.FromArgb(52, 73, 94)
-            };
-            pnlSummary.Controls.Add(lblItemCount);
-
-            this.Controls.Add(pnlSummary);
-
-            // Action buttons
-            IconButton btnContinue = new IconButton
-            {
-                Text = "Continue Shopping",
-                Location = new Point(360, 500),
-                Size = new Size(190, 45),
-                BackColor = Color.FromArgb(149, 165, 166),
-                ForeColor = Color.White,
-                IconChar = IconChar.ArrowLeft,
-                IconColor = Color.White,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 11, FontStyle.Bold)
-            };
-            btnContinue.FlatAppearance.BorderSize = 0;
-            btnContinue.Click += (s, e) => this.Close();
-            this.Controls.Add(btnContinue);
-
-            IconButton btnCheckout = new IconButton
-            {
-                Text = "Proceed to Checkout",
-                Location = new Point(560, 500),
-                Size = new Size(220, 45),
-                BackColor = Color.FromArgb(34, 139, 34),
-                ForeColor = Color.White,
-                IconChar = IconChar.CreditCard,
-                IconColor = Color.White,
-                IconSize = 20,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 11, FontStyle.Bold)
-            };
-            btnCheckout.FlatAppearance.BorderSize = 0;
-            btnCheckout.Click += BtnCheckout_Click;
-            this.Controls.Add(btnCheckout);
-        }
-
-        private void DgvCart_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DgvCart_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
             try
             {
@@ -343,17 +119,8 @@ namespace GreenLife_Organic_Store.Forms
         {
             try
             {
-                Label lblTotal = this.Controls.Cast<Control>()
-                    .SelectMany(c => c is Panel p ? p.Controls.Cast<Control>() : Enumerable.Empty<Control>())
-                    .FirstOrDefault(c => c.Name == "lblTotal") as Label;
-                    
-                Label lblItemCount = this.Controls.Cast<Control>()
-                    .SelectMany(c => c is Panel p ? p.Controls.Cast<Control>() : Enumerable.Empty<Control>())
-                    .FirstOrDefault(c => c.Name == "lblItemCount") as Label;
-
                 if (lblTotal != null)
                     lblTotal.Text = $"Total: Rs. {ShoppingCart.Items.Sum(x => x.Product.GetFinalPrice() * x.Quantity):N2}";
-                
                 if (lblItemCount != null)
                     lblItemCount.Text = $"Items: {ShoppingCart.GetItemCount()}";
             }

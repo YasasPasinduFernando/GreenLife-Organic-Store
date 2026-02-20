@@ -14,14 +14,13 @@ namespace GreenLife_Organic_Store.Forms
         private User _currentCustomer;
         private List<Product> _allProducts = new();
         private List<Category> _categories = new();
-        private FlowLayoutPanel _flpProducts = null!;
-        private FlowLayoutPanel _flpCategories = null!;
-        private Label _lblCartCount = null!;
-        private Panel _pnlFilter = null!;
-        private Panel _pnlCategoriesSection = null!;
         private bool _isFilterPinned = true;
         private bool _isCategoriesPinned = true;
         private Dictionary<int, decimal> _activeDiscountPercents = new();
+
+        public CustomerDashboard()
+            : this(new User { ID = 0, Name = "Customer", Email = "customer@example.com", UserType = UserType.Customer })
+        { }
 
         public CustomerDashboard(User customer)
         {
@@ -46,18 +45,17 @@ namespace GreenLife_Organic_Store.Forms
 
         private void CustomerDashboard_Load(object sender, EventArgs e)
         {
+            if (DesignMode) return;
             this.Text = "GreenLife Organic Store - Shopping";
-            // Fixed size window centered on screen
             this.Size = new Size(1280, 860);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.Sizable; // allow resize up to full screen
-            this.MaximizeBox = true; // allow maximize
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
             this.MinimizeBox = true;
-            // Prevent user from resizing by locking min/max to the same size
             this.MinimumSize = this.Size;
             this.BackColor = Color.FromArgb(245, 245, 245);
+            lblWelcome.Text = $"Welcome, {_currentCustomer.Name}!";
 
-            InitializeUI();
             LoadData();
             // If logged in user, load DB cart into in-memory cart so shopping cart UI reflects DB
             try
@@ -86,378 +84,15 @@ namespace GreenLife_Organic_Store.Forms
             UpdateCartCount();
         }
 
-        private void InitializeUI()
-        {
-            // Products Flow Panel - ADD FIRST (will be at bottom with DockStyle.Fill)
-            _flpProducts = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                AutoScroll = true,
-                BackColor = Color.White,
-                Padding = new Padding(15)
-            };
-            _flpProducts.FlowDirection = FlowDirection.LeftToRight;
-            _flpProducts.WrapContents = true;
-            this.Controls.Add(_flpProducts);
-
-            // Products Section Header
-            Panel pnlProductsHeader = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 40,
-                BackColor = Color.FromArgb(240, 240, 240),
-                Padding = new Padding(20, 0, 20, 0)
-            };
-
-            Label lblProductsTitle = new Label
-            {
-                Text = "Our Products",
-                Location = new Point(20, 8),
-                Size = new Size(200, 25),
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94)
-            };
-            pnlProductsHeader.Controls.Add(lblProductsTitle);
-            this.Controls.Add(pnlProductsHeader);
-
-            // Categories Section with Pin Button
-            _pnlCategoriesSection = new Panel
-            {
-                Name = "pnlCategoriesSection",
-                Dock = DockStyle.Top,
-                Height = 160,
-                BackColor = Color.White
-            };
-
-            // Categories horizontal panel (add first so it appears at bottom of categories section)
-            _flpCategories = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                Height = 120,
-                AutoSize = false,
-                AutoScroll = true,
-                BackColor = Color.White,
-                Padding = new Padding(15, 10, 15, 10)
-            };
-            _flpCategories.FlowDirection = FlowDirection.LeftToRight;
-            // keep categories in a single horizontal row and allow horizontal scrolling
-            _flpCategories.WrapContents = false;
-            _pnlCategoriesSection.Controls.Add(_flpCategories);
-
-            Panel pnlCategoriesHeader = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 40,
-                BackColor = Color.White,
-                Padding = new Padding(20, 0, 20, 0)
-            };
-
-            // Pin button for categories - same style as search
-            IconButton btnPinCategories = new IconButton
-            {
-                Name = "btnPinCategories",
-                Text = "",
-                Location = new Point(15, 5),
-                Size = new Size(35, 30),
-                BackColor = Color.FromArgb(52, 152, 219),
-                ForeColor = Color.White,
-                IconChar = IconChar.AngleDown,
-                IconColor = Color.White,
-                IconSize = 20,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnPinCategories.FlatAppearance.BorderSize = 0;
-            btnPinCategories.Click += (s, e) => ToggleCategoriesPin();
-            pnlCategoriesHeader.Controls.Add(btnPinCategories);
-
-            Label lblCategoriesTitle = new Label
-            {
-                Text = "Shop by Category",
-                Location = new Point(60, 8),
-                Size = new Size(200, 25),
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94)
-            };
-            pnlCategoriesHeader.Controls.Add(lblCategoriesTitle);
-            _pnlCategoriesSection.Controls.Add(pnlCategoriesHeader);
-
-            this.Controls.Add(_pnlCategoriesSection);
-
-            // Filter Panel with Pin Button
-            _pnlFilter = new Panel
-            {
-                Name = "pnlFilter",
-                Dock = DockStyle.Top,
-                Height = 80,
-                BackColor = Color.White,
-                Padding = new Padding(20, 15, 20, 15)
-            };
-
-            // Pin button for filter
-            IconButton btnPinFilter = new IconButton
-            {
-                Name = "btnPinFilter",
-                Text = "",
-                Location = new Point(15, 15),
-                Size = new Size(35, 35),
-                BackColor = Color.FromArgb(52, 152, 219),
-                ForeColor = Color.White,
-                IconChar = IconChar.AngleDown,
-                IconColor = Color.White,
-                IconSize = 20,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnPinFilter.FlatAppearance.BorderSize = 0;
-            btnPinFilter.Click += (s, e) => ToggleFilterPin();
-            _pnlFilter.Controls.Add(btnPinFilter);
-
-            Label lblSearch = new Label 
-            { 
-                Text = "Search:", 
-                Location = new Point(60, 18), 
-                Size = new Size(80, 25),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94)
-            };
-            _pnlFilter.Controls.Add(lblSearch);
-
-            TextBox txtSearch = new TextBox 
-            { 
-                Name = "txtSearch", 
-                Location = new Point(145, 15), 
-                Size = new Size(250, 30),
-                Font = new Font("Segoe UI", 11F)
-            };
-            _pnlFilter.Controls.Add(txtSearch);
-
-            IconButton btnSearch = new IconButton
-            {
-                Text = "Search",
-                Location = new Point(405, 13),
-                Size = new Size(110, 35),
-                BackColor = Color.FromArgb(46, 204, 113),
-                ForeColor = Color.White,
-                IconChar = IconChar.Search,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
-            };
-            btnSearch.FlatAppearance.BorderSize = 0;
-            btnSearch.Click += (s, e) => SearchProducts(txtSearch.Text);
-            _pnlFilter.Controls.Add(btnSearch);
-
-            Label lblCategory = new Label 
-            { 
-                Text = "Category:", 
-                Location = new Point(530, 18), 
-                Size = new Size(80, 25),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94)
-            };
-            _pnlFilter.Controls.Add(lblCategory);
-
-            ComboBox cmbCategory = new ComboBox
-            {
-                Name = "cmbCategory",
-                Location = new Point(615, 15),
-                Size = new Size(180, 30),
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Font = new Font("Segoe UI", 10F)
-            };
-            cmbCategory.Items.Add("All Products");
-            cmbCategory.SelectedIndex = 0;
-            cmbCategory.SelectedIndexChanged += (s, e) => FilterByCategory(cmbCategory);
-            _pnlFilter.Controls.Add(cmbCategory);
-
-            Label lblPrice = new Label 
-            { 
-                Text = "Price:", 
-                Location = new Point(810, 18), 
-                Size = new Size(50, 25),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94)
-            };
-            _pnlFilter.Controls.Add(lblPrice);
-
-            NumericUpDown numMinPrice = new NumericUpDown
-            {
-                Name = "numMinPrice",
-                Location = new Point(865, 15),
-                Size = new Size(90, 30),
-                Minimum = 0,
-                Maximum = 10000,
-                Font = new Font("Segoe UI", 10F)
-            };
-            _pnlFilter.Controls.Add(numMinPrice);
-
-            Label lblPriceTo = new Label { Text = "-", Location = new Point(960, 18), Size = new Size(20, 25), Font = new Font("Segoe UI", 10F, FontStyle.Bold) };
-            _pnlFilter.Controls.Add(lblPriceTo);
-
-            NumericUpDown numMaxPrice = new NumericUpDown
-            {
-                Name = "numMaxPrice",
-                Location = new Point(985, 15),
-                Size = new Size(90, 30),
-                Minimum = 0,
-                Maximum = 10000,
-                Value = 10000,
-                Font = new Font("Segoe UI", 10F)
-            };
-            _pnlFilter.Controls.Add(numMaxPrice);
-
-            IconButton btnFilter = new IconButton
-            {
-                Text = "Filter",
-                Location = new Point(1085, 13),
-                Size = new Size(95, 35),
-                BackColor = Color.FromArgb(52, 152, 219),
-                ForeColor = Color.White,
-                IconChar = IconChar.Filter,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
-            };
-            btnFilter.FlatAppearance.BorderSize = 0;
-            btnFilter.Click += (s, e) => FilterByPrice((decimal)numMinPrice.Value, (decimal)numMaxPrice.Value);
-            _pnlFilter.Controls.Add(btnFilter);
-
-            this.Controls.Add(_pnlFilter);
-
-            // Header Panel - ADD LAST SO IT APPEARS AT TOP
-            Panel pnlHeader = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 80,
-                BackColor = Color.FromArgb(34, 139, 34)
-            };
-
-            // Logo
-            IconPictureBox iconLogo = new IconPictureBox
-            {
-                IconChar = IconChar.Leaf,
-                IconColor = Color.White,
-                IconSize = 50,
-                Location = new Point(20, 15),
-                Size = new Size(50, 50),
-                BackColor = Color.Transparent
-            };
-            pnlHeader.Controls.Add(iconLogo);
-
-            Label lblTitle = new Label
-            {
-                Text = "GreenLife Organic Store",
-                Location = new Point(80, 18),
-                Size = new Size(400, 35),
-                Font = new Font("Segoe UI", 20F, FontStyle.Bold),
-                ForeColor = Color.White,
-                BackColor = Color.Transparent
-            };
-            pnlHeader.Controls.Add(lblTitle);
-
-            Label lblWelcome = new Label
-            {
-                Text = $"Welcome, {_currentCustomer.Name}!",
-                Location = new Point(80, 52),
-                Size = new Size(400, 20),
-                Font = new Font("Segoe UI", 10F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(220, 255, 220),
-                BackColor = Color.Transparent
-            };
-            pnlHeader.Controls.Add(lblWelcome);
-
-            // Cart Section
-            // Right-side panel for cart and profile (keeps them anchored to the right)
-            Panel pnlHeaderRight = new Panel
-            {
-                Dock = DockStyle.Right,
-                Width = 300,
-                BackColor = Color.Transparent
-            };
-
-            IconButton btnCart = new IconButton()
-            {
-                Text = "",
-                Location = new Point(10, 15),
-                Size = new Size(44, 44),
-                BackColor = Color.FromArgb(46, 204, 113),
-                ForeColor = Color.White,
-                IconChar = IconChar.ShoppingCart,
-                IconColor = Color.White,
-                IconSize = 22,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnCart.FlatAppearance.BorderSize = 0;
-            btnCart.Click += (s, e) => ShowCart();
-            pnlHeaderRight.Controls.Add(btnCart);
-
-            // Cart info panel (stacked count above the label) to avoid overlap
-            Panel pnlCartInfo = new Panel
-            {
-                Location = new Point(64, 12),
-                Size = new Size(60, 44),
-                BackColor = Color.Transparent
-            };
-
-            _lblCartCount = new Label
-            {
-                Text = "0",
-                Dock = DockStyle.Top,
-                Height = 26,
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                ForeColor = Color.White,
-                TextAlign = ContentAlignment.MiddleCenter,
-                Cursor = Cursors.Hand,
-                BackColor = Color.Transparent
-            };
-            _lblCartCount.Click += (s, e) => ShowCart();
-            pnlCartInfo.Controls.Add(_lblCartCount);
-
-            Label lblCartText = new Label
-            {
-                Text = "Items",
-                Dock = DockStyle.Bottom,
-                Height = 18,
-                Font = new Font("Segoe UI", 8.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(220, 255, 220),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Cursor = Cursors.Hand,
-                BackColor = Color.Transparent
-            };
-            lblCartText.Click += (s, e) => ShowCart();
-            pnlCartInfo.Controls.Add(lblCartText);
-
-            pnlHeaderRight.Controls.Add(pnlCartInfo);
-
-            IconButton btnProfile = new IconButton();
-            btnProfile.Text = "Profile";
-            btnProfile.Location = new Point(160, 12);
-            btnProfile.Size = new Size(120, 44);
-            btnProfile.BackColor = Color.FromArgb(52, 152, 219);
-            btnProfile.ForeColor = Color.White;
-            btnProfile.IconChar = IconChar.UserCircle;
-            btnProfile.IconColor = Color.White;
-            btnProfile.IconSize = 20;
-            btnProfile.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnProfile.FlatStyle = FlatStyle.Flat;
-            btnProfile.Cursor = Cursors.Hand;
-            btnProfile.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btnProfile.FlatAppearance.BorderSize = 0;
-            btnProfile.Click += (s, e) => ShowProfile();
-            pnlHeaderRight.Controls.Add(btnProfile);
-
-            pnlHeader.Controls.Add(pnlHeaderRight);
-
-            // ADD HEADER LAST - IT WILL APPEAR AT TOP
-            this.Controls.Add(pnlHeader);
-        }
+        private void BtnPinCategories_Click(object? sender, EventArgs e) => ToggleCategoriesPin();
+        private void BtnPinFilter_Click(object? sender, EventArgs e) => ToggleFilterPin();
+        private void BtnSearch_Click(object? sender, EventArgs e) => SearchProducts(txtSearch.Text);
+        private void CmbCategory_SelectedIndexChanged(object? sender, EventArgs e) => FilterByCategory(cmbCategory);
+        private void BtnFilter_Click(object? sender, EventArgs e) => FilterByPrice((decimal)numMinPrice.Value, (decimal)numMaxPrice.Value);
+        private void BtnCart_Click(object? sender, EventArgs e) => ShowCart();
+        private void LblCartCount_Click(object? sender, EventArgs e) => ShowCart();
+        private void LblCartText_Click(object? sender, EventArgs e) => ShowCart();
+        private void BtnProfile_Click(object? sender, EventArgs e) => ShowProfile();
 
         private async void ToggleFilterPin()
         {

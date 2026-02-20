@@ -1,5 +1,6 @@
-﻿using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Database;
+using GreenLife_Organic_Store.Utilities;
 using FontAwesome.Sharp;
 using System.Text.RegularExpressions;
 
@@ -10,17 +11,12 @@ namespace GreenLife_Organic_Store.Forms
         private User? _currentUser;
         private List<CartItem> _cartItems = new();
         private decimal _totalAmount;
-        private ProgressBar progressBarEmail;
 
         public CheckoutForm()
         {
-            this.Text = "Checkout & Place Order";
-            // Slightly taller than original to fit progress bar comfortably
-            this.Size = new Size(700, 740);
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.Load += CheckoutForm_Load;
+            InitializeComponent();
+            if (!DesignMode)
+                this.Load += CheckoutForm_Load;
         }
 
         public CheckoutForm(User currentUser) : this()
@@ -30,175 +26,17 @@ namespace GreenLife_Organic_Store.Forms
 
         private void CheckoutForm_Load(object sender, EventArgs e)
         {
+            if (DesignMode) return;
             try
             {
-                InitializeUI();
                 LoadCustomerInfo();
                 LoadOrderSummary();
+                FormThemeManager.ApplyToForm(this);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading checkout: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void InitializeUI()
-        {
-            int yPosition = 10;
-
-            // Delivery Information Section
-            Label lblDeliveryInfo = new Label
-            {
-                Text = "DELIVERY INFORMATION",
-                Location = new Point(10, yPosition),
-                Size = new Size(300, 20),
-                Font = new Font("Arial", 12, FontStyle.Bold),
-                ForeColor = Color.DarkGreen
-            };
-            this.Controls.Add(lblDeliveryInfo);
-            yPosition += 30;
-
-            // Full Name
-            Label lblName = new Label { Text = "Full Name:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtName = new TextBox { Name = "txtName", Location = new Point(120, yPosition), Size = new Size(540, 25) };
-            this.Controls.Add(lblName);
-            this.Controls.Add(txtName);
-            yPosition += 30;
-
-            // Phone
-            Label lblPhone = new Label { Text = "Phone:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtPhone = new TextBox { Name = "txtPhone", Location = new Point(120, yPosition), Size = new Size(540, 25) };
-            this.Controls.Add(lblPhone);
-            this.Controls.Add(txtPhone);
-            yPosition += 30;
-
-            // Email
-            Label lblEmail = new Label { Text = "Email:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtEmail = new TextBox { Name = "txtEmail", Location = new Point(120, yPosition), Size = new Size(540, 25) };
-            this.Controls.Add(lblEmail);
-            this.Controls.Add(txtEmail);
-            yPosition += 30;
-
-            // Address
-            Label lblAddress = new Label { Text = "Address:", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtAddress = new TextBox
-            {
-                Name = "txtAddress",
-                Location = new Point(120, yPosition),
-                Size = new Size(540, 80),
-                Multiline = true
-            };
-            this.Controls.Add(lblAddress);
-            this.Controls.Add(txtAddress);
-            yPosition += 100;
-
-            // Order Summary Section
-            Label lblOrderSummary = new Label
-            {
-                Text = "ORDER SUMMARY",
-                Location = new Point(10, yPosition),
-                Size = new Size(300, 20),
-                Font = new Font("Arial", 12, FontStyle.Bold),
-                ForeColor = Color.DarkGreen
-            };
-            this.Controls.Add(lblOrderSummary);
-            yPosition += 30;
-
-            // DataGridView for order items
-            DataGridView dgvItems = new DataGridView
-            {
-                Name = "dgvItems",
-                Location = new Point(10, yPosition),
-                Size = new Size(660, 120),
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                BackColor = Color.White,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            dgvItems.Columns.Add("ProductName", "Product");
-            dgvItems.Columns.Add("Quantity", "Qty");
-            dgvItems.Columns.Add("UnitPrice", "Unit Price");
-            dgvItems.Columns.Add("Subtotal", "Subtotal");
-            this.Controls.Add(dgvItems);
-            yPosition += 130;
-
-            // Total Amount
-            Label lblTotal = new Label
-            {
-                Name = "lblTotal",
-                Text = "Total Amount: Rs. 0.00",
-                Location = new Point(10, yPosition),
-                Size = new Size(400, 25),
-                Font = new Font("Arial", 12, FontStyle.Bold),
-                ForeColor = Color.DarkGreen
-            };
-            this.Controls.Add(lblTotal);
-            yPosition += 40;
-
-            // Notes
-            Label lblNotes = new Label { Text = "Notes (Optional):", Location = new Point(10, yPosition), Size = new Size(100, 20) };
-            TextBox txtNotes = new TextBox
-            {
-                Name = "txtNotes",
-                Location = new Point(10, yPosition + 25),
-                Size = new Size(660, 60),
-                Multiline = true
-            };
-            this.Controls.Add(lblNotes);
-            this.Controls.Add(txtNotes);
-
-            // Cancel button
-            IconButton btnCancel = new IconButton
-            {
-                Name = "btnCancel",
-                Text = "Cancel",
-                Location = new Point(200, 560),
-                Size = new Size(120, 40),
-                BackColor = Color.LightGray,
-                ForeColor = Color.Black,
-                IconChar = IconChar.Times,
-                IconColor = Color.Black,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnCancel.FlatAppearance.BorderSize = 0;
-            btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
-            this.Controls.Add(btnCancel);
-
-            // Place Order button
-            IconButton btnPlaceOrder = new IconButton
-            {
-                Name = "btnPlaceOrder",
-                Text = "Place Order",
-                Location = new Point(380, 560),
-                Size = new Size(140, 40),
-                BackColor = Color.Green,
-                ForeColor = Color.White,
-                Font = new Font("Arial", 10, FontStyle.Bold),
-                IconChar = IconChar.ShoppingCart,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnPlaceOrder.FlatAppearance.BorderSize = 0;
-            btnPlaceOrder.Click += BtnPlaceOrder_Click;
-            this.Controls.Add(btnPlaceOrder);
-
-            progressBarEmail = new ProgressBar
-            {
-                Style = ProgressBarStyle.Marquee,
-                MarqueeAnimationSpeed = 25,
-                Visible = false,
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
-            };
-            int pbWidth = Math.Max(200, this.ClientSize.Width - 40); // 20px margin each side
-            progressBarEmail.Size = new Size(pbWidth, 18);
-            progressBarEmail.Location = new Point(20, btnPlaceOrder.Bottom + 12);
-            this.Controls.Add(progressBarEmail);
         }
 
         private void LoadCustomerInfo()
@@ -257,6 +95,11 @@ namespace GreenLife_Organic_Store.Forms
             {
                 MessageBox.Show($"Error loading order summary: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void BtnCancel_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
         }
 
         private async void BtnPlaceOrder_Click(object sender, EventArgs e)

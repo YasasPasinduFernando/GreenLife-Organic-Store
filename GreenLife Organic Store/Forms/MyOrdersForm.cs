@@ -1,27 +1,28 @@
 using GreenLife_Organic_Store.Models;
 using GreenLife_Organic_Store.Database;
+using GreenLife_Organic_Store.Utilities;
 using FontAwesome.Sharp;
 
 namespace GreenLife_Organic_Store.Forms
 {
     public partial class MyOrdersForm : Form
     {
-        private User _currentUser;
+        private User _currentUser = null!;
         private List<Order> _orders = new();
-        private DataGridView _dgvOrders = null!;
 
         public MyOrdersForm()
         {
+            InitializeComponent();
             this.Text = "My Orders";
             this.Size = new Size(800, 500);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Load += MyOrdersForm_Load;
-            // Improve theming
-            this.BackColor = Color.FromArgb(245, 245, 245);
-            this.ForeColor = Color.FromArgb(34, 34, 34);
+            this.BackColor = FormThemeManager.Background;
+            this.ForeColor = FormThemeManager.TextColor;
             this.DoubleBuffered = true;
+            if (!DesignMode)
+                this.Load += MyOrdersForm_Load;
         }
 
         public MyOrdersForm(User currentUser) : this()
@@ -31,10 +32,11 @@ namespace GreenLife_Organic_Store.Forms
 
         private void MyOrdersForm_Load(object sender, EventArgs e)
         {
+            if (DesignMode) return;
             try
             {
-                InitializeUI();
                 LoadOrders();
+                FormThemeManager.ApplyToForm(this);
             }
             catch (Exception ex)
             {
@@ -42,180 +44,8 @@ namespace GreenLife_Organic_Store.Forms
             }
         }
 
-        private void InitializeUI()
-        {
-            // Filter Panel
-            Panel pnlFilter = new Panel
-            {
-                Location = new Point(10, 10),
-                Size = new Size(780, 50),
-                BackColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle
-            };
-
-            // Status Filter
-            Label lblFilter = new Label
-            {
-                Text = "Filter by Status:",
-                Location = new Point(15, 15),
-                Size = new Size(110, 25),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94),
-                TextAlign = ContentAlignment.MiddleLeft
-            };
-            pnlFilter.Controls.Add(lblFilter);
-
-            ComboBox cmbStatus = new ComboBox
-            {
-                Name = "cmbStatus",
-                Location = new Point(130, 12),
-                Size = new Size(180, 30),
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Font = new Font("Segoe UI", 10F),
-                FlatStyle = FlatStyle.Flat
-            };
-            cmbStatus.Items.Add("All Orders");
-            cmbStatus.Items.Add("Pending");
-            cmbStatus.Items.Add("Processing");
-            cmbStatus.Items.Add("Shipped");
-            cmbStatus.Items.Add("Delivered");
-            cmbStatus.Items.Add("Cancelled");
-            cmbStatus.SelectedIndex = 0;
-            cmbStatus.SelectedIndexChanged += CmbStatus_SelectedIndexChanged;
-            pnlFilter.Controls.Add(cmbStatus);
-
-            // Refresh button
-            IconButton btnRefresh = new IconButton
-            {
-                Text = "Refresh",
-                Location = new Point(330, 10),
-                Size = new Size(110, 32),
-                BackColor = Color.FromArgb(52, 152, 219),
-                ForeColor = Color.White,
-                IconChar = IconChar.Sync,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
-            };
-            btnRefresh.FlatAppearance.BorderSize = 0;
-            btnRefresh.Click += (s, e) => LoadOrders();
-            pnlFilter.Controls.Add(btnRefresh);
-
-            this.Controls.Add(pnlFilter);
-
-            // DataGridView for orders
-            _dgvOrders = new DataGridView
-            {
-                Name = "dgvOrders",
-                Location = new Point(10, 70),
-                Size = new Size(780, 280),
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackgroundColor = Color.White,
-                GridColor = Color.LightGray,
-                BorderStyle = BorderStyle.FixedSingle,
-                EnableHeadersVisualStyles = false,
-                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
-                {
-                    BackColor = Color.FromArgb(52, 73, 94),
-                    ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                    Padding = new Padding(5)
-                },
-                ColumnHeadersHeight = 35,
-                RowTemplate = new DataGridViewRow { Height = 30 }
-            };
-            _dgvOrders.Columns.Add("OrderNumber", "Order #");
-            _dgvOrders.Columns.Add("OrderDate", "Date");
-            _dgvOrders.Columns.Add("Status", "Status");
-            _dgvOrders.Columns.Add("TotalAmount", "Amount");
-            this.Controls.Add(_dgvOrders);
-
-            // Track Order button (previously 'View Details')
-            IconButton btnViewDetails = new IconButton
-            {
-                Text = "Track Order",
-                Location = new Point(180, 365),
-                Size = new Size(130, 40),
-                BackColor = Color.FromArgb(46, 204, 113),
-                ForeColor = Color.White,
-                IconChar = IconChar.MapMarkerAlt,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
-            };
-            btnViewDetails.FlatAppearance.BorderSize = 0;
-            btnViewDetails.Click += BtnViewDetails_Click;
-            this.Controls.Add(btnViewDetails);
-
-            // Edit Order button (customers can edit pending orders)
-            IconButton btnEdit = new IconButton
-            {
-                Text = "Edit Order",
-                Location = new Point(320, 365),
-                Size = new Size(130, 40),
-                BackColor = Color.FromArgb(52, 152, 219),
-                ForeColor = Color.White,
-                IconChar = IconChar.Edit,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
-            };
-            btnEdit.FlatAppearance.BorderSize = 0;
-            btnEdit.Click += BtnEdit_Click;
-            this.Controls.Add(btnEdit);
-
-            // Delete Order button (customers can delete pending orders)
-            IconButton btnDelete = new IconButton
-            {
-                Text = "Delete Order",
-                Location = new Point(460, 365),
-                Size = new Size(130, 40),
-                BackColor = Color.FromArgb(231, 76, 60),
-                ForeColor = Color.White,
-                IconChar = IconChar.TrashAlt,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
-            };
-            btnDelete.FlatAppearance.BorderSize = 0;
-            btnDelete.Click += BtnDelete_Click;
-            this.Controls.Add(btnDelete);
-
-            // Close button
-            IconButton btnClose = new IconButton
-            {
-                Text = "Close",
-                Location = new Point(600, 365),
-                Size = new Size(110, 40),
-                BackColor = Color.FromArgb(149, 165, 166),
-                ForeColor = Color.White,
-                IconChar = IconChar.Times,
-                IconColor = Color.White,
-                IconSize = 18,
-                TextImageRelation = TextImageRelation.ImageBeforeText,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
-            };
-            btnClose.FlatAppearance.BorderSize = 0;
-            btnClose.Click += (s, e) => this.Close();
-            this.Controls.Add(btnClose);
-        }
+        private void BtnRefresh_Click(object? sender, EventArgs e) => LoadOrders();
+        private void BtnClose_Click(object? sender, EventArgs e) => Close();
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
