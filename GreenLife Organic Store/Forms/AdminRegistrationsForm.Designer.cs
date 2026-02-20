@@ -23,9 +23,7 @@ namespace GreenLife_Organic_Store.Forms
             this._btnDelete = new Button();
             ((System.ComponentModel.ISupportInitialize)this._dgvAdmins).BeginInit();
             this.SuspendLayout();
-            //
             // _dgvAdmins
-            //
             this._dgvAdmins.AllowUserToAddRows = false;
             this._dgvAdmins.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             this._dgvAdmins.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.LightGray };
@@ -43,9 +41,7 @@ namespace GreenLife_Organic_Store.Forms
             this._dgvAdmins.Columns.Add("Age", "Age");
             this._dgvAdmins.Columns.Add("Address", "Address");
             this._dgvAdmins.Columns.Add("CreatedDate", "Created Date");
-            //
             // _btnRefresh
-            //
             this._btnRefresh.BackColor = Color.FromArgb(34, 139, 34);
             this._btnRefresh.Cursor = Cursors.Hand;
             this._btnRefresh.ForeColor = Color.White;
@@ -56,9 +52,7 @@ namespace GreenLife_Organic_Store.Forms
             this._btnRefresh.Text = "Refresh";
             this._btnRefresh.UseVisualStyleBackColor = false;
             this._btnRefresh.Click += this.BtnRefresh_Click;
-            //
             // _btnClose
-            //
             this._btnClose.BackColor = Color.FromArgb(200, 200, 200);
             this._btnClose.Cursor = Cursors.Hand;
             this._btnClose.ForeColor = Color.Black;
@@ -69,9 +63,7 @@ namespace GreenLife_Organic_Store.Forms
             this._btnClose.Text = "Close";
             this._btnClose.UseVisualStyleBackColor = false;
             this._btnClose.Click += this.BtnClose_Click;
-            //
             // _btnAdd
-            //
             this._btnAdd.BackColor = Color.FromArgb(34, 139, 34);
             this._btnAdd.Cursor = Cursors.Hand;
             this._btnAdd.ForeColor = Color.White;
@@ -82,9 +74,7 @@ namespace GreenLife_Organic_Store.Forms
             this._btnAdd.Text = "Add Admin";
             this._btnAdd.UseVisualStyleBackColor = false;
             this._btnAdd.Click += this.BtnAdd_Click;
-            //
             // _btnEdit
-            //
             this._btnEdit.BackColor = Color.FromArgb(34, 139, 34);
             this._btnEdit.Cursor = Cursors.Hand;
             this._btnEdit.ForeColor = Color.White;
@@ -95,9 +85,7 @@ namespace GreenLife_Organic_Store.Forms
             this._btnEdit.Text = "Edit";
             this._btnEdit.UseVisualStyleBackColor = false;
             this._btnEdit.Click += this.BtnEdit_Click;
-            //
             // _btnDelete
-            //
             this._btnDelete.BackColor = Color.FromArgb(200, 50, 50);
             this._btnDelete.Cursor = Cursors.Hand;
             this._btnDelete.ForeColor = Color.White;
@@ -108,9 +96,7 @@ namespace GreenLife_Organic_Store.Forms
             this._btnDelete.Text = "Delete";
             this._btnDelete.UseVisualStyleBackColor = false;
             this._btnDelete.Click += this.BtnDelete_Click;
-            //
             // AdminRegistrationsForm
-            //
             this.AutoScaleDimensions = new SizeF(96F, 96F);
             this.AutoScaleMode = AutoScaleMode.Dpi;
             this.BackColor = Color.FromArgb(245, 245, 245);

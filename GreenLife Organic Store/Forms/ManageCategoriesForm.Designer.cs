@@ -35,9 +35,7 @@ namespace GreenLife_Organic_Store.Forms
             ((System.ComponentModel.ISupportInitialize)_dgvCategories).BeginInit();
             pnlActions.SuspendLayout();
             SuspendLayout();
-            //
             // pnlToolbar
-            //
             pnlToolbar.BackColor = Color.LightGray;
             pnlToolbar.Controls.Add(btnAdd);
             pnlToolbar.Controls.Add(btnRefresh);
@@ -46,9 +44,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlToolbar.Name = "pnlToolbar";
             pnlToolbar.Size = new Size(700, 50);
             pnlToolbar.TabIndex = 0;
-            //
             // btnAdd
-            //
             btnAdd.BackColor = Color.Green;
             btnAdd.Cursor = Cursors.Hand;
             btnAdd.ForeColor = Color.White;
@@ -63,9 +59,7 @@ namespace GreenLife_Organic_Store.Forms
             btnAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnAdd.UseVisualStyleBackColor = false;
             btnAdd.Click += BtnAdd_Click;
-            //
             // btnRefresh
-            //
             btnRefresh.BackColor = Color.LightBlue;
             btnRefresh.Cursor = Cursors.Hand;
             btnRefresh.IconChar = IconChar.Sync;
@@ -79,9 +73,7 @@ namespace GreenLife_Organic_Store.Forms
             btnRefresh.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnRefresh.UseVisualStyleBackColor = false;
             btnRefresh.Click += BtnRefresh_Click;
-            //
             // _dgvCategories
-            //
             _dgvCategories.AllowUserToAddRows = false;
             _dgvCategories.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             _dgvCategories.BackColor = Color.White;
@@ -104,9 +96,7 @@ namespace GreenLife_Organic_Store.Forms
             _dgvCategories.Columns.Add("CategoryName", "Category Name");
             _dgvCategories.Columns.Add("Description", "Description");
             _dgvCategories.Columns.Add("Status", "Status");
-            //
             // pnlActions
-            //
             pnlActions.BackColor = Color.WhiteSmoke;
             pnlActions.Controls.Add(btnEdit);
             pnlActions.Controls.Add(btnDelete);
@@ -117,9 +107,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlActions.Padding = new Padding(10);
             pnlActions.Size = new Size(700, 50);
             pnlActions.TabIndex = 2;
-            //
             // btnEdit
-            //
             btnEdit.BackColor = Color.LightBlue;
             btnEdit.Cursor = Cursors.Hand;
             btnEdit.IconChar = IconChar.Edit;
@@ -133,9 +121,7 @@ namespace GreenLife_Organic_Store.Forms
             btnEdit.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnEdit.UseVisualStyleBackColor = false;
             btnEdit.Click += BtnEdit_Click;
-            //
             // btnDelete
-            //
             btnDelete.BackColor = Color.LightCoral;
             btnDelete.Cursor = Cursors.Hand;
             btnDelete.IconChar = IconChar.TrashAlt;
@@ -149,9 +135,7 @@ namespace GreenLife_Organic_Store.Forms
             btnDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += BtnDelete_Click;
-            //
             // btnClose
-            //
             btnClose.BackColor = Color.LightGray;
             btnClose.Cursor = Cursors.Hand;
             btnClose.IconChar = IconChar.Times;
@@ -165,9 +149,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClose.UseVisualStyleBackColor = false;
             btnClose.Click += BtnClose_Click;
-            //
             // ManageCategoriesForm
-            //
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 500);

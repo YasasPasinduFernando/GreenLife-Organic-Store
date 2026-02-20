@@ -16,8 +16,21 @@ namespace GreenLife_Organic_Store.Forms
             this.Size = new Size(900, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            if (!DesignMode)
-                this.Load += ManageOrdersForm_Load;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (DesignMode) return;
+            try
+            {
+                LoadOrders();
+                FormThemeManager.ApplyToForm(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
 
         private void EditSelectedOrder()
@@ -56,13 +69,6 @@ namespace GreenLife_Organic_Store.Forms
                     MessageBox.Show($"Error saving order: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
-
-        private void ManageOrdersForm_Load(object sender, EventArgs e)
-        {
-            if (DesignMode) return;
-            LoadOrders();
-            FormThemeManager.ApplyToForm(this);
         }
 
         private void CmbStatus_SelectedIndexChanged(object? sender, EventArgs e) => FilterByStatus();

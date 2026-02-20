@@ -17,8 +17,20 @@ namespace GreenLife_Organic_Store.Forms
             this.BackColor = FormThemeManager.Background;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            if (!DesignMode)
-                this.Load += SalesReportForm_Load;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (DesignMode) return;
+            try
+            {
+                FormThemeManager.ApplyToForm(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
 
         private void ExportToPDF()
@@ -88,12 +100,6 @@ namespace GreenLife_Organic_Store.Forms
             {
                 MessageBox.Show($"Error exporting PDF: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void SalesReportForm_Load(object? sender, EventArgs e)
-        {
-            if (DesignMode) return;
-            FormThemeManager.ApplyToForm(this);
         }
 
         private void CmbReportType_SelectedIndexChanged(object? sender, EventArgs e) => UpdateDateControls();

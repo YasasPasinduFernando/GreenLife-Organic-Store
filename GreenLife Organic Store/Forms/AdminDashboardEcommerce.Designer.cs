@@ -96,9 +96,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlRecent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRecent).BeginInit();
             SuspendLayout();
-            // 
             // pnlHeader
-            // 
             pnlHeader.BackColor = Color.FromArgb(34, 139, 34);
             pnlHeader.Controls.Add(iconLogo);
             pnlHeader.Controls.Add(lblHeader);
@@ -109,9 +107,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeader.Name = "pnlHeader";
             pnlHeader.Size = new Size(875, 52);
             pnlHeader.TabIndex = 0;
-            // 
             // iconLogo
-            // 
             iconLogo.BackColor = Color.Transparent;
             iconLogo.IconChar = IconChar.Leaf;
             iconLogo.IconColor = Color.White;
@@ -123,9 +119,7 @@ namespace GreenLife_Organic_Store.Forms
             iconLogo.Size = new Size(39, 34);
             iconLogo.TabIndex = 0;
             iconLogo.TabStop = false;
-            // 
             // lblHeader
-            // 
             lblHeader.AutoSize = true;
             lblHeader.BackColor = Color.Transparent;
             lblHeader.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
@@ -135,9 +129,7 @@ namespace GreenLife_Organic_Store.Forms
             lblHeader.Size = new Size(316, 30);
             lblHeader.TabIndex = 1;
             lblHeader.Text = "Admin Dashboard - Welcome";
-            // 
             // btnLogout
-            // 
             btnLogout.BackColor = Color.FromArgb(220, 53, 69);
             btnLogout.Cursor = Cursors.Hand;
             btnLogout.FlatAppearance.BorderSize = 0;
@@ -157,9 +149,7 @@ namespace GreenLife_Organic_Store.Forms
             btnLogout.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnLogout.UseVisualStyleBackColor = false;
             btnLogout.Click += BtnLogout_Click;
-            // 
             // pnlMenu
-            // 
             pnlMenu.BackColor = Color.White;
             pnlMenu.Controls.Add(btnManageProducts);
             pnlMenu.Controls.Add(btnManageOrders);
@@ -176,9 +166,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlMenu.Padding = new Padding(13, 11, 13, 8);
             pnlMenu.Size = new Size(875, 120);
             pnlMenu.TabIndex = 1;
-            // 
             // btnManageProducts
-            // 
             btnManageProducts.BackColor = Color.FromArgb(46, 204, 113);
             btnManageProducts.Cursor = Cursors.Hand;
             btnManageProducts.FlatAppearance.BorderSize = 0;
@@ -198,9 +186,7 @@ namespace GreenLife_Organic_Store.Forms
             btnManageProducts.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnManageProducts.UseVisualStyleBackColor = false;
             btnManageProducts.Click += BtnManageProducts_Click;
-            // 
             // btnManageOrders
-            // 
             btnManageOrders.BackColor = Color.FromArgb(52, 152, 219);
             btnManageOrders.Cursor = Cursors.Hand;
             btnManageOrders.FlatAppearance.BorderSize = 0;
@@ -220,9 +206,7 @@ namespace GreenLife_Organic_Store.Forms
             btnManageOrders.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnManageOrders.UseVisualStyleBackColor = false;
             btnManageOrders.Click += BtnManageOrders_Click;
-            // 
             // btnManageCategories
-            // 
             btnManageCategories.BackColor = Color.FromArgb(155, 89, 182);
             btnManageCategories.Cursor = Cursors.Hand;
             btnManageCategories.FlatAppearance.BorderSize = 0;
@@ -242,9 +226,7 @@ namespace GreenLife_Organic_Store.Forms
             btnManageCategories.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnManageCategories.UseVisualStyleBackColor = false;
             btnManageCategories.Click += BtnManageCategories_Click;
-            // 
             // btnManageCustomers
-            // 
             btnManageCustomers.BackColor = Color.FromArgb(26, 188, 156);
             btnManageCustomers.Cursor = Cursors.Hand;
             btnManageCustomers.FlatAppearance.BorderSize = 0;
@@ -264,9 +246,7 @@ namespace GreenLife_Organic_Store.Forms
             btnManageCustomers.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnManageCustomers.UseVisualStyleBackColor = false;
             btnManageCustomers.Click += BtnManageCustomers_Click;
-            // 
             // btnSalesReports
-            // 
             btnSalesReports.BackColor = Color.FromArgb(52, 73, 94);
             btnSalesReports.Cursor = Cursors.Hand;
             btnSalesReports.FlatAppearance.BorderSize = 0;
@@ -286,9 +266,7 @@ namespace GreenLife_Organic_Store.Forms
             btnSalesReports.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSalesReports.UseVisualStyleBackColor = false;
             btnSalesReports.Click += BtnSalesReports_Click;
-            // 
             // btnAdminRegistrations
-            // 
             btnAdminRegistrations.BackColor = Color.FromArgb(230, 126, 34);
             btnAdminRegistrations.Cursor = Cursors.Hand;
             btnAdminRegistrations.FlatAppearance.BorderSize = 0;
@@ -308,9 +286,7 @@ namespace GreenLife_Organic_Store.Forms
             btnAdminRegistrations.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnAdminRegistrations.UseVisualStyleBackColor = false;
             btnAdminRegistrations.Click += BtnAdminRegistrations_Click;
-            // 
             // btnOrderReviews
-            // 
             btnOrderReviews.BackColor = Color.FromArgb(39, 174, 96);
             btnOrderReviews.Cursor = Cursors.Hand;
             btnOrderReviews.FlatAppearance.BorderSize = 0;
@@ -330,9 +306,7 @@ namespace GreenLife_Organic_Store.Forms
             btnOrderReviews.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnOrderReviews.UseVisualStyleBackColor = false;
             btnOrderReviews.Click += BtnOrderReviews_Click;
-            // 
             // btnManageDiscounts
-            // 
             btnManageDiscounts.BackColor = Color.FromArgb(211, 84, 0);
             btnManageDiscounts.Cursor = Cursors.Hand;
             btnManageDiscounts.FlatAppearance.BorderSize = 0;
@@ -352,9 +326,7 @@ namespace GreenLife_Organic_Store.Forms
             btnManageDiscounts.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnManageDiscounts.UseVisualStyleBackColor = false;
             btnManageDiscounts.Click += BtnManageDiscounts_Click;
-            // 
             // pnlContent
-            // 
             pnlContent.BackColor = Color.White;
             pnlContent.Controls.Add(lblContentTitle);
             pnlContent.Controls.Add(lblContentNote);
@@ -365,9 +337,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlContent.Padding = new Padding(13, 8, 13, 8);
             pnlContent.Size = new Size(875, 60);
             pnlContent.TabIndex = 2;
-            // 
             // lblContentTitle
-            // 
             lblContentTitle.AutoSize = true;
             lblContentTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblContentTitle.ForeColor = Color.FromArgb(52, 73, 94);
@@ -376,9 +346,7 @@ namespace GreenLife_Organic_Store.Forms
             lblContentTitle.Size = new Size(115, 21);
             lblContentTitle.TabIndex = 0;
             lblContentTitle.Text = "Quick Actions";
-            // 
             // lblContentNote
-            // 
             lblContentNote.AutoSize = true;
             lblContentNote.Font = new Font("Segoe UI", 9F);
             lblContentNote.ForeColor = Color.FromArgb(127, 140, 141);
@@ -387,9 +355,7 @@ namespace GreenLife_Organic_Store.Forms
             lblContentNote.Size = new Size(352, 15);
             lblContentNote.TabIndex = 1;
             lblContentNote.Text = "Use the menu below to access management sections and reports.";
-            // 
             // pnlStats
-            // 
             pnlStats.BackColor = Color.FromArgb(245, 245, 245);
             pnlStats.Controls.Add(pnlStatCard1);
             pnlStats.Controls.Add(pnlStatCard2);
@@ -402,9 +368,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlStats.Padding = new Padding(13, 8, 13, 8);
             pnlStats.Size = new Size(875, 105);
             pnlStats.TabIndex = 3;
-            // 
             // pnlStatCard1
-            // 
             pnlStatCard1.BackColor = Color.White;
             pnlStatCard1.Controls.Add(lblStatTitle1);
             pnlStatCard1.Controls.Add(lblTotalProducts);
@@ -413,9 +377,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlStatCard1.Name = "pnlStatCard1";
             pnlStatCard1.Size = new Size(201, 90);
             pnlStatCard1.TabIndex = 0;
-            // 
             // lblStatTitle1
-            // 
             lblStatTitle1.Font = new Font("Segoe UI", 10F);
             lblStatTitle1.ForeColor = Color.FromArgb(127, 140, 141);
             lblStatTitle1.Location = new Point(61, 19);
@@ -423,9 +385,7 @@ namespace GreenLife_Organic_Store.Forms
             lblStatTitle1.Size = new Size(131, 19);
             lblStatTitle1.TabIndex = 1;
             lblStatTitle1.Text = "Total Products";
-            // 
             // lblTotalProducts
-            // 
             lblTotalProducts.Font = new Font("Segoe UI", 28F, FontStyle.Bold);
             lblTotalProducts.ForeColor = Color.FromArgb(52, 73, 94);
             lblTotalProducts.Location = new Point(61, 41);
@@ -434,9 +394,7 @@ namespace GreenLife_Organic_Store.Forms
             lblTotalProducts.TabIndex = 0;
             lblTotalProducts.Text = "0";
             lblTotalProducts.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // pnlStatCard2
-            // 
             pnlStatCard2.BackColor = Color.White;
             pnlStatCard2.Controls.Add(lblStatTitle2);
             pnlStatCard2.Controls.Add(lblPendingOrders);
@@ -445,9 +403,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlStatCard2.Name = "pnlStatCard2";
             pnlStatCard2.Size = new Size(201, 90);
             pnlStatCard2.TabIndex = 1;
-            // 
             // lblStatTitle2
-            // 
             lblStatTitle2.Font = new Font("Segoe UI", 10F);
             lblStatTitle2.ForeColor = Color.FromArgb(127, 140, 141);
             lblStatTitle2.Location = new Point(61, 19);
@@ -455,9 +411,7 @@ namespace GreenLife_Organic_Store.Forms
             lblStatTitle2.Size = new Size(131, 19);
             lblStatTitle2.TabIndex = 1;
             lblStatTitle2.Text = "Pending Orders";
-            // 
             // lblPendingOrders
-            // 
             lblPendingOrders.Font = new Font("Segoe UI", 28F, FontStyle.Bold);
             lblPendingOrders.ForeColor = Color.FromArgb(52, 73, 94);
             lblPendingOrders.Location = new Point(61, 41);
@@ -466,9 +420,7 @@ namespace GreenLife_Organic_Store.Forms
             lblPendingOrders.TabIndex = 0;
             lblPendingOrders.Text = "0";
             lblPendingOrders.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // pnlStatCard3
-            // 
             pnlStatCard3.BackColor = Color.White;
             pnlStatCard3.Controls.Add(lblStatTitle3);
             pnlStatCard3.Controls.Add(lblTotalCustomers);
@@ -477,9 +429,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlStatCard3.Name = "pnlStatCard3";
             pnlStatCard3.Size = new Size(201, 90);
             pnlStatCard3.TabIndex = 2;
-            // 
             // lblStatTitle3
-            // 
             lblStatTitle3.Font = new Font("Segoe UI", 10F);
             lblStatTitle3.ForeColor = Color.FromArgb(127, 140, 141);
             lblStatTitle3.Location = new Point(61, 19);
@@ -487,9 +437,7 @@ namespace GreenLife_Organic_Store.Forms
             lblStatTitle3.Size = new Size(131, 19);
             lblStatTitle3.TabIndex = 1;
             lblStatTitle3.Text = "Total Customers";
-            // 
             // lblTotalCustomers
-            // 
             lblTotalCustomers.Font = new Font("Segoe UI", 28F, FontStyle.Bold);
             lblTotalCustomers.ForeColor = Color.FromArgb(52, 73, 94);
             lblTotalCustomers.Location = new Point(61, 41);
@@ -498,9 +446,7 @@ namespace GreenLife_Organic_Store.Forms
             lblTotalCustomers.TabIndex = 0;
             lblTotalCustomers.Text = "0";
             lblTotalCustomers.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // pnlStatCard4
-            // 
             pnlStatCard4.BackColor = Color.White;
             pnlStatCard4.Controls.Add(lblStatTitle4);
             pnlStatCard4.Controls.Add(lblLowStock);
@@ -509,9 +455,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlStatCard4.Name = "pnlStatCard4";
             pnlStatCard4.Size = new Size(201, 90);
             pnlStatCard4.TabIndex = 3;
-            // 
             // lblStatTitle4
-            // 
             lblStatTitle4.Font = new Font("Segoe UI", 10F);
             lblStatTitle4.ForeColor = Color.FromArgb(127, 140, 141);
             lblStatTitle4.Location = new Point(61, 19);
@@ -519,9 +463,7 @@ namespace GreenLife_Organic_Store.Forms
             lblStatTitle4.Size = new Size(131, 19);
             lblStatTitle4.TabIndex = 1;
             lblStatTitle4.Text = "Low Stock Items";
-            // 
             // lblLowStock
-            // 
             lblLowStock.Font = new Font("Segoe UI", 28F, FontStyle.Bold);
             lblLowStock.ForeColor = Color.FromArgb(52, 73, 94);
             lblLowStock.Location = new Point(61, 41);
@@ -530,9 +472,7 @@ namespace GreenLife_Organic_Store.Forms
             lblLowStock.TabIndex = 0;
             lblLowStock.Text = "0";
             lblLowStock.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // pnlRecent
-            // 
             pnlRecent.AutoScroll = true;
             pnlRecent.BackColor = Color.White;
             pnlRecent.Controls.Add(lblRecent);
@@ -544,9 +484,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlRecent.Padding = new Padding(13, 11, 13, 11);
             pnlRecent.Size = new Size(875, 188);
             pnlRecent.TabIndex = 4;
-            // 
             // lblRecent
-            // 
             lblRecent.AutoSize = true;
             lblRecent.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             lblRecent.ForeColor = Color.FromArgb(52, 73, 94);
@@ -555,9 +493,7 @@ namespace GreenLife_Organic_Store.Forms
             lblRecent.Size = new Size(137, 25);
             lblRecent.TabIndex = 0;
             lblRecent.Text = "Recent Orders";
-            // 
             // dgvRecent
-            // 
             dgvRecent.AllowUserToAddRows = false;
             dgvRecent.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRecent.BackgroundColor = Color.White;
@@ -573,39 +509,27 @@ namespace GreenLife_Organic_Store.Forms
             dgvRecent.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRecent.Size = new Size(831, 188);
             dgvRecent.TabIndex = 1;
-            // 
             // dataGridViewTextBoxColumn1
-            // 
             dataGridViewTextBoxColumn1.HeaderText = "Order #";
             dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
             // dataGridViewTextBoxColumn2
-            // 
             dataGridViewTextBoxColumn2.HeaderText = "Customer";
             dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             dataGridViewTextBoxColumn2.ReadOnly = true;
-            // 
             // dataGridViewTextBoxColumn3
-            // 
             dataGridViewTextBoxColumn3.HeaderText = "Status";
             dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             dataGridViewTextBoxColumn3.ReadOnly = true;
-            // 
             // dataGridViewTextBoxColumn4
-            // 
             dataGridViewTextBoxColumn4.HeaderText = "Amount";
             dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             dataGridViewTextBoxColumn4.ReadOnly = true;
-            // 
             // dataGridViewTextBoxColumn5
-            // 
             dataGridViewTextBoxColumn5.HeaderText = "Date";
             dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             dataGridViewTextBoxColumn5.ReadOnly = true;
-            // 
             // AdminDashboardEcommerce
-            // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);

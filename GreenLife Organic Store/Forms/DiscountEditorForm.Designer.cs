@@ -60,9 +60,7 @@ namespace GreenLife_Organic_Store.Forms
             ((System.ComponentModel.ISupportInitialize)_numDiscountPrice).BeginInit();
             pnlButtons.SuspendLayout();
             SuspendLayout();
-            // 
             // pnlHeader
-            // 
             pnlHeader.BackColor = Color.FromArgb(52, 152, 219);
             pnlHeader.Controls.Add(lblTitle);
             pnlHeader.Dock = DockStyle.Top;
@@ -72,9 +70,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeader.Padding = new Padding(13, 11, 13, 11);
             pnlHeader.Size = new Size(438, 38);
             pnlHeader.TabIndex = 0;
-            // 
             // lblTitle
-            // 
             lblTitle.BackColor = Color.Transparent;
             lblTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblTitle.ForeColor = Color.White;
@@ -83,9 +79,7 @@ namespace GreenLife_Organic_Store.Forms
             lblTitle.Size = new Size(394, 19);
             lblTitle.TabIndex = 0;
             lblTitle.Text = "Edit Discount - Product";
-            // 
             // pnlContent
-            // 
             pnlContent.AutoScroll = true;
             pnlContent.BackColor = Color.White;
             pnlContent.Controls.Add(lblProductInfo);
@@ -109,9 +103,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlContent.Padding = new Padding(18, 15, 18, 15);
             pnlContent.Size = new Size(438, 224);
             pnlContent.TabIndex = 1;
-            // 
             // lblProductInfo
-            // 
             lblProductInfo.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             lblProductInfo.ForeColor = Color.FromArgb(52, 73, 94);
             lblProductInfo.Location = new Point(18, 15);
@@ -119,9 +111,7 @@ namespace GreenLife_Organic_Store.Forms
             lblProductInfo.Size = new Size(350, 19);
             lblProductInfo.TabIndex = 0;
             lblProductInfo.Text = "Product Information";
-            // 
             // lblProductName
-            // 
             lblProductName.Font = new Font("Segoe UI", 10F);
             lblProductName.ForeColor = Color.FromArgb(52, 73, 94);
             lblProductName.Location = new Point(18, 41);
@@ -129,9 +119,7 @@ namespace GreenLife_Organic_Store.Forms
             lblProductName.Size = new Size(105, 15);
             lblProductName.TabIndex = 1;
             lblProductName.Text = "Product Name:";
-            // 
             // txtProductName
-            // 
             txtProductName.Font = new Font("Segoe UI", 10F);
             txtProductName.Location = new Point(131, 39);
             txtProductName.Margin = new Padding(3, 2, 3, 2);
@@ -140,9 +128,7 @@ namespace GreenLife_Organic_Store.Forms
             txtProductName.Size = new Size(263, 25);
             txtProductName.TabIndex = 2;
             txtProductName.Text = "Product";
-            // 
             // lblCategory
-            // 
             lblCategory.Font = new Font("Segoe UI", 10F);
             lblCategory.ForeColor = Color.FromArgb(52, 73, 94);
             lblCategory.Location = new Point(18, 64);
@@ -150,9 +136,7 @@ namespace GreenLife_Organic_Store.Forms
             lblCategory.Size = new Size(105, 15);
             lblCategory.TabIndex = 3;
             lblCategory.Text = "Category:";
-            // 
             // txtCategory
-            // 
             txtCategory.Font = new Font("Segoe UI", 10F);
             txtCategory.Location = new Point(131, 62);
             txtCategory.Margin = new Padding(3, 2, 3, 2);
@@ -161,9 +145,7 @@ namespace GreenLife_Organic_Store.Forms
             txtCategory.Size = new Size(263, 25);
             txtCategory.TabIndex = 4;
             txtCategory.Text = "Category";
-            // 
             // lblPricing
-            // 
             lblPricing.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             lblPricing.ForeColor = Color.FromArgb(52, 73, 94);
             lblPricing.Location = new Point(18, 94);
@@ -171,9 +153,7 @@ namespace GreenLife_Organic_Store.Forms
             lblPricing.Size = new Size(350, 19);
             lblPricing.TabIndex = 5;
             lblPricing.Text = "Pricing";
-            // 
             // lblOriginalPrice
-            // 
             lblOriginalPrice.Font = new Font("Segoe UI", 10F);
             lblOriginalPrice.ForeColor = Color.FromArgb(52, 73, 94);
             lblOriginalPrice.Location = new Point(18, 120);
@@ -181,9 +161,7 @@ namespace GreenLife_Organic_Store.Forms
             lblOriginalPrice.Size = new Size(105, 15);
             lblOriginalPrice.TabIndex = 6;
             lblOriginalPrice.Text = "Original Price (Rs.):";
-            // 
             // txtOriginalPrice
-            // 
             txtOriginalPrice.Font = new Font("Segoe UI", 10F);
             txtOriginalPrice.Location = new Point(131, 118);
             txtOriginalPrice.Margin = new Padding(3, 2, 3, 2);
@@ -192,9 +170,7 @@ namespace GreenLife_Organic_Store.Forms
             txtOriginalPrice.Size = new Size(263, 25);
             txtOriginalPrice.TabIndex = 7;
             txtOriginalPrice.Text = "0.00";
-            // 
             // lblDiscountPrice
-            // 
             lblDiscountPrice.Font = new Font("Segoe UI", 10F);
             lblDiscountPrice.ForeColor = Color.FromArgb(52, 73, 94);
             lblDiscountPrice.Location = new Point(18, 142);
@@ -202,9 +178,7 @@ namespace GreenLife_Organic_Store.Forms
             lblDiscountPrice.Size = new Size(105, 15);
             lblDiscountPrice.TabIndex = 8;
             lblDiscountPrice.Text = "Discount Price (Rs.):";
-            // 
             // _numDiscountPrice
-            // 
             _numDiscountPrice.DecimalPlaces = 2;
             _numDiscountPrice.Font = new Font("Segoe UI", 10F);
             _numDiscountPrice.Location = new Point(131, 140);
@@ -214,9 +188,7 @@ namespace GreenLife_Organic_Store.Forms
             _numDiscountPrice.Size = new Size(262, 25);
             _numDiscountPrice.TabIndex = 9;
             _numDiscountPrice.ValueChanged += NumDiscountPrice_ValueChanged;
-            // 
             // lblDiscountPercent
-            // 
             lblDiscountPercent.Font = new Font("Segoe UI", 10F);
             lblDiscountPercent.ForeColor = Color.FromArgb(52, 73, 94);
             lblDiscountPercent.Location = new Point(18, 165);
@@ -224,9 +196,7 @@ namespace GreenLife_Organic_Store.Forms
             lblDiscountPercent.Size = new Size(105, 15);
             lblDiscountPercent.TabIndex = 10;
             lblDiscountPercent.Text = "Discount Percentage:";
-            // 
             // _lblPercentValue
-            // 
             _lblPercentValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             _lblPercentValue.ForeColor = Color.FromArgb(46, 204, 113);
             _lblPercentValue.Location = new Point(131, 165);
@@ -234,9 +204,7 @@ namespace GreenLife_Organic_Store.Forms
             _lblPercentValue.Size = new Size(262, 15);
             _lblPercentValue.TabIndex = 11;
             _lblPercentValue.Text = "0%";
-            // 
             // lblSavings
-            // 
             lblSavings.Font = new Font("Segoe UI", 10F);
             lblSavings.ForeColor = Color.FromArgb(52, 73, 94);
             lblSavings.Location = new Point(18, 188);
@@ -244,9 +212,7 @@ namespace GreenLife_Organic_Store.Forms
             lblSavings.Size = new Size(105, 15);
             lblSavings.TabIndex = 12;
             lblSavings.Text = "You Save:";
-            // 
             // _lblSavingsValue
-            // 
             _lblSavingsValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             _lblSavingsValue.ForeColor = Color.FromArgb(52, 152, 219);
             _lblSavingsValue.Location = new Point(131, 188);
@@ -254,9 +220,7 @@ namespace GreenLife_Organic_Store.Forms
             _lblSavingsValue.Size = new Size(262, 15);
             _lblSavingsValue.TabIndex = 13;
             _lblSavingsValue.Text = "Rs. 0.00";
-            // 
             // pnlButtons
-            // 
             pnlButtons.BackColor = Color.White;
             pnlButtons.BorderStyle = BorderStyle.FixedSingle;
             pnlButtons.Controls.Add(btnSave);
@@ -268,9 +232,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlButtons.Padding = new Padding(9, 8, 9, 8);
             pnlButtons.Size = new Size(438, 38);
             pnlButtons.TabIndex = 2;
-            // 
             // btnSave
-            // 
             btnSave.BackColor = Color.FromArgb(46, 204, 113);
             btnSave.Cursor = Cursors.Hand;
             btnSave.FlatAppearance.BorderSize = 0;
@@ -290,9 +252,7 @@ namespace GreenLife_Organic_Store.Forms
             btnSave.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSave.UseVisualStyleBackColor = false;
             btnSave.Click += BtnSave_Click;
-            // 
             // btnCancel
-            // 
             btnCancel.BackColor = Color.FromArgb(149, 165, 166);
             btnCancel.Cursor = Cursors.Hand;
             btnCancel.FlatAppearance.BorderSize = 0;
@@ -312,9 +272,7 @@ namespace GreenLife_Organic_Store.Forms
             btnCancel.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnCancel.UseVisualStyleBackColor = false;
             btnCancel.Click += BtnCancel_Click;
-            // 
             // DiscountEditorForm
-            // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);

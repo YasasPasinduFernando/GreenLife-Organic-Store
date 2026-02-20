@@ -43,9 +43,7 @@ namespace GreenLife_Organic_Store.Forms
             ((System.ComponentModel.ISupportInitialize)_dgvCustomers).BeginInit();
             pnlActions.SuspendLayout();
             SuspendLayout();
-            //
             // pnlToolbar
-            //
             pnlToolbar.BackColor = Color.LightGray;
             pnlToolbar.Controls.Add(txtSearch);
             pnlToolbar.Controls.Add(btnSearch);
@@ -56,9 +54,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlToolbar.Name = "pnlToolbar";
             pnlToolbar.Size = new Size(900, 50);
             pnlToolbar.TabIndex = 0;
-            //
             // txtSearch
-            //
             txtSearch.Location = new Point(10, 10);
             txtSearch.Name = "txtSearch";
             txtSearch.Size = new Size(200, 27);
@@ -66,9 +62,7 @@ namespace GreenLife_Organic_Store.Forms
             txtSearch.Text = "Search...";
             txtSearch.Enter += TxtSearch_Enter;
             txtSearch.Leave += TxtSearch_Leave;
-            //
             // btnSearch
-            //
             btnSearch.BackColor = Color.LightBlue;
             btnSearch.Cursor = Cursors.Hand;
             btnSearch.IconChar = IconChar.Search;
@@ -82,9 +76,7 @@ namespace GreenLife_Organic_Store.Forms
             btnSearch.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSearch.UseVisualStyleBackColor = false;
             btnSearch.Click += BtnSearch_Click;
-            //
             // btnRefresh
-            //
             btnRefresh.BackColor = Color.LightBlue;
             btnRefresh.Cursor = Cursors.Hand;
             btnRefresh.IconChar = IconChar.Sync;
@@ -98,9 +90,7 @@ namespace GreenLife_Organic_Store.Forms
             btnRefresh.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnRefresh.UseVisualStyleBackColor = false;
             btnRefresh.Click += BtnRefresh_Click;
-            //
             // btnExport
-            //
             btnExport.BackColor = Color.LightGreen;
             btnExport.Cursor = Cursors.Hand;
             btnExport.IconChar = IconChar.FileExport;
@@ -114,9 +104,7 @@ namespace GreenLife_Organic_Store.Forms
             btnExport.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnExport.UseVisualStyleBackColor = false;
             btnExport.Click += BtnExport_Click;
-            //
             // _dgvCustomers
-            //
             _dgvCustomers.AllowUserToAddRows = false;
             _dgvCustomers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             _dgvCustomers.BackColor = Color.White;
@@ -134,9 +122,7 @@ namespace GreenLife_Organic_Store.Forms
             _dgvCustomers.Columns.Add("Address", "Address");
             _dgvCustomers.Columns.Add("RegistrationDate", "Registered Date");
             _dgvCustomers.CellDoubleClick += DgvCustomers_CellDoubleClick;
-            //
             // pnlActions
-            //
             pnlActions.BackColor = Color.White;
             pnlActions.Controls.Add(btnViewDetails);
             pnlActions.Controls.Add(btnDeleteAccount);
@@ -149,9 +135,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlActions.Padding = new Padding(10);
             pnlActions.Size = new Size(900, 110);
             pnlActions.TabIndex = 2;
-            //
             // btnViewDetails
-            //
             btnViewDetails.BackColor = Color.LightBlue;
             btnViewDetails.Cursor = Cursors.Hand;
             btnViewDetails.IconChar = IconChar.Eye;
@@ -165,9 +149,7 @@ namespace GreenLife_Organic_Store.Forms
             btnViewDetails.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnViewDetails.UseVisualStyleBackColor = false;
             btnViewDetails.Click += BtnViewDetails_Click;
-            //
             // btnDeleteAccount
-            //
             btnDeleteAccount.BackColor = Color.LightCoral;
             btnDeleteAccount.Cursor = Cursors.Hand;
             btnDeleteAccount.IconChar = IconChar.TrashAlt;
@@ -181,9 +163,7 @@ namespace GreenLife_Organic_Store.Forms
             btnDeleteAccount.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDeleteAccount.UseVisualStyleBackColor = false;
             btnDeleteAccount.Click += BtnDeleteAccount_Click;
-            //
             // btnClose
-            //
             btnClose.BackColor = Color.LightGray;
             btnClose.Cursor = Cursors.Hand;
             btnClose.IconChar = IconChar.Times;
@@ -197,9 +177,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClose.UseVisualStyleBackColor = false;
             btnClose.Click += BtnClose_Click;
-            //
             // _btnEditCustomer
-            //
             _btnEditCustomer.BackColor = Color.LightGreen;
             _btnEditCustomer.Cursor = Cursors.Hand;
             _btnEditCustomer.IconChar = IconChar.Edit;
@@ -213,9 +191,7 @@ namespace GreenLife_Organic_Store.Forms
             _btnEditCustomer.TextImageRelation = TextImageRelation.ImageBeforeText;
             _btnEditCustomer.UseVisualStyleBackColor = false;
             _btnEditCustomer.Click += BtnEditCustomer_Click;
-            //
             // _btnChangePassword
-            //
             _btnChangePassword.BackColor = Color.LightSkyBlue;
             _btnChangePassword.Cursor = Cursors.Hand;
             _btnChangePassword.IconChar = IconChar.Key;
@@ -229,9 +205,7 @@ namespace GreenLife_Organic_Store.Forms
             _btnChangePassword.TextImageRelation = TextImageRelation.ImageBeforeText;
             _btnChangePassword.UseVisualStyleBackColor = false;
             _btnChangePassword.Click += BtnChangePassword_Click;
-            //
             // ManageCustomersForm
-            //
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(900, 600);

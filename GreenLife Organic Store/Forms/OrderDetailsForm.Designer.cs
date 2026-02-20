@@ -63,9 +63,7 @@ namespace GreenLife_Organic_Store.Forms
             ((System.ComponentModel.ISupportInitialize)headerIcon).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvItems).BeginInit();
             SuspendLayout();
-            //
             // pnlMain
-            //
             pnlMain.AutoScroll = true;
             pnlMain.BackColor = Color.Transparent;
             pnlMain.Controls.Add(headerIcon);
@@ -94,9 +92,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlMain.Name = "pnlMain";
             pnlMain.Size = new Size(700, 650);
             pnlMain.TabIndex = 0;
-            //
             // headerIcon
-            //
             headerIcon.BackColor = Color.Transparent;
             headerIcon.IconChar = IconChar.ShoppingBag;
             headerIcon.IconColor = Color.FromArgb(34, 139, 34);
@@ -106,9 +102,7 @@ namespace GreenLife_Organic_Store.Forms
             headerIcon.Size = new Size(34, 34);
             headerIcon.TabIndex = 0;
             headerIcon.TabStop = false;
-            //
             // lblOrderHeader
-            //
             lblOrderHeader.AutoSize = true;
             lblOrderHeader.BackColor = Color.Transparent;
             lblOrderHeader.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
@@ -118,34 +112,26 @@ namespace GreenLife_Organic_Store.Forms
             lblOrderHeader.Size = new Size(150, 30);
             lblOrderHeader.TabIndex = 1;
             lblOrderHeader.Text = "Order #00000";
-            //
             // lblOrderDateLabel
-            //
             lblOrderDateLabel.Location = new Point(10, 45);
             lblOrderDateLabel.Name = "lblOrderDateLabel";
             lblOrderDateLabel.Size = new Size(100, 20);
             lblOrderDateLabel.TabIndex = 2;
             lblOrderDateLabel.Text = "Order Date:";
-            //
             // lblOrderDate
-            //
             lblOrderDate.Location = new Point(120, 45);
             lblOrderDate.Name = "lblOrderDate";
             lblOrderDate.Size = new Size(300, 20);
             lblOrderDate.TabIndex = 3;
             lblOrderDate.Text = "—";
-            //
             // lblStatusLabel
-            //
             lblStatusLabel.AutoSize = true;
             lblStatusLabel.Location = new Point(10, 75);
             lblStatusLabel.Name = "lblStatusLabel";
             lblStatusLabel.Size = new Size(50, 20);
             lblStatusLabel.TabIndex = 4;
             lblStatusLabel.Text = "Status:";
-            //
             // lblStatus
-            //
             lblStatus.AutoSize = true;
             lblStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblStatus.Location = new Point(120, 75);
@@ -153,9 +139,7 @@ namespace GreenLife_Organic_Store.Forms
             lblStatus.Size = new Size(50, 23);
             lblStatus.TabIndex = 5;
             lblStatus.Text = "—";
-            //
             // pnlProgress
-            //
             pnlProgress.BackColor = Color.White;
             pnlProgress.BorderStyle = BorderStyle.None;
             pnlProgress.Location = new Point(10, 115);
@@ -163,9 +147,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlProgress.Size = new Size(680, 70);
             pnlProgress.TabIndex = 6;
             pnlProgress.Paint += PnlProgress_Paint;
-            //
             // lblItemsHeader
-            //
             lblItemsHeader.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblItemsHeader.ForeColor = Color.DarkGreen;
             lblItemsHeader.Location = new Point(10, 195);
@@ -173,9 +155,7 @@ namespace GreenLife_Organic_Store.Forms
             lblItemsHeader.Size = new Size(300, 20);
             lblItemsHeader.TabIndex = 7;
             lblItemsHeader.Text = "ITEMS ORDERED";
-            //
             // dgvItems
-            //
             dgvItems.AllowUserToAddRows = false;
             dgvItems.BackgroundColor = Color.White;
             dgvItems.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.FromArgb(230, 230, 230), ForeColor = Color.FromArgb(34, 34, 34) };
@@ -190,18 +170,14 @@ namespace GreenLife_Organic_Store.Forms
             dgvItems.Columns.Add("Quantity", "Qty");
             dgvItems.Columns.Add("UnitPrice", "Unit Price");
             dgvItems.Columns.Add("Subtotal", "Subtotal");
-            //
             // lblTotalLabel
-            //
             lblTotalLabel.Font = new Font("Arial", 12F, FontStyle.Bold);
             lblTotalLabel.Location = new Point(10, 415);
             lblTotalLabel.Name = "lblTotalLabel";
             lblTotalLabel.Size = new Size(100, 25);
             lblTotalLabel.TabIndex = 9;
             lblTotalLabel.Text = "Total:";
-            //
             // lblTotal
-            //
             lblTotal.BackColor = Color.Transparent;
             lblTotal.Font = new Font("Arial", 12F, FontStyle.Bold);
             lblTotal.ForeColor = Color.FromArgb(34, 139, 34);
@@ -210,9 +186,7 @@ namespace GreenLife_Organic_Store.Forms
             lblTotal.Size = new Size(300, 25);
             lblTotal.TabIndex = 10;
             lblTotal.Text = "Rs. 0.00";
-            //
             // lblDeliveryHeader
-            //
             lblDeliveryHeader.BackColor = Color.Transparent;
             lblDeliveryHeader.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblDeliveryHeader.ForeColor = Color.FromArgb(34, 139, 34);
@@ -221,65 +195,49 @@ namespace GreenLife_Organic_Store.Forms
             lblDeliveryHeader.Size = new Size(300, 20);
             lblDeliveryHeader.TabIndex = 11;
             lblDeliveryHeader.Text = "DELIVERY INFORMATION";
-            //
             // lblNameLabel
-            //
             lblNameLabel.Location = new Point(10, 485);
             lblNameLabel.Name = "lblNameLabel";
             lblNameLabel.Size = new Size(100, 20);
             lblNameLabel.TabIndex = 12;
             lblNameLabel.Text = "Name:";
-            //
             // lblName
-            //
             lblName.Location = new Point(120, 485);
             lblName.Name = "lblName";
             lblName.Size = new Size(400, 20);
             lblName.TabIndex = 13;
             lblName.Text = "—";
-            //
             // lblPhoneLabel
-            //
             lblPhoneLabel.Location = new Point(10, 510);
             lblPhoneLabel.Name = "lblPhoneLabel";
             lblPhoneLabel.Size = new Size(100, 20);
             lblPhoneLabel.TabIndex = 14;
             lblPhoneLabel.Text = "Phone:";
-            //
             // lblPhone
-            //
             lblPhone.Location = new Point(120, 510);
             lblPhone.Name = "lblPhone";
             lblPhone.Size = new Size(400, 20);
             lblPhone.TabIndex = 15;
             lblPhone.Text = "—";
-            //
             // lblEmailLabel
-            //
             lblEmailLabel.Location = new Point(10, 535);
             lblEmailLabel.Name = "lblEmailLabel";
             lblEmailLabel.Size = new Size(100, 20);
             lblEmailLabel.TabIndex = 16;
             lblEmailLabel.Text = "Email:";
-            //
             // lblEmail
-            //
             lblEmail.Location = new Point(120, 535);
             lblEmail.Name = "lblEmail";
             lblEmail.Size = new Size(400, 20);
             lblEmail.TabIndex = 17;
             lblEmail.Text = "—";
-            //
             // lblAddressLabel
-            //
             lblAddressLabel.Location = new Point(10, 560);
             lblAddressLabel.Name = "lblAddressLabel";
             lblAddressLabel.Size = new Size(100, 20);
             lblAddressLabel.TabIndex = 18;
             lblAddressLabel.Text = "Address:";
-            //
             // lblAddress
-            //
             lblAddress.AutoSize = true;
             lblAddress.BackColor = Color.Transparent;
             lblAddress.Location = new Point(120, 560);
@@ -288,9 +246,7 @@ namespace GreenLife_Organic_Store.Forms
             lblAddress.Size = new Size(50, 20);
             lblAddress.TabIndex = 19;
             lblAddress.Text = "—";
-            //
             // btnClose
-            //
             btnClose.BackColor = Color.LightGray;
             btnClose.FlatStyle = FlatStyle.Flat;
             btnClose.Location = new Point(290, 630);
@@ -300,9 +256,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.Text = "Close";
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += BtnClose_Click;
-            //
             // OrderDetailsForm
-            //
             AutoScroll = true;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;

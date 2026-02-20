@@ -15,13 +15,21 @@ namespace GreenLife_Organic_Store.Forms
             _email = email;
             InitializeComponent();
             labelEmail.Text = $"Email: {_email}";
-            this.Load += ResetPasswordForm_Load;
         }
 
-        private void ResetPasswordForm_Load(object? sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            GreenLife_Organic_Store.Utilities.FormThemeManager.ApplyToForm(this);
-            GreenLife_Organic_Store.Utilities.FormThemeManager.ApplyIconButton(buttonResetPassword);
+            base.OnLoad(e);
+            if (DesignMode) return;
+            try
+            {
+                FormThemeManager.ApplyToForm(this);
+                FormThemeManager.ApplyIconButton(buttonResetPassword);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
 
         private void ButtonResetPassword_Click(object? sender, EventArgs e)

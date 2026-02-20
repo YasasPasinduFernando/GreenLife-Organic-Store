@@ -59,17 +59,13 @@ namespace GreenLife_Organic_Store.Forms
             ((System.ComponentModel.ISupportInitialize)dgvDaily).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvTopProducts).BeginInit();
             SuspendLayout();
-            //
             // lblReportType
-            //
             lblReportType.Location = new Point(10, 10);
             lblReportType.Name = "lblReportType";
             lblReportType.Size = new Size(80, 20);
             lblReportType.TabIndex = 0;
             lblReportType.Text = "Report Type:";
-            //
             // cmbReportType
-            //
             cmbReportType.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbReportType.Location = new Point(100, 10);
             cmbReportType.Name = "cmbReportType";
@@ -81,41 +77,31 @@ namespace GreenLife_Organic_Store.Forms
             cmbReportType.Items.Add("Custom Range");
             cmbReportType.SelectedIndex = 0;
             cmbReportType.SelectedIndexChanged += CmbReportType_SelectedIndexChanged;
-            //
             // lblFromDate
-            //
             lblFromDate.Location = new Point(10, 45);
             lblFromDate.Name = "lblFromDate";
             lblFromDate.Size = new Size(80, 20);
             lblFromDate.TabIndex = 2;
             lblFromDate.Text = "From Date:";
-            //
             // dtFromDate
-            //
             dtFromDate.Location = new Point(100, 45);
             dtFromDate.Name = "dtFromDate";
             dtFromDate.Size = new Size(150, 27);
             dtFromDate.TabIndex = 3;
             dtFromDate.Value = DateTime.Now.AddMonths(-1);
-            //
             // lblToDate
-            //
             lblToDate.Location = new Point(270, 45);
             lblToDate.Name = "lblToDate";
             lblToDate.Size = new Size(60, 20);
             lblToDate.TabIndex = 4;
             lblToDate.Text = "To Date:";
-            //
             // dtToDate
-            //
             dtToDate.Location = new Point(340, 45);
             dtToDate.Name = "dtToDate";
             dtToDate.Size = new Size(150, 27);
             dtToDate.TabIndex = 5;
             dtToDate.Value = DateTime.Now;
-            //
             // btnGenerate
-            //
             btnGenerate.BackColor = Color.Green;
             btnGenerate.Cursor = Cursors.Hand;
             btnGenerate.ForeColor = Color.White;
@@ -130,9 +116,7 @@ namespace GreenLife_Organic_Store.Forms
             btnGenerate.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnGenerate.UseVisualStyleBackColor = false;
             btnGenerate.Click += BtnGenerate_Click;
-            //
             // btnExport
-            //
             btnExport.BackColor = Color.LightBlue;
             btnExport.Cursor = Cursors.Hand;
             btnExport.IconChar = IconChar.FileExport;
@@ -146,9 +130,7 @@ namespace GreenLife_Organic_Store.Forms
             btnExport.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnExport.UseVisualStyleBackColor = false;
             btnExport.Click += BtnExport_Click;
-            //
             // btnExportPdf
-            //
             btnExportPdf.BackColor = Color.LightCoral;
             btnExportPdf.Cursor = Cursors.Hand;
             btnExportPdf.IconChar = IconChar.FilePdf;
@@ -162,9 +144,7 @@ namespace GreenLife_Organic_Store.Forms
             btnExportPdf.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnExportPdf.UseVisualStyleBackColor = false;
             btnExportPdf.Click += BtnExportPdf_Click;
-            //
             // pnlSummary
-            //
             pnlSummary.BorderStyle = BorderStyle.FixedSingle;
             pnlSummary.BackColor = Color.White;
             pnlSummary.Controls.Add(lblTotalSales);
@@ -177,9 +157,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlSummary.Name = "pnlSummary";
             pnlSummary.Size = new Size(870, 100);
             pnlSummary.TabIndex = 9;
-            //
             // lblTotalSales
-            //
             lblTotalSales.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblTotalSales.ForeColor = Color.DarkGreen;
             lblTotalSales.Location = new Point(10, 10);
@@ -187,27 +165,21 @@ namespace GreenLife_Organic_Store.Forms
             lblTotalSales.Size = new Size(200, 25);
             lblTotalSales.TabIndex = 0;
             lblTotalSales.Text = "Total Sales: Rs. 0.00";
-            //
             // lblTotalOrders
-            //
             lblTotalOrders.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblTotalOrders.Location = new Point(220, 10);
             lblTotalOrders.Name = "lblTotalOrders";
             lblTotalOrders.Size = new Size(200, 25);
             lblTotalOrders.TabIndex = 1;
             lblTotalOrders.Text = "Total Orders: 0";
-            //
             // lblAvgOrder
-            //
             lblAvgOrder.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblAvgOrder.Location = new Point(430, 10);
             lblAvgOrder.Name = "lblAvgOrder";
             lblAvgOrder.Size = new Size(200, 25);
             lblAvgOrder.TabIndex = 2;
             lblAvgOrder.Text = "Average Order: Rs. 0.00";
-            //
             // lblCompletedOrders
-            //
             lblCompletedOrders.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblCompletedOrders.ForeColor = Color.Green;
             lblCompletedOrders.Location = new Point(640, 10);
@@ -215,9 +187,7 @@ namespace GreenLife_Organic_Store.Forms
             lblCompletedOrders.Size = new Size(220, 25);
             lblCompletedOrders.TabIndex = 3;
             lblCompletedOrders.Text = "Completed Orders: 0";
-            //
             // lblPendingOrders
-            //
             lblPendingOrders.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblPendingOrders.ForeColor = Color.Orange;
             lblPendingOrders.Location = new Point(10, 45);
@@ -225,27 +195,21 @@ namespace GreenLife_Organic_Store.Forms
             lblPendingOrders.Size = new Size(200, 25);
             lblPendingOrders.TabIndex = 4;
             lblPendingOrders.Text = "Pending Orders: 0";
-            //
             // lblTopProduct
-            //
             lblTopProduct.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblTopProduct.Location = new Point(220, 45);
             lblTopProduct.Name = "lblTopProduct";
             lblTopProduct.Size = new Size(400, 25);
             lblTopProduct.TabIndex = 5;
             lblTopProduct.Text = "Top Product: -";
-            //
             // lblDailySales
-            //
             lblDailySales.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblDailySales.Location = new Point(10, 195);
             lblDailySales.Name = "lblDailySales";
             lblDailySales.Size = new Size(300, 20);
             lblDailySales.TabIndex = 10;
             lblDailySales.Text = "Sales by Date";
-            //
             // dgvDaily
-            //
             dgvDaily.AllowUserToAddRows = false;
             dgvDaily.BackColor = Color.White;
             dgvDaily.Location = new Point(10, 220);
@@ -256,18 +220,14 @@ namespace GreenLife_Organic_Store.Forms
             dgvDaily.Columns.Add("Date", "Date");
             dgvDaily.Columns.Add("Orders", "Orders");
             dgvDaily.Columns.Add("Amount", "Amount");
-            //
             // lblTopProducts
-            //
             lblTopProducts.Font = new Font("Arial", 11F, FontStyle.Bold);
             lblTopProducts.Location = new Point(450, 195);
             lblTopProducts.Name = "lblTopProducts";
             lblTopProducts.Size = new Size(300, 20);
             lblTopProducts.TabIndex = 12;
             lblTopProducts.Text = "Top Selling Products";
-            //
             // dgvTopProducts
-            //
             dgvTopProducts.AllowUserToAddRows = false;
             dgvTopProducts.BackColor = Color.White;
             dgvTopProducts.Location = new Point(450, 220);
@@ -278,9 +238,7 @@ namespace GreenLife_Organic_Store.Forms
             dgvTopProducts.Columns.Add("ProductName", "Product");
             dgvTopProducts.Columns.Add("Quantity", "Qty Sold");
             dgvTopProducts.Columns.Add("Revenue", "Revenue");
-            //
             // SalesReportForm
-            //
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);

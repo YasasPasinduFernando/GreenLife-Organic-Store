@@ -27,9 +27,7 @@ namespace GreenLife_Organic_Store.Forms
             flpItems = new FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)dgvReviews).BeginInit();
             SuspendLayout();
-            // 
             // dgvReviews
-            // 
             dgvReviews.AllowUserToAddRows = false;
             dgvReviews.AllowUserToDeleteRows = false;
             dgvReviews.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -44,9 +42,7 @@ namespace GreenLife_Organic_Store.Forms
             dgvReviews.Size = new Size(760, 260);
             dgvReviews.TabIndex = 0;
             dgvReviews.SelectionChanged += dgvReviews_SelectionChanged;
-            // 
             // Columns
-            // 
             var colReviewId = new DataGridViewTextBoxColumn();
             colReviewId.Name = "colReviewId";
             colReviewId.HeaderText = "Review ID";
@@ -84,18 +80,14 @@ namespace GreenLife_Organic_Store.Forms
             colUpdated.HeaderText = "Updated";
             dgvReviews.Columns.Add(colUpdated);
 
-            // 
             // lblItems
-            // 
             lblItems.AutoSize = true;
             lblItems.Location = new Point(12, 285);
             lblItems.Name = "lblItems";
             lblItems.Size = new Size(69, 15);
             lblItems.TabIndex = 1;
             lblItems.Text = "Order Items";
-            // 
             // flpItems
-            // 
             flpItems.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             flpItems.AutoScroll = true;
             flpItems.Location = new Point(12, 305);
@@ -103,9 +95,7 @@ namespace GreenLife_Organic_Store.Forms
             flpItems.Size = new Size(760, 170);
             flpItems.TabIndex = 2;
             flpItems.WrapContents = false;
-            // 
             // btnRefresh
-            // 
             btnRefresh.IconChar = FontAwesome.Sharp.IconChar.SyncAlt;
             btnRefresh.IconColor = Color.FromArgb(52, 152, 219);
             btnRefresh.IconSize = 20;
@@ -117,9 +107,7 @@ namespace GreenLife_Organic_Store.Forms
             btnRefresh.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnRefresh.UseVisualStyleBackColor = true;
             btnRefresh.Click += btnRefresh_Click;
-            // 
             // btnClose
-            // 
             btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnClose.IconChar = FontAwesome.Sharp.IconChar.TimesCircle;
             btnClose.IconColor = Color.FromArgb(220, 53, 69);
@@ -132,9 +120,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
-            // 
             // AdminOrderReviewsForm
-            // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(784, 531);

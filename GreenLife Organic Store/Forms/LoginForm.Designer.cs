@@ -52,9 +52,7 @@ namespace GreenLife_Organic_Store.Forms
             panelContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)iconLogo).BeginInit();
             SuspendLayout();
-            // 
             // panelContainer
-            // 
             panelContainer.BackColor = Color.White;
             panelContainer.Controls.Add(linkLabelForgot);
             panelContainer.Controls.Add(iconLogo);
@@ -77,9 +75,7 @@ namespace GreenLife_Organic_Store.Forms
             panelContainer.Name = "panelContainer";
             panelContainer.Size = new Size(438, 500);
             panelContainer.TabIndex = 0;
-            // 
             // iconLogo
-            // 
             iconLogo.BackColor = Color.Transparent;
             iconLogo.ForeColor = Color.FromArgb(34, 139, 34);
             iconLogo.IconChar = IconChar.Leaf;
@@ -92,9 +88,7 @@ namespace GreenLife_Organic_Store.Forms
             iconLogo.Size = new Size(42, 36);
             iconLogo.TabIndex = 0;
             iconLogo.TabStop = false;
-            // 
             // labelTitle
-            // 
             labelTitle.AutoSize = true;
             labelTitle.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             labelTitle.ForeColor = Color.FromArgb(34, 139, 34);
@@ -104,9 +98,7 @@ namespace GreenLife_Organic_Store.Forms
             labelTitle.TabIndex = 0;
             labelTitle.Text = "GreenLife Login";
             labelTitle.Click += labelTitle_Click;
-            // 
             // labelEmail
-            // 
             labelEmail.AutoSize = true;
             labelEmail.Font = new Font("Segoe UI", 10F);
             labelEmail.Location = new Point(44, 95);
@@ -114,18 +106,14 @@ namespace GreenLife_Organic_Store.Forms
             labelEmail.Size = new Size(44, 19);
             labelEmail.TabIndex = 1;
             labelEmail.Text = "Email:";
-            // 
             // textBoxEmail
-            // 
             textBoxEmail.Font = new Font("Segoe UI", 11F);
             textBoxEmail.Location = new Point(44, 116);
             textBoxEmail.Margin = new Padding(3, 2, 3, 2);
             textBoxEmail.Name = "textBoxEmail";
             textBoxEmail.Size = new Size(350, 27);
             textBoxEmail.TabIndex = 2;
-            // 
             // labelPassword
-            // 
             labelPassword.AutoSize = true;
             labelPassword.Font = new Font("Segoe UI", 10F);
             labelPassword.Location = new Point(44, 155);
@@ -133,9 +121,7 @@ namespace GreenLife_Organic_Store.Forms
             labelPassword.Size = new Size(70, 19);
             labelPassword.TabIndex = 3;
             labelPassword.Text = "Password:";
-            // 
             // textBoxPassword
-            // 
             textBoxPassword.Font = new Font("Segoe UI", 11F);
             textBoxPassword.Location = new Point(44, 176);
             textBoxPassword.Margin = new Padding(3, 2, 3, 2);
@@ -143,9 +129,7 @@ namespace GreenLife_Organic_Store.Forms
             textBoxPassword.Size = new Size(310, 27);
             textBoxPassword.TabIndex = 4;
             textBoxPassword.UseSystemPasswordChar = true;
-            // 
             // buttonShowPassword
-            // 
             buttonShowPassword.BackColor = Color.White;
             buttonShowPassword.Cursor = Cursors.Hand;
             buttonShowPassword.FlatAppearance.BorderSize = 0;
@@ -162,9 +146,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonShowPassword.TabStop = false;
             buttonShowPassword.UseVisualStyleBackColor = false;
             buttonShowPassword.Click += buttonShowPassword_Click;
-            // 
             // linkLabelForgot
-            // 
             linkLabelForgot.AutoSize = true;
             linkLabelForgot.Font = new Font("Segoe UI", 9F);
             linkLabelForgot.LinkColor = Color.FromArgb(34, 139, 34);
@@ -175,9 +157,7 @@ namespace GreenLife_Organic_Store.Forms
             linkLabelForgot.TabStop = true;
             linkLabelForgot.Text = "Forgot password?";
             linkLabelForgot.LinkClicked += linkLabelForgot_LinkClicked;
-            // 
             // labelUserType
-            // 
             labelUserType.AutoSize = true;
             labelUserType.Font = new Font("Segoe UI", 10F);
             labelUserType.Location = new Point(44, 240);
@@ -185,9 +165,7 @@ namespace GreenLife_Organic_Store.Forms
             labelUserType.Size = new Size(72, 19);
             labelUserType.TabIndex = 7;
             labelUserType.Text = "User Type:";
-            // 
             // radioButtonAdmin
-            // 
             radioButtonAdmin.AutoSize = true;
             radioButtonAdmin.Font = new Font("Segoe UI", 10F);
             radioButtonAdmin.Location = new Point(61, 273);
@@ -198,9 +176,7 @@ namespace GreenLife_Organic_Store.Forms
             radioButtonAdmin.Text = "Admin";
             radioButtonAdmin.UseVisualStyleBackColor = true;
             radioButtonAdmin.CheckedChanged += radioButtonAdmin_CheckedChanged;
-            // 
             // radioButtonCustomer
-            // 
             radioButtonCustomer.AutoSize = true;
             radioButtonCustomer.Checked = true;
             radioButtonCustomer.Font = new Font("Segoe UI", 10F);
@@ -212,9 +188,7 @@ namespace GreenLife_Organic_Store.Forms
             radioButtonCustomer.TabStop = true;
             radioButtonCustomer.Text = "Customer";
             radioButtonCustomer.UseVisualStyleBackColor = true;
-            // 
             // buttonLogin
-            // 
             buttonLogin.BackColor = Color.FromArgb(34, 139, 34);
             buttonLogin.Cursor = Cursors.Hand;
             buttonLogin.FlatAppearance.BorderSize = 0;
@@ -234,9 +208,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonLogin.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonLogin.UseVisualStyleBackColor = false;
             buttonLogin.Click += buttonLogin_Click;
-            // 
             // labelRegisterPrompt
-            // 
             labelRegisterPrompt.AutoSize = true;
             labelRegisterPrompt.Font = new Font("Segoe UI", 9.5F);
             labelRegisterPrompt.Location = new Point(85, 410);
@@ -244,9 +216,7 @@ namespace GreenLife_Organic_Store.Forms
             labelRegisterPrompt.Size = new Size(164, 17);
             labelRegisterPrompt.TabIndex = 11;
             labelRegisterPrompt.Text = "Don't have an account yet?";
-            // 
             // linkLabelRegister
-            // 
             linkLabelRegister.AutoSize = true;
             linkLabelRegister.Font = new Font("Segoe UI", 9.5F);
             linkLabelRegister.LinkColor = Color.FromArgb(34, 139, 34);
@@ -257,9 +227,7 @@ namespace GreenLife_Organic_Store.Forms
             linkLabelRegister.TabStop = true;
             linkLabelRegister.Text = "Register here";
             linkLabelRegister.LinkClicked += linkLabelRegister_LinkClicked;
-            // 
             // lblSignature
-            // 
             lblSignature.AutoSize = false;
             lblSignature.Font = new Font("Segoe UI", 8.5F);
             lblSignature.ForeColor = Color.Gray;
@@ -270,9 +238,7 @@ namespace GreenLife_Organic_Store.Forms
             lblSignature.Text = "E280041 – Yasas Pasindu Fernando | Coursework 01";
             lblSignature.TextAlign = ContentAlignment.MiddleCenter;
             lblSignature.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            // 
             // LoginForm
-            // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.White;

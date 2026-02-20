@@ -46,9 +46,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlQuantity.SuspendLayout();
             pnlSummary.SuspendLayout();
             SuspendLayout();
-            //
             // pnlHeader
-            //
             pnlHeader.BackColor = Color.FromArgb(0x2D, 0x86, 0x59);
             pnlHeader.Controls.Add(lblHeader);
             pnlHeader.Dock = DockStyle.Top;
@@ -56,9 +54,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeader.Name = "pnlHeader";
             pnlHeader.Size = new Size(820, 60);
             pnlHeader.TabIndex = 0;
-            //
             // lblHeader
-            //
             lblHeader.BackColor = Color.Transparent;
             lblHeader.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             lblHeader.ForeColor = Color.White;
@@ -67,9 +63,7 @@ namespace GreenLife_Organic_Store.Forms
             lblHeader.Size = new Size(300, 30);
             lblHeader.TabIndex = 0;
             lblHeader.Text = "Shopping Cart";
-            //
             // _dgvCart
-            //
             _dgvCart.AllowUserToAddRows = false;
             _dgvCart.AllowUserToDeleteRows = false;
             _dgvCart.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -116,9 +110,7 @@ namespace GreenLife_Organic_Store.Forms
             };
             _dgvCart.Columns.Add(btnCol);
             _dgvCart.CellClick += DgvCart_CellClick;
-            //
             // pnlQuantity
-            //
             pnlQuantity.BackColor = Color.White;
             pnlQuantity.BorderStyle = BorderStyle.FixedSingle;
             pnlQuantity.Controls.Add(lblQuantityInfo);
@@ -129,9 +121,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlQuantity.Name = "pnlQuantity";
             pnlQuantity.Size = new Size(760, 50);
             pnlQuantity.TabIndex = 2;
-            //
             // lblQuantityInfo
-            //
             lblQuantityInfo.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblQuantityInfo.ForeColor = Color.FromArgb(52, 73, 94);
             lblQuantityInfo.Location = new Point(15, 15);
@@ -139,9 +129,7 @@ namespace GreenLife_Organic_Store.Forms
             lblQuantityInfo.Size = new Size(150, 25);
             lblQuantityInfo.TabIndex = 0;
             lblQuantityInfo.Text = "Adjust Quantity:";
-            //
             // btnDecrement
-            //
             btnDecrement.BackColor = Color.FromArgb(230, 126, 34);
             btnDecrement.Cursor = Cursors.Hand;
             btnDecrement.FlatStyle = FlatStyle.Flat;
@@ -156,9 +144,7 @@ namespace GreenLife_Organic_Store.Forms
             btnDecrement.TabIndex = 1;
             btnDecrement.UseVisualStyleBackColor = false;
             btnDecrement.Click += BtnDecrement_Click;
-            //
             // btnIncrement
-            //
             btnIncrement.BackColor = Color.FromArgb(46, 204, 113);
             btnIncrement.Cursor = Cursors.Hand;
             btnIncrement.FlatStyle = FlatStyle.Flat;
@@ -173,9 +159,7 @@ namespace GreenLife_Organic_Store.Forms
             btnIncrement.TabIndex = 2;
             btnIncrement.UseVisualStyleBackColor = false;
             btnIncrement.Click += BtnIncrement_Click;
-            //
             // btnClearCart
-            //
             btnClearCart.BackColor = Color.FromArgb(231, 76, 60);
             btnClearCart.Cursor = Cursors.Hand;
             btnClearCart.FlatStyle = FlatStyle.Flat;
@@ -193,9 +177,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClearCart.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClearCart.UseVisualStyleBackColor = false;
             btnClearCart.Click += BtnClearCart_Click;
-            //
             // pnlSummary
-            //
             pnlSummary.BackColor = Color.FromArgb(240, 255, 240);
             pnlSummary.BorderStyle = BorderStyle.FixedSingle;
             pnlSummary.Controls.Add(lblTotal);
@@ -204,9 +186,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlSummary.Name = "pnlSummary";
             pnlSummary.Size = new Size(760, 50);
             pnlSummary.TabIndex = 3;
-            //
             // lblTotal
-            //
             lblTotal.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             lblTotal.ForeColor = Color.FromArgb(34, 139, 34);
             lblTotal.Location = new Point(15, 12);
@@ -214,9 +194,7 @@ namespace GreenLife_Organic_Store.Forms
             lblTotal.Size = new Size(300, 30);
             lblTotal.TabIndex = 0;
             lblTotal.Text = "Total: Rs. 0.00";
-            //
             // lblItemCount
-            //
             lblItemCount.Font = new Font("Segoe UI", 11F);
             lblItemCount.ForeColor = Color.FromArgb(52, 73, 94);
             lblItemCount.Location = new Point(320, 15);
@@ -224,9 +202,7 @@ namespace GreenLife_Organic_Store.Forms
             lblItemCount.Size = new Size(150, 25);
             lblItemCount.TabIndex = 1;
             lblItemCount.Text = "Items: 0";
-            //
             // btnContinue
-            //
             btnContinue.BackColor = Color.FromArgb(149, 165, 166);
             btnContinue.Cursor = Cursors.Hand;
             btnContinue.FlatStyle = FlatStyle.Flat;
@@ -244,9 +220,7 @@ namespace GreenLife_Organic_Store.Forms
             btnContinue.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnContinue.UseVisualStyleBackColor = false;
             btnContinue.Click += BtnContinue_Click;
-            //
             // btnCheckout
-            //
             btnCheckout.BackColor = Color.FromArgb(0x2D, 0x86, 0x59);
             btnCheckout.Cursor = Cursors.Hand;
             btnCheckout.FlatStyle = FlatStyle.Flat;
@@ -264,9 +238,7 @@ namespace GreenLife_Organic_Store.Forms
             btnCheckout.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnCheckout.UseVisualStyleBackColor = false;
             btnCheckout.Click += BtnCheckout_Click;
-            //
             // ShoppingCartForm
-            //
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);

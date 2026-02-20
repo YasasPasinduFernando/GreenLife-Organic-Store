@@ -86,9 +86,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeaderRight.SuspendLayout();
             pnlCartInfo.SuspendLayout();
             SuspendLayout();
-            //
             // _flpProducts
-            //
             _flpProducts.AutoScroll = true;
             _flpProducts.BackColor = Color.White;
             _flpProducts.Dock = DockStyle.Fill;
@@ -99,9 +97,7 @@ namespace GreenLife_Organic_Store.Forms
             _flpProducts.Size = new Size(1000, 420);
             _flpProducts.TabIndex = 0;
             _flpProducts.WrapContents = true;
-            //
             // pnlProductsHeader
-            //
             pnlProductsHeader.BackColor = Color.FromArgb(240, 240, 240);
             pnlProductsHeader.Controls.Add(lblProductsTitle);
             pnlProductsHeader.Dock = DockStyle.Top;
@@ -110,9 +106,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlProductsHeader.Padding = new Padding(20, 0, 20, 0);
             pnlProductsHeader.Size = new Size(1000, 40);
             pnlProductsHeader.TabIndex = 1;
-            //
             // lblProductsTitle
-            //
             lblProductsTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblProductsTitle.ForeColor = Color.FromArgb(52, 73, 94);
             lblProductsTitle.Location = new Point(20, 8);
@@ -120,9 +114,7 @@ namespace GreenLife_Organic_Store.Forms
             lblProductsTitle.Size = new Size(200, 25);
             lblProductsTitle.TabIndex = 0;
             lblProductsTitle.Text = "Our Products";
-            //
             // _pnlCategoriesSection
-            //
             _pnlCategoriesSection.BackColor = Color.White;
             _pnlCategoriesSection.Controls.Add(_flpCategories);
             _pnlCategoriesSection.Controls.Add(pnlCategoriesHeader);
@@ -131,9 +123,7 @@ namespace GreenLife_Organic_Store.Forms
             _pnlCategoriesSection.Name = "pnlCategoriesSection";
             _pnlCategoriesSection.Size = new Size(1000, 160);
             _pnlCategoriesSection.TabIndex = 2;
-            //
             // _flpCategories
-            //
             _flpCategories.AutoScroll = true;
             _flpCategories.BackColor = Color.White;
             _flpCategories.Dock = DockStyle.Fill;
@@ -144,9 +134,7 @@ namespace GreenLife_Organic_Store.Forms
             _flpCategories.Size = new Size(1000, 120);
             _flpCategories.TabIndex = 0;
             _flpCategories.WrapContents = false;
-            //
             // pnlCategoriesHeader
-            //
             pnlCategoriesHeader.BackColor = Color.White;
             pnlCategoriesHeader.Controls.Add(btnPinCategories);
             pnlCategoriesHeader.Controls.Add(lblCategoriesTitle);
@@ -156,9 +144,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlCategoriesHeader.Padding = new Padding(20, 0, 20, 0);
             pnlCategoriesHeader.Size = new Size(1000, 40);
             pnlCategoriesHeader.TabIndex = 1;
-            //
             // btnPinCategories
-            //
             btnPinCategories.BackColor = Color.FromArgb(52, 152, 219);
             btnPinCategories.Cursor = Cursors.Hand;
             btnPinCategories.FlatStyle = FlatStyle.Flat;
@@ -173,9 +159,7 @@ namespace GreenLife_Organic_Store.Forms
             btnPinCategories.Text = "";
             btnPinCategories.UseVisualStyleBackColor = false;
             btnPinCategories.Click += BtnPinCategories_Click;
-            //
             // lblCategoriesTitle
-            //
             lblCategoriesTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblCategoriesTitle.ForeColor = Color.FromArgb(52, 73, 94);
             lblCategoriesTitle.Location = new Point(60, 8);
@@ -183,9 +167,7 @@ namespace GreenLife_Organic_Store.Forms
             lblCategoriesTitle.Size = new Size(200, 25);
             lblCategoriesTitle.TabIndex = 1;
             lblCategoriesTitle.Text = "Shop by Category";
-            //
             // _pnlFilter
-            //
             _pnlFilter.BackColor = Color.White;
             _pnlFilter.Controls.Add(btnPinFilter);
             _pnlFilter.Controls.Add(lblSearch);
@@ -204,9 +186,7 @@ namespace GreenLife_Organic_Store.Forms
             _pnlFilter.Padding = new Padding(20, 15, 20, 15);
             _pnlFilter.Size = new Size(1000, 80);
             _pnlFilter.TabIndex = 3;
-            //
             // btnPinFilter
-            //
             btnPinFilter.BackColor = Color.FromArgb(52, 152, 219);
             btnPinFilter.Cursor = Cursors.Hand;
             btnPinFilter.FlatStyle = FlatStyle.Flat;
@@ -221,9 +201,7 @@ namespace GreenLife_Organic_Store.Forms
             btnPinFilter.Text = "";
             btnPinFilter.UseVisualStyleBackColor = false;
             btnPinFilter.Click += BtnPinFilter_Click;
-            //
             // lblSearch
-            //
             lblSearch.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblSearch.ForeColor = Color.FromArgb(52, 73, 94);
             lblSearch.Location = new Point(60, 18);
@@ -231,17 +209,13 @@ namespace GreenLife_Organic_Store.Forms
             lblSearch.Size = new Size(80, 25);
             lblSearch.TabIndex = 1;
             lblSearch.Text = "Search:";
-            //
             // txtSearch
-            //
             txtSearch.Font = new Font("Segoe UI", 11F);
             txtSearch.Location = new Point(145, 15);
             txtSearch.Name = "txtSearch";
             txtSearch.Size = new Size(250, 27);
             txtSearch.TabIndex = 2;
-            //
             // btnSearch
-            //
             btnSearch.BackColor = Color.FromArgb(46, 204, 113);
             btnSearch.Cursor = Cursors.Hand;
             btnSearch.FlatStyle = FlatStyle.Flat;
@@ -259,9 +233,7 @@ namespace GreenLife_Organic_Store.Forms
             btnSearch.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSearch.UseVisualStyleBackColor = false;
             btnSearch.Click += BtnSearch_Click;
-            //
             // lblCategory
-            //
             lblCategory.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblCategory.ForeColor = Color.FromArgb(52, 73, 94);
             lblCategory.Location = new Point(530, 18);
@@ -269,9 +241,7 @@ namespace GreenLife_Organic_Store.Forms
             lblCategory.Size = new Size(80, 25);
             lblCategory.TabIndex = 4;
             lblCategory.Text = "Category:";
-            //
             // cmbCategory
-            //
             cmbCategory.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbCategory.Font = new Font("Segoe UI", 10F);
             cmbCategory.Location = new Point(615, 15);
@@ -281,9 +251,7 @@ namespace GreenLife_Organic_Store.Forms
             cmbCategory.Items.Add("All Products");
             cmbCategory.SelectedIndex = 0;
             cmbCategory.SelectedIndexChanged += CmbCategory_SelectedIndexChanged;
-            //
             // lblPrice
-            //
             lblPrice.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblPrice.ForeColor = Color.FromArgb(52, 73, 94);
             lblPrice.Location = new Point(810, 18);
@@ -291,27 +259,21 @@ namespace GreenLife_Organic_Store.Forms
             lblPrice.Size = new Size(50, 25);
             lblPrice.TabIndex = 6;
             lblPrice.Text = "Price:";
-            //
             // numMinPrice
-            //
             numMinPrice.Font = new Font("Segoe UI", 10F);
             numMinPrice.Location = new Point(865, 15);
             numMinPrice.Maximum = 10000;
             numMinPrice.Name = "numMinPrice";
             numMinPrice.Size = new Size(90, 25);
             numMinPrice.TabIndex = 7;
-            //
             // lblPriceTo
-            //
             lblPriceTo.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblPriceTo.Location = new Point(960, 18);
             lblPriceTo.Name = "lblPriceTo";
             lblPriceTo.Size = new Size(20, 25);
             lblPriceTo.TabIndex = 8;
             lblPriceTo.Text = "-";
-            //
             // numMaxPrice
-            //
             numMaxPrice.Font = new Font("Segoe UI", 10F);
             numMaxPrice.Location = new Point(985, 15);
             numMaxPrice.Maximum = 10000;
@@ -319,9 +281,7 @@ namespace GreenLife_Organic_Store.Forms
             numMaxPrice.Size = new Size(90, 25);
             numMaxPrice.TabIndex = 9;
             numMaxPrice.Value = 10000;
-            //
             // btnFilter
-            //
             btnFilter.BackColor = Color.FromArgb(52, 152, 219);
             btnFilter.Cursor = Cursors.Hand;
             btnFilter.FlatStyle = FlatStyle.Flat;
@@ -339,9 +299,7 @@ namespace GreenLife_Organic_Store.Forms
             btnFilter.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnFilter.UseVisualStyleBackColor = false;
             btnFilter.Click += BtnFilter_Click;
-            //
             // pnlHeader
-            //
             pnlHeader.BackColor = Color.FromArgb(34, 139, 34);
             pnlHeader.Controls.Add(iconLogo);
             pnlHeader.Controls.Add(lblTitle);
@@ -352,9 +310,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeader.Name = "pnlHeader";
             pnlHeader.Size = new Size(1000, 80);
             pnlHeader.TabIndex = 4;
-            //
             // iconLogo
-            //
             iconLogo.BackColor = Color.Transparent;
             iconLogo.IconChar = IconChar.Leaf;
             iconLogo.IconColor = Color.White;
@@ -364,9 +320,7 @@ namespace GreenLife_Organic_Store.Forms
             iconLogo.Size = new Size(50, 50);
             iconLogo.TabIndex = 0;
             iconLogo.TabStop = false;
-            //
             // lblTitle
-            //
             lblTitle.BackColor = Color.Transparent;
             lblTitle.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             lblTitle.ForeColor = Color.White;
@@ -375,9 +329,7 @@ namespace GreenLife_Organic_Store.Forms
             lblTitle.Size = new Size(400, 35);
             lblTitle.TabIndex = 1;
             lblTitle.Text = "GreenLife Organic Store";
-            //
             // lblWelcome
-            //
             lblWelcome.BackColor = Color.Transparent;
             lblWelcome.Font = new Font("Segoe UI", 10F);
             lblWelcome.ForeColor = Color.FromArgb(220, 255, 220);
@@ -386,9 +338,7 @@ namespace GreenLife_Organic_Store.Forms
             lblWelcome.Size = new Size(200, 20);
             lblWelcome.TabIndex = 2;
             lblWelcome.Text = "Welcome!";
-            //
             // pnlHeaderRight
-            //
             pnlHeaderRight.BackColor = Color.Transparent;
             pnlHeaderRight.Controls.Add(btnCart);
             pnlHeaderRight.Controls.Add(pnlCartInfo);
@@ -398,9 +348,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeaderRight.Name = "pnlHeaderRight";
             pnlHeaderRight.Size = new Size(300, 80);
             pnlHeaderRight.TabIndex = 3;
-            //
             // btnCart
-            //
             btnCart.BackColor = Color.FromArgb(46, 204, 113);
             btnCart.Cursor = Cursors.Hand;
             btnCart.FlatStyle = FlatStyle.Flat;
@@ -416,9 +364,7 @@ namespace GreenLife_Organic_Store.Forms
             btnCart.Text = "";
             btnCart.UseVisualStyleBackColor = false;
             btnCart.Click += BtnCart_Click;
-            //
             // pnlCartInfo
-            //
             pnlCartInfo.BackColor = Color.Transparent;
             pnlCartInfo.Controls.Add(_lblCartCount);
             pnlCartInfo.Controls.Add(lblCartText);
@@ -426,9 +372,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlCartInfo.Name = "pnlCartInfo";
             pnlCartInfo.Size = new Size(60, 44);
             pnlCartInfo.TabIndex = 1;
-            //
             // _lblCartCount
-            //
             _lblCartCount.Dock = DockStyle.Top;
             _lblCartCount.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             _lblCartCount.ForeColor = Color.White;
@@ -439,9 +383,7 @@ namespace GreenLife_Organic_Store.Forms
             _lblCartCount.Text = "0";
             _lblCartCount.TextAlign = ContentAlignment.MiddleCenter;
             _lblCartCount.Click += LblCartCount_Click;
-            //
             // lblCartText
-            //
             lblCartText.Dock = DockStyle.Bottom;
             lblCartText.Font = new Font("Segoe UI", 8.5F);
             lblCartText.ForeColor = Color.FromArgb(220, 255, 220);
@@ -452,9 +394,7 @@ namespace GreenLife_Organic_Store.Forms
             lblCartText.Text = "Items";
             lblCartText.TextAlign = ContentAlignment.MiddleCenter;
             lblCartText.Click += LblCartText_Click;
-            //
             // btnProfile
-            //
             btnProfile.BackColor = Color.FromArgb(52, 152, 219);
             btnProfile.Cursor = Cursors.Hand;
             btnProfile.FlatStyle = FlatStyle.Flat;
@@ -472,9 +412,7 @@ namespace GreenLife_Organic_Store.Forms
             btnProfile.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnProfile.UseVisualStyleBackColor = false;
             btnProfile.Click += BtnProfile_Click;
-            //
             // CustomerDashboard
-            //
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);

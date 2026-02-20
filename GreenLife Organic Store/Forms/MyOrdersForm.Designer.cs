@@ -36,9 +36,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)_dgvOrders).BeginInit();
             SuspendLayout();
-            //
             // pnlFilter
-            //
             pnlFilter.BackColor = Color.White;
             pnlFilter.BorderStyle = BorderStyle.FixedSingle;
             pnlFilter.Controls.Add(lblFilter);
@@ -48,9 +46,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlFilter.Name = "pnlFilter";
             pnlFilter.Size = new Size(780, 50);
             pnlFilter.TabIndex = 0;
-            //
             // lblFilter
-            //
             lblFilter.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblFilter.ForeColor = Color.FromArgb(52, 73, 94);
             lblFilter.Location = new Point(15, 15);
@@ -59,9 +55,7 @@ namespace GreenLife_Organic_Store.Forms
             lblFilter.TabIndex = 0;
             lblFilter.Text = "Filter by Status:";
             lblFilter.TextAlign = ContentAlignment.MiddleLeft;
-            //
             // cmbStatus
-            //
             cmbStatus.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbStatus.FlatStyle = FlatStyle.Flat;
             cmbStatus.Font = new Font("Segoe UI", 10F);
@@ -77,9 +71,7 @@ namespace GreenLife_Organic_Store.Forms
             cmbStatus.Items.Add("Cancelled");
             cmbStatus.SelectedIndex = 0;
             cmbStatus.SelectedIndexChanged += CmbStatus_SelectedIndexChanged;
-            //
             // btnRefresh
-            //
             btnRefresh.BackColor = Color.FromArgb(52, 152, 219);
             btnRefresh.Cursor = Cursors.Hand;
             btnRefresh.FlatStyle = FlatStyle.Flat;
@@ -97,9 +89,7 @@ namespace GreenLife_Organic_Store.Forms
             btnRefresh.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnRefresh.UseVisualStyleBackColor = false;
             btnRefresh.Click += BtnRefresh_Click;
-            //
             // _dgvOrders
-            //
             _dgvOrders.AllowUserToAddRows = false;
             _dgvOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             _dgvOrders.BackgroundColor = Color.White;
@@ -125,9 +115,7 @@ namespace GreenLife_Organic_Store.Forms
             _dgvOrders.Columns.Add("OrderDate", "Date");
             _dgvOrders.Columns.Add("Status", "Status");
             _dgvOrders.Columns.Add("TotalAmount", "Amount");
-            //
             // btnViewDetails
-            //
             btnViewDetails.BackColor = Color.FromArgb(46, 204, 113);
             btnViewDetails.Cursor = Cursors.Hand;
             btnViewDetails.FlatStyle = FlatStyle.Flat;
@@ -145,9 +133,7 @@ namespace GreenLife_Organic_Store.Forms
             btnViewDetails.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnViewDetails.UseVisualStyleBackColor = false;
             btnViewDetails.Click += BtnViewDetails_Click;
-            //
             // btnEdit
-            //
             btnEdit.BackColor = Color.FromArgb(52, 152, 219);
             btnEdit.Cursor = Cursors.Hand;
             btnEdit.FlatStyle = FlatStyle.Flat;
@@ -165,9 +151,7 @@ namespace GreenLife_Organic_Store.Forms
             btnEdit.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnEdit.UseVisualStyleBackColor = false;
             btnEdit.Click += BtnEdit_Click;
-            //
             // btnDelete
-            //
             btnDelete.BackColor = Color.FromArgb(231, 76, 60);
             btnDelete.Cursor = Cursors.Hand;
             btnDelete.FlatStyle = FlatStyle.Flat;
@@ -185,9 +169,7 @@ namespace GreenLife_Organic_Store.Forms
             btnDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += BtnDelete_Click;
-            //
             // btnClose
-            //
             btnClose.BackColor = Color.FromArgb(149, 165, 166);
             btnClose.Cursor = Cursors.Hand;
             btnClose.FlatStyle = FlatStyle.Flat;
@@ -205,9 +187,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClose.UseVisualStyleBackColor = false;
             btnClose.Click += BtnClose_Click;
-            //
             // MyOrdersForm
-            //
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);

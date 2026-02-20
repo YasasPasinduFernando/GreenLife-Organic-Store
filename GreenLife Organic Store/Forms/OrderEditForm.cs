@@ -23,12 +23,20 @@ namespace GreenLife_Organic_Store.Forms
             LoadOrderData();
             cmbStatus.Enabled = _allowStatusEdit;
             this.Text = $"Edit Order - {order.OrderNumber}";
-            this.Load += OrderEditForm_Load;
         }
 
-        private void OrderEditForm_Load(object? sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            GreenLife_Organic_Store.Utilities.FormThemeManager.ApplyToForm(this);
+            base.OnLoad(e);
+            if (DesignMode) return;
+            try
+            {
+                FormThemeManager.ApplyToForm(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
 
         private void BtnSave_Click(object? sender, EventArgs e)

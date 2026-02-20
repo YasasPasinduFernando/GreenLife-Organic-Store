@@ -28,9 +28,7 @@ namespace GreenLife_Organic_Store.Forms
             this.lblHelp = new Label();
             ((System.ComponentModel.ISupportInitialize)this.iconEmailStatus).BeginInit();
             this.SuspendLayout();
-            //
             // lblTitle
-            //
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             this.lblTitle.ForeColor = Color.FromArgb(34, 139, 34);
@@ -39,9 +37,7 @@ namespace GreenLife_Organic_Store.Forms
             this.lblTitle.Size = new Size(180, 25);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Reset Your Password";
-            //
             // lblInstructions
-            //
             this.lblInstructions.AutoSize = true;
             this.lblInstructions.Font = new Font("Segoe UI", 9F);
             this.lblInstructions.Location = new Point(20, 50);
@@ -49,17 +45,13 @@ namespace GreenLife_Organic_Store.Forms
             this.lblInstructions.Size = new Size(380, 15);
             this.lblInstructions.TabIndex = 1;
             this.lblInstructions.Text = "Enter your registered email address and we'll send you a reset code:";
-            //
             // textBoxEmail
-            //
             this.textBoxEmail.BorderStyle = BorderStyle.FixedSingle;
             this.textBoxEmail.Location = new Point(20, 75);
             this.textBoxEmail.Name = "textBoxEmail";
             this.textBoxEmail.Size = new Size(440, 23);
             this.textBoxEmail.TabIndex = 2;
-            //
             // buttonSendCode
-            //
             this.buttonSendCode.BackColor = Color.FromArgb(34, 139, 34);
             this.buttonSendCode.Cursor = Cursors.Hand;
             this.buttonSendCode.FlatAppearance.BorderSize = 0;
@@ -73,9 +65,7 @@ namespace GreenLife_Organic_Store.Forms
             this.buttonSendCode.Text = "Send Reset Code";
             this.buttonSendCode.UseVisualStyleBackColor = false;
             this.buttonSendCode.Click += this.ButtonSendCode_Click;
-            //
             // progressBar
-            //
             this.progressBar.Location = new Point(190, 120);
             this.progressBar.MarqueeAnimationSpeed = 30;
             this.progressBar.Name = "progressBar";
@@ -83,9 +73,7 @@ namespace GreenLife_Organic_Store.Forms
             this.progressBar.Style = ProgressBarStyle.Marquee;
             this.progressBar.TabIndex = 4;
             this.progressBar.Visible = false;
-            //
             // labelProgress
-            //
             this.labelProgress.AutoSize = true;
             this.labelProgress.Font = new Font("Segoe UI", 9F);
             this.labelProgress.ForeColor = Color.Black;
@@ -94,9 +82,7 @@ namespace GreenLife_Organic_Store.Forms
             this.labelProgress.Size = new Size(0, 15);
             this.labelProgress.TabIndex = 5;
             this.labelProgress.Visible = false;
-            //
             // iconEmailStatus
-            //
             this.iconEmailStatus.BackColor = Color.Transparent;
             this.iconEmailStatus.IconChar = FontAwesome.Sharp.IconChar.CheckCircle;
             this.iconEmailStatus.IconColor = Color.FromArgb(34, 139, 34);
@@ -106,9 +92,7 @@ namespace GreenLife_Organic_Store.Forms
             this.iconEmailStatus.Size = new Size(20, 20);
             this.iconEmailStatus.TabIndex = 6;
             this.iconEmailStatus.TabStop = false;
-            //
             // labelStatus
-            //
             this.labelStatus.AutoSize = true;
             this.labelStatus.BackColor = Color.Transparent;
             this.labelStatus.Font = new Font("Segoe UI", 9F);
@@ -118,9 +102,7 @@ namespace GreenLife_Organic_Store.Forms
             this.labelStatus.Size = new Size(155, 15);
             this.labelStatus.TabIndex = 7;
             this.labelStatus.Text = "Email service is configured";
-            //
             // lblHelp
-            //
             this.lblHelp.AutoSize = true;
             this.lblHelp.Font = new Font("Segoe UI", 8F);
             this.lblHelp.ForeColor = Color.Gray;
@@ -129,9 +111,7 @@ namespace GreenLife_Organic_Store.Forms
             this.lblHelp.Size = new Size(280, 13);
             this.lblHelp.TabIndex = 8;
             this.lblHelp.Text = "A reset code will be sent to your registered email.";
-            //
             // ForgotPasswordForm
-            //
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.BackColor = Color.FromArgb(245, 245, 245);

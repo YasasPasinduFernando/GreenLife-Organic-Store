@@ -1,6 +1,7 @@
 using FontAwesome.Sharp;
 using GreenLife_Organic_Store.Database;
 using GreenLife_Organic_Store.Models;
+using GreenLife_Organic_Store.Utilities;
 
 namespace GreenLife_Organic_Store.Forms
 {
@@ -12,42 +13,11 @@ namespace GreenLife_Organic_Store.Forms
         public LoginForm()
         {
             InitializeComponent();
-            ApplyStyles();
-        }
-
-        private void ApplyStyles()
-        {
-            // Form styling
-            this.BackColor = Color.FromArgb(245, 245, 245);
-            this.Font = new Font("Segoe UI", 9F);
+            FormThemeManager.ApplyToForm(this);
+            FormThemeManager.ApplyTitleLabel(labelTitle);
+            FormThemeManager.ApplyIconButton(buttonLogin);
             this.StartPosition = FormStartPosition.CenterScreen;
-
-            // Panel styling
-            panelContainer.BackColor = Color.White;
-            panelContainer.BorderStyle = BorderStyle.None;
-
-            // Label styling
-            labelTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            labelTitle.ForeColor = Color.FromArgb(34, 139, 34); // Forest Green
-
-            labelEmail.Font = new Font("Segoe UI", 10F);
-            labelPassword.Font = new Font("Segoe UI", 10F);
-            labelUserType.Font = new Font("Segoe UI", 10F);
-
-            // TextBox styling
-            textBoxEmail.BorderStyle = BorderStyle.FixedSingle;
-            textBoxPassword.BorderStyle = BorderStyle.FixedSingle;
-
-            // Button styling
-            buttonLogin.BackColor = Color.FromArgb(34, 139, 34); // Forest Green
-            buttonLogin.ForeColor = Color.White;
-            buttonLogin.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            buttonLogin.FlatStyle = FlatStyle.Flat;
-            buttonLogin.FlatAppearance.BorderSize = 0;
-            buttonLogin.Cursor = Cursors.Hand;
-
-            linkLabelRegister.LinkColor = Color.FromArgb(34, 139, 34);
-            linkLabelRegister.ActiveLinkColor = Color.FromArgb(0, 100, 0);
+            panelContainer.BackColor = FormThemeManager.PanelBackground;
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)

@@ -28,9 +28,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonChangePassword = new IconButton();
             buttonLogout = new IconButton();
             SuspendLayout();
-            // 
             // buttonEditProfile
-            // 
             buttonEditProfile.BackColor = Color.FromArgb(46, 204, 113);
             buttonEditProfile.Cursor = Cursors.Hand;
             buttonEditProfile.FlatAppearance.BorderSize = 0;
@@ -48,9 +46,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonEditProfile.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonEditProfile.UseVisualStyleBackColor = false;
             buttonEditProfile.Click += buttonEditProfile_Click;
-            // 
             // buttonMyOrders
-            // 
             buttonMyOrders.BackColor = Color.FromArgb(52, 152, 219);
             buttonMyOrders.Cursor = Cursors.Hand;
             buttonMyOrders.FlatAppearance.BorderSize = 0;
@@ -68,9 +64,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonMyOrders.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonMyOrders.UseVisualStyleBackColor = false;
             buttonMyOrders.Click += buttonMyOrders_Click;
-            // 
             // buttonReviewOrders
-            // 
             buttonReviewOrders.BackColor = Color.FromArgb(241, 196, 15);
             buttonReviewOrders.Cursor = Cursors.Hand;
             buttonReviewOrders.FlatAppearance.BorderSize = 0;
@@ -88,9 +82,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonReviewOrders.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonReviewOrders.UseVisualStyleBackColor = false;
             buttonReviewOrders.Click += buttonReviewOrders_Click;
-            // 
             // buttonChangePassword
-            // 
             buttonChangePassword.BackColor = Color.FromArgb(155, 89, 182);
             buttonChangePassword.Cursor = Cursors.Hand;
             buttonChangePassword.FlatAppearance.BorderSize = 0;
@@ -108,9 +100,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonChangePassword.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonChangePassword.UseVisualStyleBackColor = false;
             buttonChangePassword.Click += buttonChangePassword_Click;
-            // 
             // buttonLogout
-            // 
             buttonLogout.BackColor = Color.FromArgb(220, 53, 69);
             buttonLogout.Cursor = Cursors.Hand;
             buttonLogout.FlatAppearance.BorderSize = 0;
@@ -128,9 +118,7 @@ namespace GreenLife_Organic_Store.Forms
             buttonLogout.TextImageRelation = TextImageRelation.ImageBeforeText;
             buttonLogout.UseVisualStyleBackColor = false;
             buttonLogout.Click += buttonLogout_Click;
-            // 
             // ProfileMenuForm
-            // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.White;

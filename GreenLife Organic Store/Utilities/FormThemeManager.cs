@@ -14,6 +14,7 @@ namespace GreenLife_Organic_Store.Utilities
         public static readonly Font FontBodyBold = new Font("Segoe UI", 10F, FontStyle.Bold);
         public static readonly Font FontSection = new Font("Segoe UI", 12F, FontStyle.Bold);
         public const int ButtonHeight = 38;
+        public static readonly System.Drawing.Color PanelBackground = System.Drawing.Color.White;
 
         public static void ApplyToForm(Form form)
         {
@@ -33,6 +34,13 @@ namespace GreenLife_Organic_Store.Utilities
             button.Font = FontBodyBold;
             button.Cursor = Cursors.Hand;
             button.IconColor = PrimaryForeground;
+        }
+
+        public static void ApplyTitleLabel(Label label)
+        {
+            if (label == null) return;
+            label.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            label.ForeColor = Primary;
         }
 
         public static void ApplyStandardButton(Button button)
