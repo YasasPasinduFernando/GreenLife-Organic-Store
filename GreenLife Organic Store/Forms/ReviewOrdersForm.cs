@@ -202,5 +202,20 @@ namespace GreenLife_Organic_Store.Forms
         {
             Close();
         }
+
+        private void txtComment_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblComment_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblRating_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
