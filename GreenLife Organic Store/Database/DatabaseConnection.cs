@@ -6,7 +6,7 @@ namespace GreenLife_Organic_Store.Database
     public class DatabaseConnection
     {
         // Local dev settings - change for production
-        private static readonly string ConnectionString = "Server=localhost;Port=3306;Database=greenlife;Uid=yasas;Pwd=yasas;";
+        private static readonly string ConnectionString = "Server=localhost;Port=3307;Database=greenlife;Uid=root;Pwd=yasas;";
 
         public static MySqlConnection GetConnection()
         {
