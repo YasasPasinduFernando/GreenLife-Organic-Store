@@ -94,6 +94,7 @@ namespace GreenLife_Organic_Store.Forms
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(404, 284);
+            this.Font = new Font("Segoe UI", 9F);
             this.Controls.Add(this.labelEmail);
             this.Controls.Add(this.lblCode);
             this.Controls.Add(this.textBoxCode);

@@ -246,7 +246,7 @@ namespace GreenLife_Organic_Store.Forms
             btnSave.Location = new Point(131, 8);
             btnSave.Margin = new Padding(3, 2, 3, 2);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(122, 22);
+            btnSave.Size = new Size(122, 36);
             btnSave.TabIndex = 0;
             btnSave.Text = "Save Discount";
             btnSave.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -266,7 +266,7 @@ namespace GreenLife_Organic_Store.Forms
             btnCancel.Location = new Point(262, 8);
             btnCancel.Margin = new Padding(3, 2, 3, 2);
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(88, 22);
+            btnCancel.Size = new Size(88, 36);
             btnCancel.TabIndex = 1;
             btnCancel.Text = "Cancel";
             btnCancel.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -277,6 +277,7 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);
             ClientSize = new Size(438, 300);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(pnlContent);
             Controls.Add(pnlButtons);
             Controls.Add(pnlHeader);

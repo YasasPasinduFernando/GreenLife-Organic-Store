@@ -263,9 +263,10 @@ namespace GreenLife_Organic_Store.Forms
             linkLabelLogin.LinkClicked += linkLabelLogin_LinkClicked;
 
             // RegisterForm
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(550, 750);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(panelContainer);
             Name = "RegisterForm";
             Text = "GreenLife Organic Store - Register";

@@ -130,9 +130,10 @@ namespace GreenLife_Organic_Store.Forms
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += this.BtnCancel_Click;
             // OrderEditForm
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
-            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new SizeF(8F, 20F);
+            this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(584, 461);
+            this.Font = new Font("Segoe UI", 9F);
             this.Controls.Add(this.lblCustName);
             this.Controls.Add(this.txtCustomerName);
             this.Controls.Add(this.lblPhone);

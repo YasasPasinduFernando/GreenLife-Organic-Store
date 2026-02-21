@@ -119,10 +119,11 @@ namespace GreenLife_Organic_Store.Forms
             buttonLogout.UseVisualStyleBackColor = false;
             buttonLogout.Click += buttonLogout_Click;
             // ProfileMenuForm
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(300, 345);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(buttonLogout);
             Controls.Add(buttonChangePassword);
             Controls.Add(buttonReviewOrders);

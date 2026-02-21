@@ -97,10 +97,11 @@ namespace GreenLife_Organic_Store.Forms
             this._btnDelete.UseVisualStyleBackColor = false;
             this._btnDelete.Click += this.BtnDelete_Click;
             // AdminRegistrationsForm
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
-            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new SizeF(8F, 20F);
+            this.AutoScaleMode = AutoScaleMode.Font;
             this.BackColor = Color.FromArgb(245, 245, 245);
             this.ClientSize = new Size(784, 461);
+            this.Font = new Font("Segoe UI", 9F);
             this.Controls.Add(this._dgvAdmins);
             this.Controls.Add(this._btnRefresh);
             this.Controls.Add(this._btnClose);

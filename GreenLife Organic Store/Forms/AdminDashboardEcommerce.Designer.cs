@@ -647,6 +647,7 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);
             ClientSize = new Size(875, 560);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(pnlMenu);
             Controls.Add(pnlContent);
             Controls.Add(pnlStats);

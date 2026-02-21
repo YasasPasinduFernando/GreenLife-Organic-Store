@@ -52,15 +52,15 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(0, 0);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(820, 60);
+            pnlHeader.Size = new Size(860, 68);
             pnlHeader.TabIndex = 0;
             // lblHeader
             lblHeader.BackColor = Color.Transparent;
-            lblHeader.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblHeader.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lblHeader.ForeColor = Color.White;
-            lblHeader.Location = new Point(20, 18);
+            lblHeader.Location = new Point(20, 22);
             lblHeader.Name = "lblHeader";
-            lblHeader.Size = new Size(300, 30);
+            lblHeader.Size = new Size(320, 24);
             lblHeader.TabIndex = 0;
             lblHeader.Text = "Shopping Cart";
             // _dgvCart
@@ -73,25 +73,25 @@ namespace GreenLife_Organic_Store.Forms
             {
                 BackColor = Color.FromArgb(52, 73, 94),
                 ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 Padding = new Padding(5)
             };
-            _dgvCart.ColumnHeadersHeight = 35;
+            _dgvCart.ColumnHeadersHeight = 38;
             _dgvCart.EnableHeadersVisualStyles = false;
             _dgvCart.GridColor = Color.LightGray;
-            _dgvCart.Location = new Point(20, 80);
+            _dgvCart.Location = new Point(20, 76);
             _dgvCart.Name = "dgvCart";
             _dgvCart.ReadOnly = true;
-            _dgvCart.RowTemplate = new DataGridViewRow { Height = 50 };
+            _dgvCart.RowTemplate.Height = 35;
             _dgvCart.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            _dgvCart.Size = new Size(760, 280);
+            _dgvCart.Size = new Size(820, 180);
             _dgvCart.TabIndex = 1;
             var imgCol = new DataGridViewImageColumn
             {
                 Name = "Image",
                 HeaderText = "Image",
                 ImageLayout = DataGridViewImageCellLayout.Zoom,
-                Width = 60,
+                Width = 64,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None
             };
             _dgvCart.Columns.Add(imgCol);
@@ -105,7 +105,7 @@ namespace GreenLife_Organic_Store.Forms
                 HeaderText = "Action",
                 Text = "Remove",
                 UseColumnTextForButtonValue = true,
-                Width = 100,
+                Width = 80,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None
             };
             _dgvCart.Columns.Add(btnCol);
@@ -117,18 +117,18 @@ namespace GreenLife_Organic_Store.Forms
             pnlQuantity.Controls.Add(btnDecrement);
             pnlQuantity.Controls.Add(btnIncrement);
             pnlQuantity.Controls.Add(btnClearCart);
-            pnlQuantity.Location = new Point(20, 370);
+            pnlQuantity.Location = new Point(20, 386);
             pnlQuantity.Name = "pnlQuantity";
-            pnlQuantity.Size = new Size(760, 50);
+            pnlQuantity.Size = new Size(820, 52);
             pnlQuantity.TabIndex = 2;
             // lblQuantityInfo
-            lblQuantityInfo.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblQuantityInfo.AutoSize = true;
+            lblQuantityInfo.Font = new Font("Segoe UI", 9F);
             lblQuantityInfo.ForeColor = Color.FromArgb(52, 73, 94);
-            lblQuantityInfo.Location = new Point(15, 15);
+            lblQuantityInfo.Location = new Point(10, 14);
             lblQuantityInfo.Name = "lblQuantityInfo";
-            lblQuantityInfo.Size = new Size(150, 25);
             lblQuantityInfo.TabIndex = 0;
-            lblQuantityInfo.Text = "Adjust Quantity:";
+            lblQuantityInfo.Text = "Adjust quantity for selected row:";
             // btnDecrement
             btnDecrement.BackColor = Color.FromArgb(230, 126, 34);
             btnDecrement.Cursor = Cursors.Hand;
@@ -138,10 +138,11 @@ namespace GreenLife_Organic_Store.Forms
             btnDecrement.IconChar = IconChar.Minus;
             btnDecrement.IconColor = Color.White;
             btnDecrement.IconSize = 20;
-            btnDecrement.Location = new Point(180, 10);
+            btnDecrement.Location = new Point(295, 8);
             btnDecrement.Name = "btnDecrement";
-            btnDecrement.Size = new Size(45, 32);
+            btnDecrement.Size = new Size(44, 36);
             btnDecrement.TabIndex = 1;
+            btnDecrement.Text = "";
             btnDecrement.UseVisualStyleBackColor = false;
             btnDecrement.Click += BtnDecrement_Click;
             // btnIncrement
@@ -153,10 +154,11 @@ namespace GreenLife_Organic_Store.Forms
             btnIncrement.IconChar = IconChar.Plus;
             btnIncrement.IconColor = Color.White;
             btnIncrement.IconSize = 20;
-            btnIncrement.Location = new Point(235, 10);
+            btnIncrement.Location = new Point(347, 8);
             btnIncrement.Name = "btnIncrement";
-            btnIncrement.Size = new Size(45, 32);
+            btnIncrement.Size = new Size(44, 36);
             btnIncrement.TabIndex = 2;
+            btnIncrement.Text = "";
             btnIncrement.UseVisualStyleBackColor = false;
             btnIncrement.Click += BtnIncrement_Click;
             // btnClearCart
@@ -164,14 +166,14 @@ namespace GreenLife_Organic_Store.Forms
             btnClearCart.Cursor = Cursors.Hand;
             btnClearCart.FlatStyle = FlatStyle.Flat;
             btnClearCart.FlatAppearance.BorderSize = 0;
-            btnClearCart.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnClearCart.Font = new Font("Segoe UI", 9F);
             btnClearCart.ForeColor = Color.White;
             btnClearCart.IconChar = IconChar.TrashAlt;
             btnClearCart.IconColor = Color.White;
-            btnClearCart.IconSize = 18;
-            btnClearCart.Location = new Point(620, 10);
+            btnClearCart.IconSize = 16;
+            btnClearCart.Location = new Point(680, 8);
             btnClearCart.Name = "btnClearCart";
-            btnClearCart.Size = new Size(130, 32);
+            btnClearCart.Size = new Size(130, 36);
             btnClearCart.TabIndex = 3;
             btnClearCart.Text = "Clear Cart";
             btnClearCart.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -182,24 +184,25 @@ namespace GreenLife_Organic_Store.Forms
             pnlSummary.BorderStyle = BorderStyle.FixedSingle;
             pnlSummary.Controls.Add(lblTotal);
             pnlSummary.Controls.Add(lblItemCount);
-            pnlSummary.Location = new Point(20, 430);
+            pnlSummary.Location = new Point(20, 444);
             pnlSummary.Name = "pnlSummary";
-            pnlSummary.Size = new Size(760, 50);
+            pnlSummary.Size = new Size(820, 52);
             pnlSummary.TabIndex = 3;
             // lblTotal
             lblTotal.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             lblTotal.ForeColor = Color.FromArgb(34, 139, 34);
-            lblTotal.Location = new Point(15, 12);
+            lblTotal.Location = new Point(15, 10);
             lblTotal.Name = "lblTotal";
-            lblTotal.Size = new Size(300, 30);
+            lblTotal.Size = new Size(340, 32);
             lblTotal.TabIndex = 0;
             lblTotal.Text = "Total: Rs. 0.00";
+            lblTotal.UseMnemonic = false;
             // lblItemCount
+            lblItemCount.AutoSize = true;
             lblItemCount.Font = new Font("Segoe UI", 11F);
             lblItemCount.ForeColor = Color.FromArgb(52, 73, 94);
-            lblItemCount.Location = new Point(320, 15);
+            lblItemCount.Location = new Point(370, 14);
             lblItemCount.Name = "lblItemCount";
-            lblItemCount.Size = new Size(150, 25);
             lblItemCount.TabIndex = 1;
             lblItemCount.Text = "Items: 0";
             // btnContinue
@@ -207,14 +210,14 @@ namespace GreenLife_Organic_Store.Forms
             btnContinue.Cursor = Cursors.Hand;
             btnContinue.FlatStyle = FlatStyle.Flat;
             btnContinue.FlatAppearance.BorderSize = 0;
-            btnContinue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnContinue.Font = new Font("Segoe UI", 9F);
             btnContinue.ForeColor = Color.White;
             btnContinue.IconChar = IconChar.ArrowLeft;
             btnContinue.IconColor = Color.White;
-            btnContinue.IconSize = 20;
-            btnContinue.Location = new Point(360, 500);
+            btnContinue.IconSize = 18;
+            btnContinue.Location = new Point(380, 500);
             btnContinue.Name = "btnContinue";
-            btnContinue.Size = new Size(190, 45);
+            btnContinue.Size = new Size(190, 36);
             btnContinue.TabIndex = 4;
             btnContinue.Text = "Continue Shopping";
             btnContinue.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -225,14 +228,14 @@ namespace GreenLife_Organic_Store.Forms
             btnCheckout.Cursor = Cursors.Hand;
             btnCheckout.FlatStyle = FlatStyle.Flat;
             btnCheckout.FlatAppearance.BorderSize = 0;
-            btnCheckout.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnCheckout.Font = new Font("Segoe UI", 9F);
             btnCheckout.ForeColor = Color.White;
             btnCheckout.IconChar = IconChar.CreditCard;
             btnCheckout.IconColor = Color.White;
-            btnCheckout.IconSize = 20;
-            btnCheckout.Location = new Point(560, 500);
+            btnCheckout.IconSize = 18;
+            btnCheckout.Location = new Point(590, 500);
             btnCheckout.Name = "btnCheckout";
-            btnCheckout.Size = new Size(220, 45);
+            btnCheckout.Size = new Size(220, 36);
             btnCheckout.TabIndex = 5;
             btnCheckout.Text = "Proceed to Checkout";
             btnCheckout.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -242,7 +245,8 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);
-            ClientSize = new Size(820, 600);
+            ClientSize = new Size(860, 360);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(pnlHeader);
             Controls.Add(_dgvCart);
             Controls.Add(pnlQuantity);

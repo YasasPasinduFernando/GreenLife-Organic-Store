@@ -103,9 +103,11 @@ namespace GreenLife_Organic_Store.Forms
             this.dgvItems.AllowUserToAddRows = false;
             this.dgvItems.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvItems.BackColor = Color.White;
+            this.dgvItems.ColumnHeadersHeight = 38;
             this.dgvItems.Location = new Point(10, 250);
             this.dgvItems.Name = "dgvItems";
             this.dgvItems.ReadOnly = true;
+            this.dgvItems.RowTemplate.Height = 38;
             this.dgvItems.Size = new Size(660, 120);
             this.dgvItems.TabIndex = 10;
             this.dgvItems.Columns.Add("ProductName", "Product");
@@ -143,7 +145,7 @@ namespace GreenLife_Organic_Store.Forms
             this.btnCancel.IconSize = 18;
             this.btnCancel.Location = new Point(200, 560);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new Size(120, 40);
+            this.btnCancel.Size = new Size(120, 36);
             this.btnCancel.TabIndex = 14;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -161,7 +163,7 @@ namespace GreenLife_Organic_Store.Forms
             this.btnPlaceOrder.IconSize = 18;
             this.btnPlaceOrder.Location = new Point(380, 560);
             this.btnPlaceOrder.Name = "btnPlaceOrder";
-            this.btnPlaceOrder.Size = new Size(140, 40);
+            this.btnPlaceOrder.Size = new Size(140, 36);
             this.btnPlaceOrder.TabIndex = 15;
             this.btnPlaceOrder.Text = "Place Order";
             this.btnPlaceOrder.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -180,6 +182,7 @@ namespace GreenLife_Organic_Store.Forms
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(684, 701);
+            this.Font = new Font("Segoe UI", 9F);
             this.Controls.Add(this.lblDeliveryInfo);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.txtName);

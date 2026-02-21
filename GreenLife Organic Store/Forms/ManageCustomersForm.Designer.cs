@@ -70,7 +70,7 @@ namespace GreenLife_Organic_Store.Forms
             btnSearch.IconSize = 20;
             btnSearch.Location = new Point(220, 10);
             btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(100, 30);
+            btnSearch.Size = new Size(100, 36);
             btnSearch.TabIndex = 1;
             btnSearch.Text = "Search";
             btnSearch.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -84,7 +84,7 @@ namespace GreenLife_Organic_Store.Forms
             btnRefresh.IconSize = 20;
             btnRefresh.Location = new Point(330, 10);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(100, 30);
+            btnRefresh.Size = new Size(100, 36);
             btnRefresh.TabIndex = 2;
             btnRefresh.Text = "Refresh";
             btnRefresh.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -98,7 +98,7 @@ namespace GreenLife_Organic_Store.Forms
             btnExport.IconSize = 20;
             btnExport.Location = new Point(440, 10);
             btnExport.Name = "btnExport";
-            btnExport.Size = new Size(120, 30);
+            btnExport.Size = new Size(120, 36);
             btnExport.TabIndex = 3;
             btnExport.Text = "Export to CSV";
             btnExport.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -109,9 +109,11 @@ namespace GreenLife_Organic_Store.Forms
             _dgvCustomers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             _dgvCustomers.BackColor = Color.White;
             _dgvCustomers.Dock = DockStyle.Top;
+            _dgvCustomers.ColumnHeadersHeight = 38;
             _dgvCustomers.Location = new Point(0, 50);
             _dgvCustomers.Name = "dgvCustomers";
             _dgvCustomers.ReadOnly = true;
+            _dgvCustomers.RowTemplate.Height = 38;
             _dgvCustomers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             _dgvCustomers.Size = new Size(900, 350);
             _dgvCustomers.TabIndex = 1;
@@ -143,7 +145,7 @@ namespace GreenLife_Organic_Store.Forms
             btnViewDetails.IconSize = 20;
             btnViewDetails.Location = new Point(10, 10);
             btnViewDetails.Name = "btnViewDetails";
-            btnViewDetails.Size = new Size(150, 35);
+            btnViewDetails.Size = new Size(150, 36);
             btnViewDetails.TabIndex = 0;
             btnViewDetails.Text = "View Details";
             btnViewDetails.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -157,7 +159,7 @@ namespace GreenLife_Organic_Store.Forms
             btnDeleteAccount.IconSize = 20;
             btnDeleteAccount.Location = new Point(170, 10);
             btnDeleteAccount.Name = "btnDeleteAccount";
-            btnDeleteAccount.Size = new Size(150, 35);
+            btnDeleteAccount.Size = new Size(150, 36);
             btnDeleteAccount.TabIndex = 1;
             btnDeleteAccount.Text = "Delete Account";
             btnDeleteAccount.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -171,7 +173,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.IconSize = 20;
             btnClose.Location = new Point(330, 10);
             btnClose.Name = "btnClose";
-            btnClose.Size = new Size(150, 35);
+            btnClose.Size = new Size(150, 36);
             btnClose.TabIndex = 2;
             btnClose.Text = "Close";
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -185,7 +187,7 @@ namespace GreenLife_Organic_Store.Forms
             _btnEditCustomer.IconSize = 20;
             _btnEditCustomer.Location = new Point(10, 55);
             _btnEditCustomer.Name = "_btnEditCustomer";
-            _btnEditCustomer.Size = new Size(150, 35);
+            _btnEditCustomer.Size = new Size(150, 36);
             _btnEditCustomer.TabIndex = 3;
             _btnEditCustomer.Text = "Edit";
             _btnEditCustomer.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -199,16 +201,17 @@ namespace GreenLife_Organic_Store.Forms
             _btnChangePassword.IconSize = 20;
             _btnChangePassword.Location = new Point(170, 55);
             _btnChangePassword.Name = "_btnChangePassword";
-            _btnChangePassword.Size = new Size(150, 35);
+            _btnChangePassword.Size = new Size(150, 36);
             _btnChangePassword.TabIndex = 4;
             _btnChangePassword.Text = "Change Password";
             _btnChangePassword.TextImageRelation = TextImageRelation.ImageBeforeText;
             _btnChangePassword.UseVisualStyleBackColor = false;
             _btnChangePassword.Click += BtnChangePassword_Click;
             // ManageCustomersForm
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(900, 600);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(pnlActions);
             Controls.Add(_dgvCustomers);
             Controls.Add(pnlToolbar);

@@ -69,16 +69,18 @@ namespace GreenLife_Organic_Store.Forms
             pnlToolbar.Size = new Size(900, 70);
             pnlToolbar.TabIndex = 0;
             // lblStatus
-            lblStatus.Location = new Point(10, 10);
+            lblStatus.AutoSize = true;
+            lblStatus.Font = new Font("Segoe UI", 9F);
+            lblStatus.Location = new Point(10, 14);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(100, 20);
             lblStatus.TabIndex = 0;
             lblStatus.Text = "Filter by Status:";
             // cmbStatus
             cmbStatus.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbStatus.Font = new Font("Segoe UI", 9F);
             cmbStatus.Location = new Point(120, 10);
             cmbStatus.Name = "cmbStatus";
-            cmbStatus.Size = new Size(150, 28);
+            cmbStatus.Size = new Size(165, 28);
             cmbStatus.TabIndex = 1;
             cmbStatus.Items.Add("All Orders");
             cmbStatus.Items.Add("Pending");
@@ -89,27 +91,33 @@ namespace GreenLife_Organic_Store.Forms
             cmbStatus.SelectedIndex = 0;
             cmbStatus.SelectedIndexChanged += CmbStatus_SelectedIndexChanged;
             // lblDate
-            lblDate.Location = new Point(10, 40);
+            lblDate.Font = new Font("Segoe UI", 9F);
+            lblDate.Location = new Point(10, 42);
             lblDate.Name = "lblDate";
             lblDate.Size = new Size(100, 20);
             lblDate.TabIndex = 2;
             lblDate.Text = "From Date:";
             // dtFromDate
+            dtFromDate.Font = new Font("Segoe UI", 9F);
+            dtFromDate.Format = DateTimePickerFormat.Short;
             dtFromDate.Location = new Point(120, 40);
             dtFromDate.Name = "dtFromDate";
-            dtFromDate.Size = new Size(150, 27);
+            dtFromDate.Size = new Size(140, 27);
             dtFromDate.TabIndex = 3;
             dtFromDate.Value = DateTime.Now.AddDays(-30);
             // lblToDate
-            lblToDate.Location = new Point(280, 40);
+            lblToDate.Font = new Font("Segoe UI", 9F);
+            lblToDate.Location = new Point(268, 42);
             lblToDate.Name = "lblToDate";
-            lblToDate.Size = new Size(80, 20);
+            lblToDate.Size = new Size(60, 20);
             lblToDate.TabIndex = 4;
             lblToDate.Text = "To Date:";
             // dtToDate
-            dtToDate.Location = new Point(370, 40);
+            dtToDate.Font = new Font("Segoe UI", 9F);
+            dtToDate.Format = DateTimePickerFormat.Short;
+            dtToDate.Location = new Point(330, 40);
             dtToDate.Name = "dtToDate";
-            dtToDate.Size = new Size(150, 27);
+            dtToDate.Size = new Size(140, 27);
             dtToDate.TabIndex = 5;
             dtToDate.Value = DateTime.Now;
             // btnFilter
@@ -118,9 +126,9 @@ namespace GreenLife_Organic_Store.Forms
             btnFilter.IconChar = IconChar.Filter;
             btnFilter.IconColor = Color.Black;
             btnFilter.IconSize = 16;
-            btnFilter.Location = new Point(530, 40);
+            btnFilter.Location = new Point(480, 38);
             btnFilter.Name = "btnFilter";
-            btnFilter.Size = new Size(100, 25);
+            btnFilter.Size = new Size(100, 36);
             btnFilter.TabIndex = 6;
             btnFilter.Text = "Filter";
             btnFilter.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -132,9 +140,9 @@ namespace GreenLife_Organic_Store.Forms
             btnRefresh.IconChar = IconChar.Sync;
             btnRefresh.IconColor = Color.Black;
             btnRefresh.IconSize = 16;
-            btnRefresh.Location = new Point(640, 40);
+            btnRefresh.Location = new Point(590, 38);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(100, 25);
+            btnRefresh.Size = new Size(100, 36);
             btnRefresh.TabIndex = 7;
             btnRefresh.Text = "Refresh";
             btnRefresh.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -147,8 +155,10 @@ namespace GreenLife_Organic_Store.Forms
             _dgvOrders.Dock = DockStyle.Fill;
             _dgvOrders.Location = new Point(0, 70);
             _dgvOrders.Name = "dgvOrders";
+            _dgvOrders.ColumnHeadersHeight = 38;
             _dgvOrders.ReadOnly = true;
             _dgvOrders.RowHeadersVisible = false;
+            _dgvOrders.RowTemplate.Height = 38;
             _dgvOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             _dgvOrders.Size = new Size(900, 350);
             _dgvOrders.TabIndex = 1;
@@ -157,6 +167,8 @@ namespace GreenLife_Organic_Store.Forms
             _dgvOrders.Columns.Add("Status", "Status");
             _dgvOrders.Columns.Add("Amount", "Amount");
             _dgvOrders.Columns.Add("Date", "Date");
+            _dgvOrders.Columns["Date"].MinimumWidth = 115;
+            _dgvOrders.Columns["Amount"].MinimumWidth = 95;
             _dgvOrders.CellDoubleClick += DgvOrders_CellDoubleClick;
             // pnlActions
             pnlActions.BackColor = Color.White;
@@ -167,23 +179,25 @@ namespace GreenLife_Organic_Store.Forms
             pnlActions.Controls.Add(btnEditOrder);
             pnlActions.Controls.Add(btnClose);
             pnlActions.Dock = DockStyle.Bottom;
-            pnlActions.Height = 90;
-            pnlActions.Location = new Point(0, 510);
+            pnlActions.Height = 62;
+            pnlActions.Location = new Point(0, 538);
             pnlActions.Name = "pnlActions";
-            pnlActions.Padding = new Padding(10);
-            pnlActions.Size = new Size(900, 90);
+            pnlActions.Padding = new Padding(10, 8, 10, 8);
+            pnlActions.Size = new Size(900, 62);
             pnlActions.TabIndex = 2;
             // lblChangeStatus
-            lblChangeStatus.Location = new Point(10, 15);
+            lblChangeStatus.Font = new Font("Segoe UI", 9F);
+            lblChangeStatus.Location = new Point(10, 14);
             lblChangeStatus.Name = "lblChangeStatus";
-            lblChangeStatus.Size = new Size(120, 20);
+            lblChangeStatus.Size = new Size(115, 20);
             lblChangeStatus.TabIndex = 0;
             lblChangeStatus.Text = "Change Status To:";
             // cmbNewStatus
             cmbNewStatus.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbNewStatus.Location = new Point(120, 15);
+            cmbNewStatus.Font = new Font("Segoe UI", 9F);
+            cmbNewStatus.Location = new Point(130, 11);
             cmbNewStatus.Name = "cmbNewStatus";
-            cmbNewStatus.Size = new Size(150, 28);
+            cmbNewStatus.Size = new Size(165, 28);
             cmbNewStatus.TabIndex = 1;
             cmbNewStatus.Items.Add("Pending");
             cmbNewStatus.Items.Add("Processing");
@@ -194,12 +208,14 @@ namespace GreenLife_Organic_Store.Forms
             // btnUpdate
             btnUpdate.BackColor = Color.Orange;
             btnUpdate.Cursor = Cursors.Hand;
+            btnUpdate.Font = new Font("Segoe UI", 9F);
             btnUpdate.IconChar = IconChar.Edit;
             btnUpdate.IconColor = Color.Black;
             btnUpdate.IconSize = 16;
-            btnUpdate.Location = new Point(280, 15);
+            btnUpdate.Location = new Point(305, 11);
             btnUpdate.Name = "btnUpdate";
-            btnUpdate.Size = new Size(150, 25);
+            btnUpdate.Padding = new Padding(6, 2, 6, 2);
+            btnUpdate.Size = new Size(128, 38);
             btnUpdate.TabIndex = 2;
             btnUpdate.Text = "Update Status";
             btnUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -208,12 +224,14 @@ namespace GreenLife_Organic_Store.Forms
             // btnViewDetails
             btnViewDetails.BackColor = Color.LightBlue;
             btnViewDetails.Cursor = Cursors.Hand;
+            btnViewDetails.Font = new Font("Segoe UI", 9F);
             btnViewDetails.IconChar = IconChar.Eye;
             btnViewDetails.IconColor = Color.Black;
             btnViewDetails.IconSize = 16;
-            btnViewDetails.Location = new Point(440, 15);
+            btnViewDetails.Location = new Point(441, 11);
             btnViewDetails.Name = "btnViewDetails";
-            btnViewDetails.Size = new Size(120, 25);
+            btnViewDetails.Padding = new Padding(6, 2, 6, 2);
+            btnViewDetails.Size = new Size(118, 38);
             btnViewDetails.TabIndex = 3;
             btnViewDetails.Text = "View Details";
             btnViewDetails.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -222,12 +240,14 @@ namespace GreenLife_Organic_Store.Forms
             // btnEditOrder
             btnEditOrder.BackColor = Color.LightGreen;
             btnEditOrder.Cursor = Cursors.Hand;
+            btnEditOrder.Font = new Font("Segoe UI", 9F);
             btnEditOrder.IconChar = IconChar.Edit;
             btnEditOrder.IconColor = Color.Black;
             btnEditOrder.IconSize = 16;
-            btnEditOrder.Location = new Point(440, 45);
+            btnEditOrder.Location = new Point(567, 11);
             btnEditOrder.Name = "btnEditOrder";
-            btnEditOrder.Size = new Size(120, 25);
+            btnEditOrder.Padding = new Padding(6, 2, 6, 2);
+            btnEditOrder.Size = new Size(118, 38);
             btnEditOrder.TabIndex = 4;
             btnEditOrder.Text = "Edit Order";
             btnEditOrder.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -236,12 +256,14 @@ namespace GreenLife_Organic_Store.Forms
             // btnClose
             btnClose.BackColor = Color.LightGray;
             btnClose.Cursor = Cursors.Hand;
+            btnClose.Font = new Font("Segoe UI", 9F);
             btnClose.IconChar = IconChar.Times;
             btnClose.IconColor = Color.Black;
             btnClose.IconSize = 16;
-            btnClose.Location = new Point(570, 15);
+            btnClose.Location = new Point(693, 11);
             btnClose.Name = "btnClose";
-            btnClose.Size = new Size(100, 25);
+            btnClose.Padding = new Padding(6, 2, 6, 2);
+            btnClose.Size = new Size(100, 38);
             btnClose.TabIndex = 5;
             btnClose.Text = "Close";
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -251,6 +273,7 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(900, 600);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(pnlActions);
             Controls.Add(_dgvOrders);
             Controls.Add(pnlToolbar);

@@ -121,9 +121,10 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
             // AdminOrderReviewsForm
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(784, 531);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(btnClose);
             Controls.Add(btnRefresh);
             Controls.Add(flpItems);

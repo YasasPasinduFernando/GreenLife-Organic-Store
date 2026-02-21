@@ -308,7 +308,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(0, 0);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(1000, 80);
+            pnlHeader.Size = new Size(1000, 88);
             pnlHeader.TabIndex = 4;
             // iconLogo
             iconLogo.BackColor = Color.Transparent;
@@ -324,18 +324,19 @@ namespace GreenLife_Organic_Store.Forms
             lblTitle.BackColor = Color.Transparent;
             lblTitle.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             lblTitle.ForeColor = Color.White;
-            lblTitle.Location = new Point(80, 18);
+            lblTitle.Location = new Point(82, 12);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(400, 35);
+            lblTitle.Size = new Size(480, 40);
             lblTitle.TabIndex = 1;
             lblTitle.Text = "GreenLife Organic Store";
+            lblTitle.UseCompatibleTextRendering = false;
             // lblWelcome
             lblWelcome.BackColor = Color.Transparent;
             lblWelcome.Font = new Font("Segoe UI", 10F);
             lblWelcome.ForeColor = Color.FromArgb(220, 255, 220);
-            lblWelcome.Location = new Point(80, 52);
+            lblWelcome.Location = new Point(80, 54);
             lblWelcome.Name = "lblWelcome";
-            lblWelcome.Size = new Size(200, 20);
+            lblWelcome.Size = new Size(380, 22);
             lblWelcome.TabIndex = 2;
             lblWelcome.Text = "Welcome!";
             // pnlHeaderRight
@@ -346,7 +347,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeaderRight.Dock = DockStyle.Right;
             pnlHeaderRight.Location = new Point(700, 0);
             pnlHeaderRight.Name = "pnlHeaderRight";
-            pnlHeaderRight.Size = new Size(300, 80);
+            pnlHeaderRight.Size = new Size(300, 88);
             pnlHeaderRight.TabIndex = 3;
             // btnCart
             btnCart.BackColor = Color.FromArgb(46, 204, 113);
@@ -417,6 +418,7 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);
             ClientSize = new Size(1000, 700);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(_flpProducts);
             Controls.Add(pnlProductsHeader);
             Controls.Add(_pnlCategoriesSection);

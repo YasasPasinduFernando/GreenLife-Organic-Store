@@ -46,14 +46,14 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(0, 0);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Padding = new Padding(15);
-            pnlHeader.Size = new Size(1000, 50);
+            pnlHeader.Padding = new Padding(15, 12, 15, 12);
+            pnlHeader.Size = new Size(1000, 56);
             pnlHeader.TabIndex = 0;
             // lblHeader
             lblHeader.BackColor = Color.Transparent;
             lblHeader.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             lblHeader.ForeColor = Color.White;
-            lblHeader.Location = new Point(15, 12);
+            lblHeader.Location = new Point(15, 14);
             lblHeader.Name = "lblHeader";
             lblHeader.Size = new Size(300, 30);
             lblHeader.TabIndex = 0;
@@ -63,7 +63,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlToolbar.Controls.Add(btnAdd);
             pnlToolbar.Controls.Add(btnRefresh);
             pnlToolbar.Dock = DockStyle.Top;
-            pnlToolbar.Location = new Point(0, 50);
+            pnlToolbar.Location = new Point(0, 56);
             pnlToolbar.Name = "pnlToolbar";
             pnlToolbar.Padding = new Padding(10);
             pnlToolbar.Size = new Size(1000, 50);
@@ -73,14 +73,14 @@ namespace GreenLife_Organic_Store.Forms
             btnAdd.Cursor = Cursors.Hand;
             btnAdd.FlatStyle = FlatStyle.Flat;
             btnAdd.FlatAppearance.BorderSize = 0;
-            btnAdd.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnAdd.Font = new Font("Segoe UI", 9F);
             btnAdd.ForeColor = Color.White;
             btnAdd.IconChar = IconChar.Plus;
             btnAdd.IconColor = Color.White;
-            btnAdd.IconSize = 18;
+            btnAdd.IconSize = 16;
             btnAdd.Location = new Point(10, 10);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(160, 35);
+            btnAdd.Size = new Size(160, 36);
             btnAdd.TabIndex = 0;
             btnAdd.Text = "Add New Discount";
             btnAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -91,14 +91,14 @@ namespace GreenLife_Organic_Store.Forms
             btnRefresh.Cursor = Cursors.Hand;
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.FlatAppearance.BorderSize = 0;
-            btnRefresh.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnRefresh.Font = new Font("Segoe UI", 9F);
             btnRefresh.ForeColor = Color.White;
             btnRefresh.IconChar = IconChar.Sync;
             btnRefresh.IconColor = Color.White;
-            btnRefresh.IconSize = 18;
-            btnRefresh.Location = new Point(180, 10);
+            btnRefresh.IconSize = 16;
+            btnRefresh.Location = new Point(185, 10);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(110, 35);
+            btnRefresh.Size = new Size(110, 36);
             btnRefresh.TabIndex = 1;
             btnRefresh.Text = "Refresh";
             btnRefresh.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -112,18 +112,18 @@ namespace GreenLife_Organic_Store.Forms
             {
                 BackColor = Color.FromArgb(52, 73, 94),
                 ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 Padding = new Padding(5)
             };
-            _dgvDiscounts.ColumnHeadersHeight = 40;
+            _dgvDiscounts.ColumnHeadersHeight = 38;
             _dgvDiscounts.Dock = DockStyle.Top;
             _dgvDiscounts.EnableHeadersVisualStyles = false;
-            _dgvDiscounts.Location = new Point(0, 100);
+            _dgvDiscounts.Location = new Point(0, 106);
             _dgvDiscounts.Name = "dgvDiscounts";
             _dgvDiscounts.ReadOnly = true;
-            _dgvDiscounts.RowTemplate = new DataGridViewRow { Height = 30 };
+            _dgvDiscounts.RowTemplate = new DataGridViewRow { Height = 38 };
             _dgvDiscounts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            _dgvDiscounts.Size = new Size(1000, 400);
+            _dgvDiscounts.Size = new Size(1000, 394);
             _dgvDiscounts.TabIndex = 2;
             _dgvDiscounts.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.FromArgb(250, 250, 250) };
             var imgCol = new DataGridViewImageColumn
@@ -158,14 +158,14 @@ namespace GreenLife_Organic_Store.Forms
             btnEdit.Cursor = Cursors.Hand;
             btnEdit.FlatStyle = FlatStyle.Flat;
             btnEdit.FlatAppearance.BorderSize = 0;
-            btnEdit.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnEdit.Font = new Font("Segoe UI", 9F);
             btnEdit.ForeColor = Color.White;
             btnEdit.IconChar = IconChar.Edit;
             btnEdit.IconColor = Color.White;
             btnEdit.IconSize = 18;
             btnEdit.Location = new Point(10, 10);
             btnEdit.Name = "btnEdit";
-            btnEdit.Size = new Size(140, 35);
+            btnEdit.Size = new Size(140, 36);
             btnEdit.TabIndex = 0;
             btnEdit.Text = "Edit Discount";
             btnEdit.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -176,14 +176,14 @@ namespace GreenLife_Organic_Store.Forms
             btnDelete.Cursor = Cursors.Hand;
             btnDelete.FlatStyle = FlatStyle.Flat;
             btnDelete.FlatAppearance.BorderSize = 0;
-            btnDelete.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnDelete.Font = new Font("Segoe UI", 9F);
             btnDelete.ForeColor = Color.White;
             btnDelete.IconChar = IconChar.TrashAlt;
             btnDelete.IconColor = Color.White;
-            btnDelete.IconSize = 18;
-            btnDelete.Location = new Point(160, 10);
+            btnDelete.IconSize = 16;
+            btnDelete.Location = new Point(165, 10);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(140, 35);
+            btnDelete.Size = new Size(145, 36);
             btnDelete.TabIndex = 1;
             btnDelete.Text = "Delete Discount";
             btnDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -194,14 +194,14 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.Cursor = Cursors.Hand;
             btnClose.FlatStyle = FlatStyle.Flat;
             btnClose.FlatAppearance.BorderSize = 0;
-            btnClose.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnClose.Font = new Font("Segoe UI", 9F);
             btnClose.ForeColor = Color.White;
             btnClose.IconChar = IconChar.Times;
             btnClose.IconColor = Color.White;
-            btnClose.IconSize = 18;
-            btnClose.Location = new Point(310, 10);
+            btnClose.IconSize = 16;
+            btnClose.Location = new Point(320, 10);
             btnClose.Name = "btnClose";
-            btnClose.Size = new Size(100, 35);
+            btnClose.Size = new Size(100, 36);
             btnClose.TabIndex = 2;
             btnClose.Text = "Close";
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -211,6 +211,7 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1000, 650);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(pnlActions);
             Controls.Add(_dgvDiscounts);
             Controls.Add(pnlToolbar);

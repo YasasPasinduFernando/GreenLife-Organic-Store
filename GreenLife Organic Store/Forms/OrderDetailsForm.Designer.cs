@@ -161,9 +161,11 @@ namespace GreenLife_Organic_Store.Forms
             dgvItems.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.FromArgb(230, 230, 230), ForeColor = Color.FromArgb(34, 34, 34) };
             dgvItems.EnableHeadersVisualStyles = false;
             dgvItems.GridColor = Color.LightGray;
+            dgvItems.ColumnHeadersHeight = 38;
             dgvItems.Location = new Point(10, 225);
             dgvItems.Name = "dgvItems";
             dgvItems.ReadOnly = true;
+            dgvItems.RowTemplate.Height = 38;
             dgvItems.Size = new Size(680, 180);
             dgvItems.TabIndex = 8;
             dgvItems.Columns.Add("ProductName", "Product");
@@ -251,7 +253,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.FlatStyle = FlatStyle.Flat;
             btnClose.Location = new Point(290, 630);
             btnClose.Name = "btnClose";
-            btnClose.Size = new Size(120, 40);
+            btnClose.Size = new Size(120, 36);
             btnClose.TabIndex = 20;
             btnClose.Text = "Close";
             btnClose.UseVisualStyleBackColor = true;
@@ -262,6 +264,7 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);
             ClientSize = new Size(700, 650);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(pnlMain);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;

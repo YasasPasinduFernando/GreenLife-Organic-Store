@@ -53,7 +53,7 @@ namespace GreenLife_Organic_Store.Forms
             btnAdd.IconSize = 20;
             btnAdd.Location = new Point(10, 10);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(150, 30);
+            btnAdd.Size = new Size(150, 36);
             btnAdd.TabIndex = 0;
             btnAdd.Text = "Add Category";
             btnAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -67,7 +67,7 @@ namespace GreenLife_Organic_Store.Forms
             btnRefresh.IconSize = 20;
             btnRefresh.Location = new Point(170, 10);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(100, 30);
+            btnRefresh.Size = new Size(100, 36);
             btnRefresh.TabIndex = 1;
             btnRefresh.Text = "Refresh";
             btnRefresh.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -78,9 +78,11 @@ namespace GreenLife_Organic_Store.Forms
             _dgvCategories.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             _dgvCategories.BackColor = Color.White;
             _dgvCategories.Dock = DockStyle.Top;
+            _dgvCategories.ColumnHeadersHeight = 38;
             _dgvCategories.Location = new Point(0, 50);
             _dgvCategories.Name = "dgvCategories";
             _dgvCategories.ReadOnly = true;
+            _dgvCategories.RowTemplate.Height = 38;
             _dgvCategories.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             _dgvCategories.Size = new Size(700, 300);
             _dgvCategories.TabIndex = 1;
@@ -115,7 +117,7 @@ namespace GreenLife_Organic_Store.Forms
             btnEdit.IconSize = 20;
             btnEdit.Location = new Point(10, 10);
             btnEdit.Name = "btnEdit";
-            btnEdit.Size = new Size(100, 30);
+            btnEdit.Size = new Size(100, 36);
             btnEdit.TabIndex = 0;
             btnEdit.Text = "Edit";
             btnEdit.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -129,7 +131,7 @@ namespace GreenLife_Organic_Store.Forms
             btnDelete.IconSize = 20;
             btnDelete.Location = new Point(120, 10);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(100, 30);
+            btnDelete.Size = new Size(100, 36);
             btnDelete.TabIndex = 1;
             btnDelete.Text = "Delete";
             btnDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -143,7 +145,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.IconSize = 20;
             btnClose.Location = new Point(230, 10);
             btnClose.Name = "btnClose";
-            btnClose.Size = new Size(100, 30);
+            btnClose.Size = new Size(100, 36);
             btnClose.TabIndex = 2;
             btnClose.Text = "Close";
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -153,6 +155,7 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 500);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(pnlActions);
             Controls.Add(_dgvCategories);
             Controls.Add(pnlToolbar);

@@ -190,19 +190,22 @@ namespace GreenLife_Organic_Store.Forms
             dataGridViewUsers.AllowUserToAddRows = false;
             dataGridViewUsers.AllowUserToDeleteRows = false;
             dataGridViewUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewUsers.ColumnHeadersHeight = 38;
+            dataGridViewUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridViewUsers.Dock = DockStyle.Fill;
             dataGridViewUsers.Location = new Point(0, 158);
             dataGridViewUsers.Margin = new Padding(3, 2, 3, 2);
             dataGridViewUsers.Name = "dataGridViewUsers";
             dataGridViewUsers.ReadOnly = true;
+            dataGridViewUsers.RowTemplate.Height = 38;
             dataGridViewUsers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewUsers.Size = new Size(788, 300);
             dataGridViewUsers.TabIndex = 2;
             // AdminDashboard
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(788, 458);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(dataGridViewUsers);
             Controls.Add(panelButtons);
             Controls.Add(panelTop);

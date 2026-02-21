@@ -188,9 +188,10 @@ namespace GreenLife_Organic_Store.Forms
             buttonCancel.Click += buttonCancel_Click;
 
             // CustomerProfileEditForm
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(500, 520);
+            Font = new Font("Segoe UI", 9F);
             Controls.Add(panelContainer);
             Name = "CustomerProfileEditForm";
             Text = "Edit Your Profile";

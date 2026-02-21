@@ -173,7 +173,7 @@ namespace GreenLife_Organic_Store.Forms
             // btnChooseImage
             this.btnChooseImage.Location = new Point(250, 455);
             this.btnChooseImage.Name = "btnChooseImage";
-            this.btnChooseImage.Size = new Size(140, 30);
+            this.btnChooseImage.Size = new Size(140, 36);
             this.btnChooseImage.TabIndex = 20;
             this.btnChooseImage.Text = "Choose Image...";
             this.btnChooseImage.UseVisualStyleBackColor = true;
@@ -184,7 +184,7 @@ namespace GreenLife_Organic_Store.Forms
             this.btnSave.ForeColor = Color.White;
             this.btnSave.Location = new Point(150, 550);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new Size(150, 40);
+            this.btnSave.Size = new Size(150, 36);
             this.btnSave.TabIndex = 21;
             this.btnSave.Text = "Save Product";
             this.btnSave.UseVisualStyleBackColor = false;
@@ -193,14 +193,17 @@ namespace GreenLife_Organic_Store.Forms
             this.btnCancel.BackColor = Color.LightGray;
             this.btnCancel.Location = new Point(310, 550);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new Size(150, 40);
+            this.btnCancel.Size = new Size(150, 36);
             this.btnCancel.TabIndex = 22;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += this.BtnCancel_Click;
             // AddEditProductForm
+            this.AutoScaleDimensions = new SizeF(8F, 20F);
+            this.AutoScaleMode = AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new Size(584, 661);
+            this.Font = new Font("Segoe UI", 9F);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.lblCategory);
