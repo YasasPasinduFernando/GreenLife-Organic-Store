@@ -46,6 +46,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlFilter.Name = "pnlFilter";
             pnlFilter.Size = new Size(820, 54);
             pnlFilter.TabIndex = 0;
+            pnlFilter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             // lblFilter
             lblFilter.Font = new Font("Segoe UI", 9F);
             lblFilter.ForeColor = Color.FromArgb(52, 73, 94);
@@ -109,8 +110,9 @@ namespace GreenLife_Organic_Store.Forms
             _dgvOrders.RowHeadersVisible = false;
             _dgvOrders.RowTemplate.Height = 32;
             _dgvOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            _dgvOrders.Size = new Size(820, 190);
+            _dgvOrders.Size = new Size(820, 300);
             _dgvOrders.TabIndex = 1;
+            _dgvOrders.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
             _dgvOrders.Columns.Add("OrderNumber", "Order #");
             _dgvOrders.Columns.Add("OrderDate", "Date");
             _dgvOrders.Columns.Add("Status", "Status");
@@ -126,7 +128,7 @@ namespace GreenLife_Organic_Store.Forms
             btnViewDetails.IconChar = IconChar.MapMarkerAlt;
             btnViewDetails.IconColor = Color.White;
             btnViewDetails.IconSize = 16;
-            btnViewDetails.Location = new Point(20, 362);
+            btnViewDetails.Location = new Point(20, 402);
             btnViewDetails.Name = "btnViewDetails";
             btnViewDetails.Size = new Size(120, 36);
             btnViewDetails.TabIndex = 2;
@@ -134,6 +136,7 @@ namespace GreenLife_Organic_Store.Forms
             btnViewDetails.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnViewDetails.UseVisualStyleBackColor = false;
             btnViewDetails.Click += BtnViewDetails_Click;
+            btnViewDetails.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             // btnEdit
             btnEdit.BackColor = Color.FromArgb(52, 152, 219);
             btnEdit.Cursor = Cursors.Hand;
@@ -144,7 +147,7 @@ namespace GreenLife_Organic_Store.Forms
             btnEdit.IconChar = IconChar.Edit;
             btnEdit.IconColor = Color.White;
             btnEdit.IconSize = 16;
-            btnEdit.Location = new Point(152, 362);
+            btnEdit.Location = new Point(152, 402);
             btnEdit.Name = "btnEdit";
             btnEdit.Padding = new Padding(6, 0, 8, 0);
             btnEdit.Size = new Size(132, 36);
@@ -153,6 +156,7 @@ namespace GreenLife_Organic_Store.Forms
             btnEdit.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnEdit.UseVisualStyleBackColor = false;
             btnEdit.Click += BtnEdit_Click;
+            btnEdit.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             // btnDelete
             btnDelete.BackColor = Color.FromArgb(231, 76, 60);
             btnDelete.Cursor = Cursors.Hand;
@@ -163,7 +167,7 @@ namespace GreenLife_Organic_Store.Forms
             btnDelete.IconChar = IconChar.TrashAlt;
             btnDelete.IconColor = Color.White;
             btnDelete.IconSize = 16;
-            btnDelete.Location = new Point(294, 362);
+            btnDelete.Location = new Point(294, 402);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(120, 36);
             btnDelete.TabIndex = 4;
@@ -171,6 +175,7 @@ namespace GreenLife_Organic_Store.Forms
             btnDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += BtnDelete_Click;
+            btnDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             // btnClose
             btnClose.BackColor = Color.FromArgb(149, 165, 166);
             btnClose.Cursor = Cursors.Hand;
@@ -181,7 +186,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.IconChar = IconChar.Times;
             btnClose.IconColor = Color.White;
             btnClose.IconSize = 16;
-            btnClose.Location = new Point(426, 362);
+            btnClose.Location = new Point(426, 402);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(100, 36);
             btnClose.TabIndex = 5;
@@ -189,11 +194,12 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClose.UseVisualStyleBackColor = false;
             btnClose.Click += BtnClose_Click;
+            btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             // MyOrdersForm
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);
-            ClientSize = new Size(840, 320);
+            ClientSize = new Size(840, 500);
             Font = new Font("Segoe UI", 9F);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Controls.Add(pnlFilter);

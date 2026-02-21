@@ -13,7 +13,7 @@ namespace GreenLife_Organic_Store.Forms
         {
             InitializeComponent();
             this.Text = "Manage Customers";
-            this.Size = new Size(900, 600);
+            this.ClientSize = new Size(900, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             if (!DesignMode)

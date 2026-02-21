@@ -14,7 +14,7 @@ namespace GreenLife_Organic_Store.Forms
         {
             InitializeComponent();
             this.Text = "My Orders";
-            this.Size = new Size(800, 500);
+            this.ClientSize = new Size(840, 500);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;

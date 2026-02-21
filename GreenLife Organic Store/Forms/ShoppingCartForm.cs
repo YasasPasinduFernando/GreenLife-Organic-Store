@@ -10,16 +10,22 @@ namespace GreenLife_Organic_Store.Forms
     {
         private List<CartItem> _cartItems = new();
         private User? _currentUser;
+        private const int LayoutMargin = 20;
+        private const int SectionGap = 10;
+        private const int ButtonGap = 12;
+        private const int BottomMargin = 20;
 
         public ShoppingCartForm()
         {
             InitializeComponent();
             this.Text = "Shopping Cart";
-            this.Size = new Size(820, 600);
+            this.ClientSize = new Size(820, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.BackColor = Color.FromArgb(245, 245, 245);
+            ApplyCartLayout();
+            this.ClientSizeChanged += (_, __) => ApplyCartLayout();
             if (!DesignMode)
                 this.Load += ShoppingCartForm_Load;
         }
@@ -34,12 +40,49 @@ namespace GreenLife_Organic_Store.Forms
             if (DesignMode) return;
             try
             {
+                ApplyCartLayout();
                 LoadCartItems();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading shopping cart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void ApplyCartLayout()
+        {
+            if (_dgvCart == null || pnlHeader == null || pnlQuantity == null || pnlSummary == null || btnContinue == null || btnCheckout == null || btnClearCart == null)
+            {
+                return;
+            }
+
+            int contentWidth = ClientSize.Width - (LayoutMargin * 2);
+            if (contentWidth <= 0)
+            {
+                return;
+            }
+
+            _dgvCart.Width = contentWidth;
+            pnlQuantity.Width = contentWidth;
+            pnlSummary.Width = contentWidth;
+            btnClearCart.Location = new Point(pnlQuantity.Width - btnClearCart.Width - 10, btnClearCart.Location.Y);
+
+            int buttonsTop = ClientSize.Height - BottomMargin - btnCheckout.Height;
+            int checkoutLeft = LayoutMargin + contentWidth - btnCheckout.Width;
+            btnCheckout.Location = new Point(checkoutLeft, buttonsTop);
+            btnContinue.Location = new Point(checkoutLeft - ButtonGap - btnContinue.Width, buttonsTop);
+
+            pnlSummary.Location = new Point(LayoutMargin, buttonsTop - SectionGap - pnlSummary.Height);
+            pnlQuantity.Location = new Point(LayoutMargin, pnlSummary.Top - SectionGap - pnlQuantity.Height);
+
+            int gridTop = pnlHeader.Bottom + SectionGap;
+            int gridHeight = pnlQuantity.Top - SectionGap - gridTop;
+            if (gridHeight < 140)
+            {
+                gridHeight = 140;
+            }
+            _dgvCart.Location = new Point(LayoutMargin, gridTop);
+            _dgvCart.Height = gridHeight;
         }
 
         private void BtnDecrement_Click(object? sender, EventArgs e) => AdjustQuantity(-1);

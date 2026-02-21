@@ -15,7 +15,7 @@ namespace GreenLife_Organic_Store.Forms
         {
             InitializeComponent();
             this.Text = "Manage Discounts";
-            this.Size = new Size(1000, 650);
+            this.ClientSize = new Size(1000, 650);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             if (!DesignMode)

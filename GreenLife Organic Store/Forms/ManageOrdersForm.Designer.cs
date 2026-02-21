@@ -211,6 +211,7 @@ namespace GreenLife_Organic_Store.Forms
             btnUpdate.Font = new Font("Segoe UI", 9F);
             btnUpdate.IconChar = IconChar.Edit;
             btnUpdate.IconColor = Color.Black;
+            btnUpdate.IconFont = IconFont.Solid;
             btnUpdate.IconSize = 16;
             btnUpdate.Location = new Point(305, 11);
             btnUpdate.Name = "btnUpdate";
@@ -227,6 +228,7 @@ namespace GreenLife_Organic_Store.Forms
             btnViewDetails.Font = new Font("Segoe UI", 9F);
             btnViewDetails.IconChar = IconChar.Eye;
             btnViewDetails.IconColor = Color.Black;
+            btnViewDetails.IconFont = IconFont.Solid;
             btnViewDetails.IconSize = 16;
             btnViewDetails.Location = new Point(441, 11);
             btnViewDetails.Name = "btnViewDetails";

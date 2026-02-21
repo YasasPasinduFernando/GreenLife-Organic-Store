@@ -116,7 +116,7 @@ namespace GreenLife_Organic_Store.Forms
                 Padding = new Padding(5)
             };
             _dgvDiscounts.ColumnHeadersHeight = 38;
-            _dgvDiscounts.Dock = DockStyle.Top;
+            _dgvDiscounts.Dock = DockStyle.Fill;
             _dgvDiscounts.EnableHeadersVisualStyles = false;
             _dgvDiscounts.Location = new Point(0, 106);
             _dgvDiscounts.Name = "dgvDiscounts";
@@ -147,8 +147,8 @@ namespace GreenLife_Organic_Store.Forms
             pnlActions.Controls.Add(btnEdit);
             pnlActions.Controls.Add(btnDelete);
             pnlActions.Controls.Add(btnClose);
-            pnlActions.Dock = DockStyle.Top;
-            pnlActions.Location = new Point(0, 500);
+            pnlActions.Dock = DockStyle.Bottom;
+            pnlActions.Location = new Point(0, 600);
             pnlActions.Name = "pnlActions";
             pnlActions.Padding = new Padding(10);
             pnlActions.Size = new Size(1000, 50);
@@ -212,10 +212,10 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1000, 650);
             Font = new Font("Segoe UI", 9F);
-            Controls.Add(pnlActions);
-            Controls.Add(_dgvDiscounts);
             Controls.Add(pnlToolbar);
             Controls.Add(pnlHeader);
+            Controls.Add(pnlActions);
+            Controls.Add(_dgvDiscounts);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;

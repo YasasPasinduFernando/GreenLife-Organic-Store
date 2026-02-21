@@ -77,7 +77,7 @@ namespace GreenLife_Organic_Store.Forms
             _dgvCategories.AllowUserToAddRows = false;
             _dgvCategories.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             _dgvCategories.BackColor = Color.White;
-            _dgvCategories.Dock = DockStyle.Top;
+            _dgvCategories.Dock = DockStyle.Fill;
             _dgvCategories.ColumnHeadersHeight = 38;
             _dgvCategories.Location = new Point(0, 50);
             _dgvCategories.Name = "dgvCategories";
@@ -103,8 +103,8 @@ namespace GreenLife_Organic_Store.Forms
             pnlActions.Controls.Add(btnEdit);
             pnlActions.Controls.Add(btnDelete);
             pnlActions.Controls.Add(btnClose);
-            pnlActions.Dock = DockStyle.Top;
-            pnlActions.Location = new Point(0, 350);
+            pnlActions.Dock = DockStyle.Bottom;
+            pnlActions.Location = new Point(0, 450);
             pnlActions.Name = "pnlActions";
             pnlActions.Padding = new Padding(10);
             pnlActions.Size = new Size(700, 50);
@@ -156,9 +156,9 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 500);
             Font = new Font("Segoe UI", 9F);
+            Controls.Add(pnlToolbar);
             Controls.Add(pnlActions);
             Controls.Add(_dgvCategories);
-            Controls.Add(pnlToolbar);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "ManageCategoriesForm";
             StartPosition = FormStartPosition.CenterScreen;

@@ -15,7 +15,7 @@ namespace GreenLife_Organic_Store.Forms
         {
             InitializeComponent();
             this.Text = "Manage Categories";
-            this.Size = new Size(700, 500);
+            this.ClientSize = new Size(700, 500);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             if (!DesignMode)

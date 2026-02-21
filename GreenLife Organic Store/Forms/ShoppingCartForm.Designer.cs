@@ -52,7 +52,7 @@ namespace GreenLife_Organic_Store.Forms
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(0, 0);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(860, 68);
+            pnlHeader.Size = new Size(820, 68);
             pnlHeader.TabIndex = 0;
             // lblHeader
             lblHeader.BackColor = Color.Transparent;
@@ -84,8 +84,9 @@ namespace GreenLife_Organic_Store.Forms
             _dgvCart.ReadOnly = true;
             _dgvCart.RowTemplate.Height = 35;
             _dgvCart.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            _dgvCart.Size = new Size(820, 180);
+            _dgvCart.Size = new Size(780, 300);
             _dgvCart.TabIndex = 1;
+            _dgvCart.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             var imgCol = new DataGridViewImageColumn
             {
                 Name = "Image",
@@ -117,10 +118,11 @@ namespace GreenLife_Organic_Store.Forms
             pnlQuantity.Controls.Add(btnDecrement);
             pnlQuantity.Controls.Add(btnIncrement);
             pnlQuantity.Controls.Add(btnClearCart);
-            pnlQuantity.Location = new Point(20, 386);
+            pnlQuantity.Location = new Point(20, 390);
             pnlQuantity.Name = "pnlQuantity";
-            pnlQuantity.Size = new Size(820, 52);
+            pnlQuantity.Size = new Size(780, 52);
             pnlQuantity.TabIndex = 2;
+            pnlQuantity.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
             // lblQuantityInfo
             lblQuantityInfo.AutoSize = true;
             lblQuantityInfo.Font = new Font("Segoe UI", 9F);
@@ -171,7 +173,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClearCart.IconChar = IconChar.TrashAlt;
             btnClearCart.IconColor = Color.White;
             btnClearCart.IconSize = 16;
-            btnClearCart.Location = new Point(680, 8);
+            btnClearCart.Location = new Point(640, 8);
             btnClearCart.Name = "btnClearCart";
             btnClearCart.Size = new Size(130, 36);
             btnClearCart.TabIndex = 3;
@@ -184,10 +186,11 @@ namespace GreenLife_Organic_Store.Forms
             pnlSummary.BorderStyle = BorderStyle.FixedSingle;
             pnlSummary.Controls.Add(lblTotal);
             pnlSummary.Controls.Add(lblItemCount);
-            pnlSummary.Location = new Point(20, 444);
+            pnlSummary.Location = new Point(20, 448);
             pnlSummary.Name = "pnlSummary";
-            pnlSummary.Size = new Size(820, 52);
+            pnlSummary.Size = new Size(780, 52);
             pnlSummary.TabIndex = 3;
+            pnlSummary.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
             // lblTotal
             lblTotal.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             lblTotal.ForeColor = Color.FromArgb(34, 139, 34);
@@ -215,7 +218,7 @@ namespace GreenLife_Organic_Store.Forms
             btnContinue.IconChar = IconChar.ArrowLeft;
             btnContinue.IconColor = Color.White;
             btnContinue.IconSize = 18;
-            btnContinue.Location = new Point(380, 500);
+            btnContinue.Location = new Point(197, 508);
             btnContinue.Name = "btnContinue";
             btnContinue.Size = new Size(190, 36);
             btnContinue.TabIndex = 4;
@@ -223,6 +226,7 @@ namespace GreenLife_Organic_Store.Forms
             btnContinue.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnContinue.UseVisualStyleBackColor = false;
             btnContinue.Click += BtnContinue_Click;
+            btnContinue.Anchor = AnchorStyles.Bottom;
             // btnCheckout
             btnCheckout.BackColor = Color.FromArgb(0x2D, 0x86, 0x59);
             btnCheckout.Cursor = Cursors.Hand;
@@ -233,7 +237,7 @@ namespace GreenLife_Organic_Store.Forms
             btnCheckout.IconChar = IconChar.CreditCard;
             btnCheckout.IconColor = Color.White;
             btnCheckout.IconSize = 18;
-            btnCheckout.Location = new Point(590, 500);
+            btnCheckout.Location = new Point(403, 508);
             btnCheckout.Name = "btnCheckout";
             btnCheckout.Size = new Size(220, 36);
             btnCheckout.TabIndex = 5;
@@ -241,11 +245,12 @@ namespace GreenLife_Organic_Store.Forms
             btnCheckout.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnCheckout.UseVisualStyleBackColor = false;
             btnCheckout.Click += BtnCheckout_Click;
+            btnCheckout.Anchor = AnchorStyles.Bottom;
             // ShoppingCartForm
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);
-            ClientSize = new Size(860, 360);
+            ClientSize = new Size(820, 600);
             Font = new Font("Segoe UI", 9F);
             Controls.Add(pnlHeader);
             Controls.Add(_dgvCart);

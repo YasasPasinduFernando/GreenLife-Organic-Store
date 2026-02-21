@@ -95,6 +95,7 @@ namespace GreenLife_Organic_Store.Forms
             btnExport.Cursor = Cursors.Hand;
             btnExport.IconChar = IconChar.FileExport;
             btnExport.IconColor = Color.Black;
+            btnExport.IconFont = IconFont.Solid;
             btnExport.IconSize = 20;
             btnExport.Location = new Point(440, 10);
             btnExport.Name = "btnExport";
@@ -108,7 +109,7 @@ namespace GreenLife_Organic_Store.Forms
             _dgvCustomers.AllowUserToAddRows = false;
             _dgvCustomers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             _dgvCustomers.BackColor = Color.White;
-            _dgvCustomers.Dock = DockStyle.Top;
+            _dgvCustomers.Dock = DockStyle.Fill;
             _dgvCustomers.ColumnHeadersHeight = 38;
             _dgvCustomers.Location = new Point(0, 50);
             _dgvCustomers.Name = "dgvCustomers";
@@ -131,8 +132,8 @@ namespace GreenLife_Organic_Store.Forms
             pnlActions.Controls.Add(btnClose);
             pnlActions.Controls.Add(_btnEditCustomer);
             pnlActions.Controls.Add(_btnChangePassword);
-            pnlActions.Dock = DockStyle.Top;
-            pnlActions.Location = new Point(0, 400);
+            pnlActions.Dock = DockStyle.Bottom;
+            pnlActions.Location = new Point(0, 490);
             pnlActions.Name = "pnlActions";
             pnlActions.Padding = new Padding(10);
             pnlActions.Size = new Size(900, 110);
@@ -198,6 +199,7 @@ namespace GreenLife_Organic_Store.Forms
             _btnChangePassword.Cursor = Cursors.Hand;
             _btnChangePassword.IconChar = IconChar.Key;
             _btnChangePassword.IconColor = Color.Black;
+            _btnChangePassword.IconFont = IconFont.Solid;
             _btnChangePassword.IconSize = 20;
             _btnChangePassword.Location = new Point(170, 55);
             _btnChangePassword.Name = "_btnChangePassword";
@@ -212,9 +214,9 @@ namespace GreenLife_Organic_Store.Forms
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(900, 600);
             Font = new Font("Segoe UI", 9F);
+            Controls.Add(pnlToolbar);
             Controls.Add(pnlActions);
             Controls.Add(_dgvCustomers);
-            Controls.Add(pnlToolbar);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "ManageCustomersForm";
             StartPosition = FormStartPosition.CenterScreen;
