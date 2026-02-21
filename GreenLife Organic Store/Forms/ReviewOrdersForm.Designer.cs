@@ -25,7 +25,15 @@ namespace GreenLife_Organic_Store.Forms
 
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             dgvOrders = new DataGridView();
+            colOrderId = new DataGridViewTextBoxColumn();
+            colOrderNumber = new DataGridViewTextBoxColumn();
+            colOrderDate = new DataGridViewTextBoxColumn();
+            colTotal = new DataGridViewTextBoxColumn();
+            colRating = new DataGridViewTextBoxColumn();
+            colComment = new DataGridViewTextBoxColumn();
+            colReviewDate = new DataGridViewTextBoxColumn();
             lblReviewStatus = new Label();
             numRating = new NumericUpDown();
             txtComment = new TextBox();
@@ -38,177 +46,205 @@ namespace GreenLife_Organic_Store.Forms
             ((System.ComponentModel.ISupportInitialize)dgvOrders).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numRating).BeginInit();
             SuspendLayout();
-            
+            // 
             // dgvOrders
+            // 
             dgvOrders.AllowUserToAddRows = false;
             dgvOrders.AllowUserToDeleteRows = false;
             dgvOrders.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dgvOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.FromArgb(45, 134, 89);
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle3.ForeColor = Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dgvOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvOrders.ColumnHeadersHeight = 35;
-            dgvOrders.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 134, 89);
-            dgvOrders.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvOrders.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            dgvOrders.Location = new Point(15, 15);
+            dgvOrders.Columns.AddRange(new DataGridViewColumn[] { colOrderId, colOrderNumber, colOrderDate, colTotal, colRating, colComment, colReviewDate });
+            dgvOrders.Location = new Point(13, 11);
+            dgvOrders.Margin = new Padding(3, 2, 3, 2);
             dgvOrders.MultiSelect = false;
             dgvOrders.Name = "dgvOrders";
             dgvOrders.ReadOnly = true;
-            dgvOrders.RowTemplate.Height = 32;
             dgvOrders.RowHeadersVisible = false;
+            dgvOrders.RowTemplate.Height = 32;
             dgvOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvOrders.Size = new Size(750, 230);
+            dgvOrders.Size = new Size(656, 172);
             dgvOrders.TabIndex = 0;
-            dgvOrders.BorderStyle = BorderStyle.FixedSingle;
             dgvOrders.SelectionChanged += dgvOrders_SelectionChanged;
-            
-            // Columns
-            var colOrderId = new DataGridViewTextBoxColumn();
-            colOrderId.Name = "colOrderId";
+            // 
+            // colOrderId
+            // 
             colOrderId.HeaderText = "Order ID";
+            colOrderId.Name = "colOrderId";
+            colOrderId.ReadOnly = true;
             colOrderId.Visible = false;
-            dgvOrders.Columns.Add(colOrderId);
-
-            var colOrderNumber = new DataGridViewTextBoxColumn();
-            colOrderNumber.Name = "colOrderNumber";
+            // 
+            // colOrderNumber
+            // 
             colOrderNumber.HeaderText = "Order #";
-            dgvOrders.Columns.Add(colOrderNumber);
-
-            var colOrderDate = new DataGridViewTextBoxColumn();
-            colOrderDate.Name = "colOrderDate";
+            colOrderNumber.Name = "colOrderNumber";
+            colOrderNumber.ReadOnly = true;
+            // 
+            // colOrderDate
+            // 
             colOrderDate.HeaderText = "Order Date";
-            dgvOrders.Columns.Add(colOrderDate);
-
-            var colTotal = new DataGridViewTextBoxColumn();
-            colTotal.Name = "colTotal";
+            colOrderDate.Name = "colOrderDate";
+            colOrderDate.ReadOnly = true;
+            // 
+            // colTotal
+            // 
             colTotal.HeaderText = "Total";
-            dgvOrders.Columns.Add(colTotal);
-
-            var colRating = new DataGridViewTextBoxColumn();
-            colRating.Name = "colRating";
+            colTotal.Name = "colTotal";
+            colTotal.ReadOnly = true;
+            // 
+            // colRating
+            // 
             colRating.HeaderText = "Rating";
-            dgvOrders.Columns.Add(colRating);
-
-            var colComment = new DataGridViewTextBoxColumn();
-            colComment.Name = "colComment";
+            colRating.Name = "colRating";
+            colRating.ReadOnly = true;
+            // 
+            // colComment
+            // 
             colComment.HeaderText = "Comment";
-            dgvOrders.Columns.Add(colComment);
-
-            var colReviewDate = new DataGridViewTextBoxColumn();
-            colReviewDate.Name = "colReviewDate";
+            colComment.Name = "colComment";
+            colComment.ReadOnly = true;
+            // 
+            // colReviewDate
+            // 
             colReviewDate.HeaderText = "Review Date";
-            dgvOrders.Columns.Add(colReviewDate);
-
+            colReviewDate.Name = "colReviewDate";
+            colReviewDate.ReadOnly = true;
+            // 
             // lblReviewStatus
+            // 
             lblReviewStatus.AutoSize = true;
-            lblReviewStatus.Location = new Point(15, 255);
-            lblReviewStatus.Name = "lblReviewStatus";
             lblReviewStatus.Font = new Font("Segoe UI", 9F);
             lblReviewStatus.ForeColor = Color.FromArgb(117, 117, 117);
-            lblReviewStatus.Size = new Size(84, 15);
+            lblReviewStatus.Location = new Point(13, 191);
+            lblReviewStatus.Name = "lblReviewStatus";
+            lblReviewStatus.Size = new Size(77, 15);
             lblReviewStatus.TabIndex = 1;
             lblReviewStatus.Text = "Not reviewed";
-            
-            // lblItems
-            lblItems.AutoSize = true;
-            lblItems.Location = new Point(15, 280);
-            lblItems.Name = "lblItems";
-            lblItems.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblItems.ForeColor = Color.FromArgb(45, 134, 89);
-            lblItems.Size = new Size(70, 15);
-            lblItems.TabIndex = 2;
-            lblItems.Text = "Order Items";
-            
-            // flpItems
-            flpItems.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            flpItems.AutoScroll = true;
-            flpItems.BackColor = Color.White;
-            flpItems.BorderStyle = BorderStyle.FixedSingle;
-            flpItems.Location = new Point(15, 300);
-            flpItems.Name = "flpItems";
-            flpItems.Padding = new Padding(5);
-            flpItems.Size = new Size(750, 80);
-            flpItems.TabIndex = 3;
-            
-            // lblRating
-            lblRating.AutoSize = true;
-            lblRating.Location = new Point(15, 395);
-            lblRating.Name = "lblRating";
-            lblRating.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblRating.Size = new Size(43, 15);
-            lblRating.TabIndex = 4;
-            lblRating.Text = "Rating";
-            
+            // 
             // numRating
-            numRating.Location = new Point(80, 390);
+            // 
+            numRating.Font = new Font("Segoe UI", 9F);
+            numRating.Location = new Point(70, 436);
+            numRating.Margin = new Padding(3, 2, 3, 2);
             numRating.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numRating.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numRating.Name = "numRating";
-            numRating.Size = new Size(70, 25);
+            numRating.Size = new Size(61, 23);
             numRating.TabIndex = 5;
             numRating.Value = new decimal(new int[] { 5, 0, 0, 0 });
-            numRating.Font = new Font("Segoe UI", 9F);
-            
-            // lblComment
-            lblComment.AutoSize = true;
-            lblComment.Location = new Point(15, 425);
-            lblComment.Name = "lblComment";
-            lblComment.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblComment.Size = new Size(62, 15);
-            lblComment.TabIndex = 6;
-            lblComment.Text = "Comment";
-            
+            // 
             // txtComment
+            // 
             txtComment.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtComment.Location = new Point(15, 445);
+            txtComment.BorderStyle = BorderStyle.FixedSingle;
+            txtComment.Font = new Font("Segoe UI", 9F);
+            txtComment.Location = new Point(14, 498);
+            txtComment.Margin = new Padding(3, 2, 3, 2);
             txtComment.Multiline = true;
             txtComment.Name = "txtComment";
-            txtComment.Font = new Font("Segoe UI", 9F);
-            txtComment.BorderStyle = BorderStyle.FixedSingle;
-            txtComment.Size = new Size(750, 70);
+            txtComment.Size = new Size(656, 81);
             txtComment.TabIndex = 7;
-            
+            // 
             // btnSaveReview
+            // 
+            btnSaveReview.BackColor = Color.FromArgb(45, 134, 89);
+            btnSaveReview.FlatAppearance.BorderSize = 0;
+            btnSaveReview.FlatStyle = FlatStyle.Flat;
+            btnSaveReview.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnSaveReview.ForeColor = Color.White;
             btnSaveReview.IconChar = FontAwesome.Sharp.IconChar.Save;
             btnSaveReview.IconColor = Color.White;
-            btnSaveReview.ForeColor = Color.White;
-            btnSaveReview.BackColor = Color.FromArgb(45, 134, 89);
+            btnSaveReview.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSaveReview.IconSize = 18;
-            btnSaveReview.Location = new Point(15, 525);
+            btnSaveReview.Location = new Point(14, 597);
+            btnSaveReview.Margin = new Padding(3, 2, 3, 2);
             btnSaveReview.Name = "btnSaveReview";
-            btnSaveReview.Size = new Size(120, 36);
+            btnSaveReview.Size = new Size(145, 27);
             btnSaveReview.TabIndex = 8;
             btnSaveReview.Text = "Save Review";
             btnSaveReview.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSaveReview.UseVisualStyleBackColor = false;
-            btnSaveReview.FlatStyle = FlatStyle.Flat;
-            btnSaveReview.FlatAppearance.BorderSize = 0;
-            btnSaveReview.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnSaveReview.Click += btnSaveReview_Click;
-            
+            // 
             // btnClose
-            btnClose.IconChar = FontAwesome.Sharp.IconChar.Times;
-            btnClose.IconColor = Color.White;
-            btnClose.ForeColor = Color.White;
+            // 
             btnClose.BackColor = Color.FromArgb(220, 53, 69);
+            btnClose.FlatAppearance.BorderSize = 0;
+            btnClose.FlatStyle = FlatStyle.Flat;
+            btnClose.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnClose.ForeColor = Color.White;
+            btnClose.IconChar = FontAwesome.Sharp.IconChar.Close;
+            btnClose.IconColor = Color.White;
+            btnClose.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClose.IconSize = 18;
-            btnClose.Location = new Point(645, 525);
+            btnClose.Location = new Point(537, 597);
+            btnClose.Margin = new Padding(3, 2, 3, 2);
             btnClose.Name = "btnClose";
-            btnClose.Size = new Size(120, 36);
+            btnClose.Size = new Size(133, 27);
             btnClose.TabIndex = 9;
             btnClose.Text = "Close";
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnClose.UseVisualStyleBackColor = false;
-            btnClose.FlatStyle = FlatStyle.Flat;
-            btnClose.FlatAppearance.BorderSize = 0;
-            btnClose.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnClose.Click += btnClose_Click;
-            
+            // 
+            // lblRating
+            // 
+            lblRating.AutoSize = true;
+            lblRating.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblRating.Location = new Point(13, 440);
+            lblRating.Name = "lblRating";
+            lblRating.Size = new Size(52, 19);
+            lblRating.TabIndex = 4;
+            lblRating.Text = "Rating";
+            // 
+            // lblComment
+            // 
+            lblComment.AutoSize = true;
+            lblComment.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblComment.Location = new Point(13, 463);
+            lblComment.Name = "lblComment";
+            lblComment.Size = new Size(74, 19);
+            lblComment.TabIndex = 6;
+            lblComment.Text = "Comment";
+            // 
+            // flpItems
+            // 
+            flpItems.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            flpItems.AutoScroll = true;
+            flpItems.BackColor = Color.White;
+            flpItems.BorderStyle = BorderStyle.FixedSingle;
+            flpItems.Location = new Point(13, 231);
+            flpItems.Margin = new Padding(3, 2, 3, 2);
+            flpItems.Name = "flpItems";
+            flpItems.Padding = new Padding(4, 4, 4, 4);
+            flpItems.Size = new Size(656, 201);
+            flpItems.TabIndex = 3;
+            // 
+            // lblItems
+            // 
+            lblItems.AutoSize = true;
+            lblItems.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblItems.ForeColor = Color.FromArgb(45, 134, 89);
+            lblItems.Location = new Point(13, 210);
+            lblItems.Name = "lblItems";
+            lblItems.Size = new Size(89, 19);
+            lblItems.TabIndex = 2;
+            lblItems.Text = "Order Items";
+            // 
             // ReviewOrdersForm
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 245);
-            ClientSize = new Size(780, 580);
-            Font = new Font("Segoe UI", 9F);
-            Padding = new Padding(10);
+            ClientSize = new Size(682, 631);
             Controls.Add(btnClose);
             Controls.Add(btnSaveReview);
             Controls.Add(txtComment);
@@ -219,10 +255,12 @@ namespace GreenLife_Organic_Store.Forms
             Controls.Add(lblItems);
             Controls.Add(lblReviewStatus);
             Controls.Add(dgvOrders);
-            FormBorderStyle = FormBorderStyle.Sizable;
+            Font = new Font("Segoe UI", 9F);
+            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
-            MinimumSize = new Size(780, 580);
+            MinimumSize = new Size(684, 445);
             Name = "ReviewOrdersForm";
+            Padding = new Padding(9, 8, 9, 8);
             StartPosition = FormStartPosition.CenterParent;
             Text = "Review Orders - GreenLife";
             Load += ReviewOrdersForm_Load;
@@ -231,5 +269,12 @@ namespace GreenLife_Organic_Store.Forms
             ResumeLayout(false);
             PerformLayout();
         }
+        private DataGridViewTextBoxColumn colOrderId;
+        private DataGridViewTextBoxColumn colOrderNumber;
+        private DataGridViewTextBoxColumn colOrderDate;
+        private DataGridViewTextBoxColumn colTotal;
+        private DataGridViewTextBoxColumn colRating;
+        private DataGridViewTextBoxColumn colComment;
+        private DataGridViewTextBoxColumn colReviewDate;
     }
 }
