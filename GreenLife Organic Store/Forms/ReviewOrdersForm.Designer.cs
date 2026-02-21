@@ -143,7 +143,6 @@ namespace GreenLife_Organic_Store.Forms
             numRating.Size = new Size(61, 23);
             numRating.TabIndex = 4;
             numRating.Value = new decimal(new int[] { 5, 0, 0, 0 });
-            numRating.ValueChanged += this.numRating_ValueChanged;
             // 
             // txtComment
             // 
