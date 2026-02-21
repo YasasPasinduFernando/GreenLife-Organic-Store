@@ -213,10 +213,10 @@ namespace GreenLife_Organic_Store.Forms
             btnUpdate.IconColor = Color.Black;
             btnUpdate.IconFont = IconFont.Solid;
             btnUpdate.IconSize = 16;
-            btnUpdate.Location = new Point(305, 11);
+            btnUpdate.Location = new Point(310, 11);
             btnUpdate.Name = "btnUpdate";
             btnUpdate.Padding = new Padding(6, 2, 6, 2);
-            btnUpdate.Size = new Size(128, 38);
+            btnUpdate.Size = new Size(150, 38);
             btnUpdate.TabIndex = 2;
             btnUpdate.Text = "Update Status";
             btnUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -230,10 +230,10 @@ namespace GreenLife_Organic_Store.Forms
             btnViewDetails.IconColor = Color.Black;
             btnViewDetails.IconFont = IconFont.Solid;
             btnViewDetails.IconSize = 16;
-            btnViewDetails.Location = new Point(441, 11);
+            btnViewDetails.Location = new Point(468, 11);
             btnViewDetails.Name = "btnViewDetails";
             btnViewDetails.Padding = new Padding(6, 2, 6, 2);
-            btnViewDetails.Size = new Size(118, 38);
+            btnViewDetails.Size = new Size(140, 38);
             btnViewDetails.TabIndex = 3;
             btnViewDetails.Text = "View Details";
             btnViewDetails.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -246,10 +246,10 @@ namespace GreenLife_Organic_Store.Forms
             btnEditOrder.IconChar = IconChar.Edit;
             btnEditOrder.IconColor = Color.Black;
             btnEditOrder.IconSize = 16;
-            btnEditOrder.Location = new Point(567, 11);
+            btnEditOrder.Location = new Point(616, 11);
             btnEditOrder.Name = "btnEditOrder";
             btnEditOrder.Padding = new Padding(6, 2, 6, 2);
-            btnEditOrder.Size = new Size(118, 38);
+            btnEditOrder.Size = new Size(130, 38);
             btnEditOrder.TabIndex = 4;
             btnEditOrder.Text = "Edit Order";
             btnEditOrder.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -262,7 +262,7 @@ namespace GreenLife_Organic_Store.Forms
             btnClose.IconChar = IconChar.Times;
             btnClose.IconColor = Color.Black;
             btnClose.IconSize = 16;
-            btnClose.Location = new Point(693, 11);
+            btnClose.Location = new Point(754, 11);
             btnClose.Name = "btnClose";
             btnClose.Padding = new Padding(6, 2, 6, 2);
             btnClose.Size = new Size(100, 38);

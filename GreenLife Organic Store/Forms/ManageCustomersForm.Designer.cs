@@ -93,15 +93,15 @@ namespace GreenLife_Organic_Store.Forms
             // btnExport
             btnExport.BackColor = Color.LightGreen;
             btnExport.Cursor = Cursors.Hand;
-            btnExport.IconChar = IconChar.FileExport;
+            btnExport.IconChar = IconChar.Download;
             btnExport.IconColor = Color.Black;
             btnExport.IconFont = IconFont.Solid;
             btnExport.IconSize = 20;
             btnExport.Location = new Point(440, 10);
             btnExport.Name = "btnExport";
-            btnExport.Size = new Size(120, 36);
+            btnExport.Size = new Size(160, 36);
             btnExport.TabIndex = 3;
-            btnExport.Text = "Export to CSV";
+            btnExport.Text = "Export CSV";
             btnExport.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnExport.UseVisualStyleBackColor = false;
             btnExport.Click += BtnExport_Click;
@@ -203,7 +203,7 @@ namespace GreenLife_Organic_Store.Forms
             _btnChangePassword.IconSize = 20;
             _btnChangePassword.Location = new Point(170, 55);
             _btnChangePassword.Name = "_btnChangePassword";
-            _btnChangePassword.Size = new Size(150, 36);
+            _btnChangePassword.Size = new Size(200, 36);
             _btnChangePassword.TabIndex = 4;
             _btnChangePassword.Text = "Change Password";
             _btnChangePassword.TextImageRelation = TextImageRelation.ImageBeforeText;
