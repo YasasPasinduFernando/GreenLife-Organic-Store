@@ -257,16 +257,14 @@ namespace GreenLife_Organic_Store.Forms
                     string message = $"Registration successful! Your account has been created.";
                     if (!emailSent)
                     {
-                        message += $"\n\nNote: Welcome email could not be sent.\nThis may be due to email not being configured.";
-                        message += $"\n\nYou can still login and use your account.";
-                        message += $"\nCheck EMAIL_CONFIG.md for email setup instructions.";
+                        message += $"\n\nWe could not send the welcome email right now, but your account is ready to use.";
                     }
                     else
                     {
                         message += $"\n\nInfo: A welcome email has been sent to {newUser.Email}";
                     }
 
-                    message += $"\n\nYou can now login with your email and password.";
+                    message += $"\n\nYou can now log in with your email and password.";
 
                     MessageBox.Show(message, "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();

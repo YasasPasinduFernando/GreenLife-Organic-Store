@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS Discounts (
 -- Insert a default admin user (password: admin123 - SHA256 hashed)
 -- Note: In production, change this password immediately
 INSERT IGNORE INTO Users (Email, Name, Phone, Age, Address, Sex, UserType, Password)
-VALUES ('admin@greenlife.com', 'Admin User', '555-0000', 30, 'Admin Office', 'Male', 'Admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9');
+VALUES ('admin@greenlife.com', 'Admin User', '555-0000', 30, 'Admin Office', 'Male', 'Admin', '$2a$12$qzUjoj88YrEQvKA5cCY7JecqFXw/50uI.b12z/5laImeCmgrlVWxe');
 
 -- Sample Data: Categories
 INSERT IGNORE INTO Categories (CategoryName, Description) VALUES
